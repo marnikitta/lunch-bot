@@ -27,7 +27,7 @@ public final class MenuParser {
     }
 
     public static String getDate(final String str) {
-        Pattern dayPattern = Pattern.compile("^МЕНЮ\\s+на\\s+(?<day>\\d+)\\s+(?<month>января|февраля|марта)\\s+(?<year>\\d{4})\\s+года", Pattern.CASE_INSENSITIVE);
+        Pattern dayPattern = Pattern.compile("^МЕНЮ\\s+на\\s+(?<day>\\d+)\\s+(?<month>января|февраля|марта|апреля|мая|июня|июля|августа|сентября|октября|ноября|декабря)\\s+(?<year>\\d{4})\\s+года", Pattern.CASE_INSENSITIVE);
         Matcher matcher = dayPattern.matcher(str);
         if (matcher.find()) {
             String day = matcher.group("day");
