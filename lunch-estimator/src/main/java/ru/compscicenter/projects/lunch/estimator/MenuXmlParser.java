@@ -55,7 +55,7 @@ public class MenuXmlParser {
         return menus;
     }
 
-    private static void parseItem(Menu.Builder builder, Element menuElement) {
+    private static void parseItem(final Menu.Builder builder, final Element menuElement) {
 
         NodeList itemList = menuElement.getElementsByTagName(ITEM);
 
