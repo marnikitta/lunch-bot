@@ -65,4 +65,22 @@ public class Menu {
         return formatter.format(date.getTime());
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Menu menu = (Menu) o;
+
+        if (date != null ? !date.equals(menu.date) : menu.date != null) return false;
+        return !(items != null ? !items.equals(menu.items) : menu.items != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = date != null ? date.hashCode() : 0;
+        result = 31 * result + (items != null ? items.hashCode() : 0);
+        return result;
+    }
 }
