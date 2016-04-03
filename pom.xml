@@ -12,6 +12,7 @@
         <module>lunch-parsing</module>
         <module>lunch-estimator</module>
         <module>lunch-model</module>
+        <module>lunch-db</module>
     </modules>
 
     <dependencies>

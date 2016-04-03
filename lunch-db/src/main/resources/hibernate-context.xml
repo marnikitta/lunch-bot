@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/mvc"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:context="http://www.springframework.org/schema/context"
+             xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <context:property-placeholder location="classpath:spring.properties"/>
+
+
+    <beans:bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+                destroy-method="close">
+        <beans:property name="driverClassName" value="${jdbc.driverClassName}"/>
+
+        <beans:property name="url"
+                        value="${jdbc.url}"/>
+        <beans:property name="username" value="${jdbc.username}"/>
+        <beans:property name="password" value="${jdbc.password}"/>
+    </beans:bean>
+
+    <beans:bean id="hibernate4AnnotatedSessionFactory"
+                class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+        <beans:property name="dataSource" ref="dataSource"/>
+        <beans:property name="annotatedClasses">
+            <beans:list>
+                <beans:value>ru.compscicenter.projects.lunch.db.model.MenuItemDBModel</beans:value>
+                <beans:value>ru.compscicenter.projects.lunch.db.model.MenuDBModel</beans:value>
+            </beans:list>
+        </beans:property>
+        <beans:property name="configLocation" value="classpath:hibernate.cfg.xml"/>
+    </beans:bean>
+</beans:beans>
