@@ -16,13 +16,14 @@ public final class MenuParser {
 
     public static Menu parse(final String str) {
         String s = str.replaceAll("\r\n", " ");
-        ArrayList<MenuItem> items = getItems(s);
+        Menu.Builder builder = new Menu.Builder();
 
+        List<MenuItem> items = getItems(s);
         String date = getDate(s);
 
-        Menu.Builder builder = new Menu.Builder();
         builder.addAll(items);
         builder.setDate(date);
+
         return builder.build();
     }
 
@@ -81,10 +82,10 @@ public final class MenuParser {
         return "02.06.1996";
     }
 
-    public static ArrayList<MenuItem> getItems(String s) {
+    public static List<MenuItem> getItems(final String s) {
         String[] spl = s.split("САЛАТЫ|СУПЫ|ГОРЯЧЕЕ|ГАРНИР");
         String[] type = new String[]{"other", "salad", "soup", "main course", "garnish"};
-        ArrayList<MenuItem> result = new ArrayList<>();
+        List<MenuItem> result = new ArrayList<>();
         int j = 4;
         for (int i = spl.length - 1; i >= 0; --i) {
             result.addAll(parseItems(spl[i], type[j--]));
@@ -92,8 +93,8 @@ public final class MenuParser {
         return result;
     }
 
-    public static ArrayList<MenuItem> parseItems(final String s, final String type) {
-        ArrayList<MenuItem> result = new ArrayList<>();
+    public static List<MenuItem> parseItems(final String s, final String type) {
+        List<MenuItem> result = new ArrayList<>();
 
         String namePattern = "(?<name>[\\p{L}\\s\\-,\\(\\)\"]+?)";
         String ingrPattern = "(\\((?<ingr>[\\p{L}0-9\\s,\\.«»\\\\/\\(\\)\\-]+?)\\))??";
@@ -120,7 +121,7 @@ public final class MenuParser {
         return result;
     }
 
-    public static String[] splitIngredients(String s) {
+    public static String[] splitIngredients(final String s) {
         return s.split(",\\s*");
     }
 }
