@@ -100,6 +100,10 @@ public class TF_IDF {
         return tfIdfMatrix;
     }
 
+    public double[] getTF_IDFVector(int index){
+        return tfIdfMatrix[index];
+    }
+
     public String[] getWordVector() {
         return wordVector;
     }
