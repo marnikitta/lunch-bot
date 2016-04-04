@@ -23,7 +23,7 @@ public class XmlMenuWriter {
     private static DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
     private static TransformerFactory transformerFactory = TransformerFactory.newInstance();
 
-    private Document makeXML(Menu menuList) throws ParserConfigurationException {
+    private Document makeXML(final Menu menuList) throws ParserConfigurationException {
         DocumentBuilder documentBuilder = factory.newDocumentBuilder();
         Document doc = documentBuilder.newDocument();
         Element root = doc.createElement("menu");
@@ -35,7 +35,7 @@ public class XmlMenuWriter {
         return doc;
     }
 
-    public void writeXML(Menu menuList, Writer writer) throws TransformerException, ParserConfigurationException, IOException {
+    public void writeXML(final Menu menuList, final Writer writer) throws TransformerException, ParserConfigurationException, IOException {
         Transformer transformer = transformerFactory.newTransformer();
         Document doc = makeXML(menuList);
         DOMSource source = new DOMSource(doc);
@@ -50,7 +50,7 @@ public class XmlMenuWriter {
         transformer.transform(source, result);
     }
 
-    private Element itemToElement(Document doc, MenuItem menuItem) {
+    private Element itemToElement(final Document doc, final MenuItem menuItem) {
         Element item = doc.createElement("item");
 
         Element name = doc.createElement("name");
@@ -86,7 +86,7 @@ public class XmlMenuWriter {
         return item;
     }
 
-    private Element ingredientsToElement(Document doc, List<String> ingr) {
+    private Element ingredientsToElement(final Document doc, List<String> ingr) {
         Element composition = doc.createElement("composition");
         for (String s : ingr) {
             Element ingredient = doc.createElement("ingredient");
