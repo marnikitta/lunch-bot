@@ -69,6 +69,10 @@ public class MenuItemDBModel {
     public MenuItemDBModel() {
     }
 
+    public void setId(long id) {
+        this.id = id;
+    }
+
     public long getId() {
         return id;
     }
