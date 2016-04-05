@@ -12,11 +12,8 @@
         <module>lunch-parsing</module>
         <module>lunch-estimator</module>
         <module>lunch-model</module>
-<<<<<<< HEAD
         <module>lunch-db</module>
-=======
         <module>lunch-tagger</module>
->>>>>>> develop
     </modules>
 
     <dependencies>
