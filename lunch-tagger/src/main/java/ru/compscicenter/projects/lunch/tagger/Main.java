@@ -27,7 +27,7 @@ public class Main {
             }
         }
 
-        MenuItemClustering clusterer = new MenuItemClustering(menuItems);
+        MenuItemClustering clusterer = new MenuItemClustering(menuItems, 0);
 
         List<CentroidCluster<MenuItemLocation>> clusterResults = clusterer.clusterRun(10, 10000);
 

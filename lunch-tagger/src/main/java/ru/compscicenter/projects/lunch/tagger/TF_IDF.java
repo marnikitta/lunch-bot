@@ -11,7 +11,11 @@ public class TF_IDF {
     private final List<double[]> tfIdfMatrix = new ArrayList<>();
 
 
-    public TF_IDF(final String[] docs) {
+    public TF_IDF(final String[] docs, double min_df) throws MinDfException {
+
+        if (min_df < 0 || min_df > 1) {
+            throw new MinDfException(min_df);
+        }
 
         for (String doc : docs) {
             String[] tokenizedTerms = doc.replaceAll(",", "").split("\\s+");
@@ -25,25 +29,35 @@ public class TF_IDF {
             }
         }
 
-        tfidfCalculate();
+        tfidfCalculate(min_df);
     }
 
-    private void tfidfCalculate() {
+    private void tfidfCalculate(double min_df) {
 
         double tf;
-        double[] idf = new double[uniqueTerms.size()];
+        List<Double> idf = new ArrayList<>();
         double tfidf;
+        List<String> removeTerms = new ArrayList<>();
 
-        for (int termInd = 0; termInd < uniqueTerms.size(); ++termInd) {
-            idf[termInd] = getIdf(termsDocsList, uniqueTerms.get(termInd));
+        for (String term : uniqueTerms) {
+
+            double documentFreq = getDf(termsDocsList, term);
+
+            if (documentFreq > min_df) {
+                idf.add(getIdf(documentFreq));
+            } else {
+                removeTerms.add(term);
+            }
         }
+
+        uniqueTerms.removeAll(removeTerms);
 
         for (String[] docTermsArray : termsDocsList) {
             double[] tfidfArray = new double[uniqueTerms.size()];
             int count = 0;
             for (String term : uniqueTerms) {
                 tf = getTf(docTermsArray, term);
-                tfidf = tf * idf[count];
+                tfidf = tf * idf.get(count);
                 tfidfArray[count] = tfidf;
                 ++count;
             }
@@ -65,7 +79,11 @@ public class TF_IDF {
     }
 
 
-    private double getIdf(List<String[]> allTerms, String termToCheck) {
+    private double getIdf(double Df) {
+        return Math.log10(1 + Df);
+    }
+
+    private double getDf(List<String[]> allTerms, String termToCheck) {
 
         int count = 0;
         for (String[] ss : allTerms) {
@@ -77,7 +95,7 @@ public class TF_IDF {
             }
         }
 
-        return Math.log10(1 + allTerms.size() / (double) count);
+        return allTerms.size() / (double) count;
     }
 
 
