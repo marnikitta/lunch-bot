@@ -13,8 +13,7 @@ public class TF_IDF_Test {
         final double eps = 0.0001;
 
         TF_IDF tf_idf = new TF_IDF(docs);
-        double[][] tf_idf_matrix = tf_idf.getTF_IDFMatrix();
-        double[] doc2Vector = tf_idf_matrix[1];
+        double[] doc2Vector = tf_idf.getTF_IDFVector(1);
         int doc2Length = tf_idf.getWordVectorLength();
 
         for (int valueInd = 0; valueInd < doc2Length; ++valueInd) {
