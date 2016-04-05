@@ -10,6 +10,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class MenuXmlParser {
@@ -26,28 +27,28 @@ public class MenuXmlParser {
     private static final String TYPE = "type";
     private static final String TAGS = "tags";
 
-    private static Document getDocument(String filePath) throws Exception {
+    private static Document getDocument(final String filePath) throws Exception {
 
-        DocumentBuilderFactory f = DocumentBuilderFactory.newInstance();
+        final DocumentBuilderFactory f = DocumentBuilderFactory.newInstance();
         f.setValidating(false);
-        DocumentBuilder builder = f.newDocumentBuilder();
+        final DocumentBuilder builder = f.newDocumentBuilder();
 
         return builder.parse(new File(filePath));
     }
 
-    public static ArrayList<Menu> parseMenu(String filePath) throws Exception {
+    public static List<Menu> parseMenu(final String filePath) throws Exception {
 
-        ArrayList<Menu> menus = new ArrayList<Menu>();
-        Document doc = getDocument(filePath);
+        final List<Menu> menus = new ArrayList<>();
+        final Document doc = getDocument(filePath);
 
-        NodeList menusList = doc.getElementsByTagName(MENU);
+        final NodeList menusList = doc.getElementsByTagName(MENU);
 
         for (int menuInd = 0; menuInd < menusList.getLength(); ++menuInd) {
 
-            Element menuElement = (Element) menusList.item(menuInd);
-            String date = menuElement.getAttribute(DATE);
+            final Element menuElement = (Element) menusList.item(menuInd);
+            final String date = menuElement.getAttribute(DATE);
 
-            Menu.Builder builder = new Menu.Builder();
+            final Menu.Builder builder = new Menu.Builder();
             builder.setDate(date);
             parseItem(builder, menuElement);
             menus.add(builder.build());
@@ -55,21 +56,21 @@ public class MenuXmlParser {
         return menus;
     }
 
-    private static void parseItem(Menu.Builder builder, Element menuElement) {
+    private static void parseItem(final Menu.Builder builder, final Element menuElement) {
 
-        NodeList itemList = menuElement.getElementsByTagName(ITEM);
+        final NodeList itemList = menuElement.getElementsByTagName(ITEM);
 
         for (int itemInd = 0; itemInd < itemList.getLength(); ++itemInd) {
 
-            Element itemElement = (Element) itemList.item(itemInd);
+            final Element itemElement = (Element) itemList.item(itemInd);
 
-            String name = getUniqueItemTextContent(itemElement, NAME);
+            final String name = getUniqueItemTextContent(itemElement, NAME);
             String weight = getUniqueItemTextContent(itemElement, WEIGHT);
             String calories = getUniqueItemTextContent(itemElement, CALORIES);
             String price = getUniqueItemTextContent(itemElement, PRICE);
             String type = itemElement.getAttribute(TYPE);
             String tags = itemElement.getAttribute(TAGS);
-            ArrayList<String> composition = getArrayItemTextContent(itemElement, COMPOSITION);
+            final List<String> composition = getArrayItemTextContent(itemElement, COMPOSITION, INGREDIENT);
 
             if (weight == null) {
                 weight = "-1";
@@ -80,30 +81,43 @@ public class MenuXmlParser {
             if (price == null) {
                 price = "-1";
             }
+            if (type.equals("")) {
+                type = null;
+            }
+            if (tags.equals("")) {
+                tags = null;
+            }
 
-            MenuItem item = new MenuItem(type, tags, name, Double.parseDouble(weight), Double.parseDouble(calories),
+            final MenuItem item = new MenuItem(type, tags, name, Double.parseDouble(weight), Double.parseDouble(calories),
                     Double.parseDouble(price), composition);
             builder.add(item);
         }
     }
 
-    private static ArrayList<String> getArrayItemTextContent(Element itemElement, String tagName) {
+    private static List<String> getArrayItemTextContent(final Element itemElement, final String titleTagName, final String tagName) {
 
-        NodeList tagList = itemElement.getElementsByTagName(tagName);
+        final NodeList titleTagList = itemElement.getElementsByTagName(titleTagName);
 
-        ArrayList<String> textContentArray = new ArrayList<String>();
+        if (titleTagList.getLength() == 0) {
+            return null;
+        }
+
+        final Element titleElement = (Element) titleTagList.item(0);
+        final NodeList tagList = titleElement.getElementsByTagName(tagName);
+
+        final List<String> textContentArray = new ArrayList<>();
 
         for (int itemInd = 0; itemInd < tagList.getLength(); ++itemInd) {
-            String ingredient = getUniqueItemTextContent((Element) tagList.item(itemInd), INGREDIENT);
+            final String ingredient = tagList.item(itemInd).getTextContent();
             textContentArray.add(ingredient);
         }
 
         return textContentArray;
     }
 
-    private static String getUniqueItemTextContent(Element itemElement, String tagName) {
+    private static String getUniqueItemTextContent(final Element itemElement, final String tagName) {
 
-        NodeList tagList = itemElement.getElementsByTagName(tagName);
+        final NodeList tagList = itemElement.getElementsByTagName(tagName);
 
         if (tagList.getLength() > 0) {
             return tagList.item(0).getTextContent();
