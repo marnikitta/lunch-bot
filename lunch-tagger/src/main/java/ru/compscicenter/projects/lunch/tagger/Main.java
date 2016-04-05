@@ -34,7 +34,7 @@ public class Main {
         for (int i = 0; i < clusterResults.size(); i++) {
             System.out.println("Cluster " + i);
             for (MenuItemLocation menuItem : clusterResults.get(i).getPoints()) {
-                System.out.println(menuItem.getName());
+                System.out.println(menuItem.getName() + " " + menuItem.getPrice() + " " + menuItem.getWeight());
             }
             System.out.println();
         }
