@@ -14,7 +14,7 @@ public class MenuItemClustering {
 
     private final List<MenuItemLocation> clusterInput;
 
-    public MenuItemClustering(final List<MenuItem> menuItems) {
+    public MenuItemClustering(final List<MenuItem> menuItems, double min_df) throws MinDfException {
 
         clusterInput = new ArrayList<>();
 
@@ -23,7 +23,7 @@ public class MenuItemClustering {
             documents[docInd] = menuItems.get(docInd).getName();
         }
 
-        TF_IDF tf_idf = new TF_IDF(documents);
+        TF_IDF tf_idf = new TF_IDF(documents, min_df);
 
         for (int docInd = 0; docInd < menuItems.size(); ++docInd) {
 

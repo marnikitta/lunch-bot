@@ -6,6 +6,8 @@ import org.apache.commons.math3.ml.clustering.Clusterable;
 public class MenuItemLocation implements Clusterable {
 
     private final String name;
+    private final double price;
+    private final double weight;
     private final double[] point;
 
     public MenuItemLocation(double[] tfidf, double price, double weight, String name) {
@@ -17,6 +19,8 @@ public class MenuItemLocation implements Clusterable {
         point[tfidf.length + 1] = weight;
 
         this.name = name;
+        this.price = price;
+        this.weight = weight;
     }
 
     @Override
@@ -26,5 +30,13 @@ public class MenuItemLocation implements Clusterable {
 
     public String getName(){
         return name;
+    }
+
+    public double getPrice(){
+        return price;
+    }
+
+    public double getWeight(){
+        return weight;
     }
 }
