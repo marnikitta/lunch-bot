@@ -6,6 +6,8 @@ import java.util.List;
 
 public class TF_IDF {
 
+    private static final int MIN_WORD_LENGTH = 2;
+
     private final List<String[]> termsDocsList = new ArrayList<>();
     private final List<String> uniqueTerms = new ArrayList<>();
     private final List<double[]> tfIdfMatrix = new ArrayList<>();
@@ -43,7 +45,7 @@ public class TF_IDF {
 
             double documentFreq = getDf(termsDocsList, term);
 
-            if (documentFreq > min_df) {
+            if (documentFreq > min_df && term.length() > MIN_WORD_LENGTH) {
                 idf.add(getIdf(documentFreq));
             } else {
                 removeTerms.add(term);
