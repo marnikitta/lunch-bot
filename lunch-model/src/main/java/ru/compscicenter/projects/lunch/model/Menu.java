@@ -1,27 +1,24 @@
 package ru.compscicenter.projects.lunch.model;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.GregorianCalendar;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 
 public class Menu {
     private final static SimpleDateFormat formatter = new SimpleDateFormat();
-    private final GregorianCalendar date;
+    private final Calendar date;
     private final List<MenuItem> items;
 
-    private Menu(final GregorianCalendar date, final List<MenuItem> items) {
+    private Menu(final Calendar date, final List<MenuItem> items) {
         this.date = date;
         this.items = items;
     }
 
     public static class Builder {
         private List<MenuItem> items = new ArrayList<>();
-        private GregorianCalendar date;
+        private Calendar date;
 
         public void setDate(String date) {
             String[] parts = date.split(Pattern.quote("."));
@@ -30,6 +27,10 @@ public class Menu {
                     Integer.parseInt(parts[1]),
                     Integer.parseInt(parts[0]));
             items = new ArrayList<>();
+        }
+
+        public void setDate(Calendar date) {
+            this.date = date;
         }
 
         public void add(MenuItem item) {
@@ -57,7 +58,7 @@ public class Menu {
         return items.get(index);
     }
 
-    public GregorianCalendar getDate() {
+    public Calendar getDate() {
         return date;
     }
 
