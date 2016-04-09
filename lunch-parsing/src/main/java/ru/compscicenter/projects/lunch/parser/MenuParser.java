@@ -4,7 +4,8 @@ import ru.compscicenter.projects.lunch.model.Menu;
 import ru.compscicenter.projects.lunch.model.MenuItem;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -19,7 +20,7 @@ public final class MenuParser {
         Menu.Builder builder = new Menu.Builder();
 
         List<MenuItem> items = getItems(s);
-        String date = getDate(s);
+        Calendar date = getDate(s);
 
         builder.addAll(items);
         builder.setDate(date);
@@ -27,8 +28,8 @@ public final class MenuParser {
         return builder.build();
     }
 
-    public static String getDate(final String str) {
-        Pattern dayPattern = Pattern.compile("^МЕНЮ\\s+на\\s+(?<day>\\d+)\\s+(?<month>января|февраля|марта|апреля|мая|июня|июля|августа|сентября|октября|ноября|декабря)\\s+(?<year>\\d{4})\\s+года", Pattern.CASE_INSENSITIVE);
+    public static Calendar getDate(final String str) {
+        Pattern dayPattern = Pattern.compile("МЕНЮ\\s+на\\s+(?<day>\\d+)\\s+(?<month>января|февраля|марта|апреля|мая|июня|июля|августа|сентября|октября|ноября|декабря)\\s+(?<year>\\d{4})\\s+года", Pattern.CASE_INSENSITIVE);
         Matcher matcher = dayPattern.matcher(str);
         if (matcher.find()) {
             String day = matcher.group("day");
@@ -77,14 +78,18 @@ public final class MenuParser {
                 default:
                     monthInt = 0;
             }
-            return (Integer.parseInt(day) < 10 ? "0" + day : day) + "." + (monthInt < 10 ? "0" + monthInt : monthInt) + "." + year;
+            monthInt -= monthInt;
+            return new GregorianCalendar(Integer.parseInt(year), monthInt, Integer.parseInt(day));
         }
-        return "02.06.1996";
+        System.out.println("wtf");
+        return new GregorianCalendar(1996, 6, 2);
     }
 
     public static List<MenuItem> getItems(final String s) {
-        String[] spl = s.split("САЛАТЫ|СУПЫ|ГОРЯЧЕЕ|ГАРНИР");
+        Pattern splitPattern = Pattern.compile("САЛАТЫ|СУПЫ|ГОРЯЧЕЕ|ГАРНИР");
+        String[] spl = splitPattern.split(s);
         String[] type = new String[]{"other", "salad", "soup", "main course", "garnish"};
+
         List<MenuItem> result = new ArrayList<>();
         int j = 4;
         for (int i = spl.length - 1; i >= 0; --i) {
@@ -97,8 +102,8 @@ public final class MenuParser {
         List<MenuItem> result = new ArrayList<>();
 
         String namePattern = "(?<name>[\\p{L}\\s\\-,\\(\\)\"]+?)";
-        String ingrPattern = "(\\((?<ingr>[\\p{L}0-9\\s,\\.«»\\\\/\\(\\)\\-]+?)\\))??";
-        String weightPattern = "(?<w>\\d+)([/\\\\\\d]+)*\\s*(гр|Гр)\\.?";
+        String ingrPattern = "(\\((?<ingr>[\\p{L}0-9\\s,\\.«»\\\\/\\-]+?)\\))??";
+        String weightPattern = "(?<w>\\d+)([/\\\\\\d]+)*\\s*(Гр|гр)\\.?";
         String calPattern = "\\((?<cal>\\d+)\\s+(Ккал|ккал)\\.?\\)";
         String pricePattern = "(?<price>\\d+-\\d+)";
 
@@ -113,8 +118,11 @@ public final class MenuParser {
             double weight = Double.parseDouble(matcher.group("w"));
             List<String> ingr = new ArrayList<>();
             if (matcher.group("ingr") != null) {
-                ingr.addAll(Arrays.asList(splitIngredients(matcher.group("ingr"))));
+                for (String ing : splitIngredients(matcher.group("ingr"))) {
+                    ingr.add(ing.toLowerCase());
+                }
             }
+
             MenuItem item = new MenuItem(type, "", name, weight, cal, price, ingr);
             result.add(item);
         }

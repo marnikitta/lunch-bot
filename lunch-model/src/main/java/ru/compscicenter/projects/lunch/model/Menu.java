@@ -7,7 +7,7 @@ import java.util.stream.Stream;
 
 
 public class Menu {
-    private final static SimpleDateFormat formatter = new SimpleDateFormat();
+
     private final Calendar date;
     private final List<MenuItem> items;
 
@@ -54,16 +54,16 @@ public class Menu {
         return items.size();
     }
 
+    public List<MenuItem> getItemsCopy() {
+        return new ArrayList<>(items);
+    }
+
     public MenuItem getItem(int index) {
         return items.get(index);
     }
 
     public Calendar getDate() {
         return date;
-    }
-
-    public String getNiceDate() {
-        return formatter.format(date.getTime());
     }
 
     @Override

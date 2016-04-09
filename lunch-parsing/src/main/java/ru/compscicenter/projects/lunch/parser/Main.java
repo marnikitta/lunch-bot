@@ -11,8 +11,11 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
 
 public class Main {
+    private final static SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy");
+
     public static void main(String[] args) {
         try {
             new Main().run();
@@ -33,8 +36,9 @@ public class Main {
         Files.walk(path, 1).forEach(filePath -> {
             try {
                 if (Files.isRegularFile(filePath)) {
-                    Menu menuList = parsePDF(new BufferedInputStream(Files.newInputStream(filePath)));
-                    String fileName = menuList.getNiceDate().replaceAll("\\.", "") + "menu.xml";
+                    Menu menuList = PDFToMenu.parsePDF(new BufferedInputStream(Files.newInputStream(filePath)));
+                    String fileName = formatter.format(menuList.getDate().getTime()).replaceAll("\\.", "") + "menu.xml";
+
                     FileOutputStream fileOutputStream = new FileOutputStream(pathOut.toString() + "/" + fileName);
                     OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream, StandardCharsets.UTF_8);
                     writer.writeXML(menuList, outputStreamWriter);
@@ -46,14 +50,6 @@ public class Main {
         });
     }
 
-    public Menu parsePDF(InputStream stream) throws IOException {
-        PDDocument doc = PDDocument.load(stream);
-        PDFTextStripper stripper = new PDFTextStripper();
-        String str = stripper.getText(doc);
-        Menu menu = MenuParser.parse(str);
-        doc.close();
-        return menu;
-    }
 
     private static void tempOps(String fileName) {
         System.err.println("Ooops, something went wrong with " + fileName);
