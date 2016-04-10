@@ -29,6 +29,8 @@ public class MenuXmlParser {
     private static final String TAGS = "tags";
 
     private static Document getDocument(final InputStream stream) throws Exception {
+        //Изменил на InputStream вместо File, чтобы можно было делать Classname.class.getResourceAsStream()
+        //TODO: look at me
 
         final DocumentBuilderFactory f = DocumentBuilderFactory.newInstance();
         f.setValidating(false);
