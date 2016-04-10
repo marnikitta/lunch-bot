@@ -1,18 +1,27 @@
 package ru.compscicenter.projects.lunch.estimator.test;
 
 import org.testng.Assert;
+import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import ru.compscicenter.projects.lunch.estimator.MenuXmlParser;
 import ru.compscicenter.projects.lunch.model.Menu;
 
+import java.io.InputStream;
 import java.util.List;
 
 
 public class MenuXmlParserTest extends Assert {
 
     private static final String PATH = "lunch-estimator/src/test/resources/01022016menutest.xml";
+    private static List<Menu> menus;
     private static final int COMPOSITION_INDEX = 22;
+
+    @BeforeSuite
+    public void menuLoader() throws Exception {
+        InputStream stream = MenuXmlParserTest.class.getClassLoader().getResourceAsStream("01022016menutest.xml");
+        menus = MenuXmlParser.parseMenu(stream);
+    }
 
     @DataProvider
     public Object[][] MenuNameData() {
@@ -85,9 +94,7 @@ public class MenuXmlParserTest extends Assert {
 
     @Test(dataProvider = "MenuNameData")
     public void testParseMenuName(int index, String expected) throws Exception {
-        final List<Menu> menus = MenuXmlParser.parseMenu(PATH);
         final Menu menu = menus.get(0);
-
         final String actual = menu.getItem(index).getName();
         assertEquals(actual, expected);
     }
@@ -95,7 +102,6 @@ public class MenuXmlParserTest extends Assert {
 
     @Test(dataProvider = "MenuPriceData")
     public void testParseMenuPrice(int index, double expected) throws Exception {
-        final List<Menu> menus = MenuXmlParser.parseMenu(PATH);
         final Menu menu = menus.get(0);
 
         final double actual = menu.getItem(index).getPrice();
@@ -104,7 +110,6 @@ public class MenuXmlParserTest extends Assert {
 
     @Test(dataProvider = "MenuCalorieData")
     public void testParseMenuCalorie(int index, double expected) throws Exception {
-        final List<Menu> menus = MenuXmlParser.parseMenu(PATH);
         final Menu menu = menus.get(0);
 
         final double actual = menu.getItem(index).getCalorie();
@@ -113,7 +118,6 @@ public class MenuXmlParserTest extends Assert {
 
     @Test(dataProvider = "MenuWeightData")
     public void testParseMenuWeight(int index, double expected) throws Exception {
-        final List<Menu> menus = MenuXmlParser.parseMenu(PATH);
         final Menu menu = menus.get(0);
 
         final double actual = menu.getItem(index).getWeight();
@@ -122,7 +126,6 @@ public class MenuXmlParserTest extends Assert {
 
     @Test(dataProvider = "MenuTypeData")
     public void testParseMenuType(int index, String expected) throws Exception {
-        final List<Menu> menus = MenuXmlParser.parseMenu(PATH);
         final Menu menu = menus.get(0);
 
         final String actual = menu.getItem(index).getType();
@@ -131,10 +134,9 @@ public class MenuXmlParserTest extends Assert {
 
     @Test(dataProvider = "MenuIngredientData")
     public void testParseMenuComposition(int indexComposition, String expected) throws Exception {
-        final List<Menu> menus = MenuXmlParser.parseMenu(PATH);
         final Menu menu = menus.get(0);
 
-        final List<String> composition  = menu.getItem(COMPOSITION_INDEX).getComposition();
+        final List<String> composition = menu.getItem(COMPOSITION_INDEX).getComposition();
         final String actual = composition.get(indexComposition);
         assertEquals(actual, expected);
     }
