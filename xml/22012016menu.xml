@@ -108,14 +108,14 @@
     <composition/>
   </item>
   <item type="main course">
-    <name>стейк  из индейки</name>
+    <name>стейк из индейки</name>
     <price>150.0</price>
     <calorie>204.0</calorie>
     <weight>100.0</weight>
     <composition/>
   </item>
   <item type="main course">
-    <name>паста  болоньезе</name>
+    <name>паста болоньезе</name>
     <price>230.0</price>
     <calorie>575.0</calorie>
     <weight>300.0</weight>
@@ -166,7 +166,7 @@
       <ingredient>картофель</ingredient>
       <ingredient>морковь</ingredient>
       <ingredient>огурцы соленые</ingredient>
-      <ingredient>горошек  зеленый</ingredient>
+      <ingredient>горошек зеленый</ingredient>
       <ingredient>яйцо</ingredient>
       <ingredient>майонез</ingredient>
     </composition>
@@ -180,7 +180,7 @@
       <ingredient>филе трески</ingredient>
       <ingredient>морковь</ingredient>
       <ingredient>лук жар.</ingredient>
-      <ingredient>шампиньоны  жар.</ingredient>
+      <ingredient>шампиньоны жар.</ingredient>
       <ingredient>яйцо</ingredient>
       <ingredient>сыр</ingredient>
       <ingredient>майонез</ingredient>
@@ -251,7 +251,7 @@
     <composition>
       <ingredient>кур. филе г\к</ingredient>
       <ingredient>язык гов.</ingredient>
-      <ingredient>горошек  конс.</ingredient>
+      <ingredient>горошек конс.</ingredient>
       <ingredient>картофель</ingredient>
       <ingredient>рак. шейки</ingredient>
       <ingredient>черри</ingredient>

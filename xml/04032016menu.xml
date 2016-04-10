@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <menu date="04.03.2016">
   <item type="garnish">
-    <name>капуста брюссельская  на пару</name>
+    <name>капуста брюссельская на пару</name>
     <price>55.0</price>
     <calorie>63.0</calorie>
     <weight>180.0</weight>
@@ -122,7 +122,7 @@
     <composition/>
   </item>
   <item type="main course">
-    <name>паста  болоньезе</name>
+    <name>паста болоньезе</name>
     <price>230.0</price>
     <calorie>575.0</calorie>
     <weight>300.0</weight>

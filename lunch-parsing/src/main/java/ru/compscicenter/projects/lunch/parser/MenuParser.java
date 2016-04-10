@@ -105,7 +105,7 @@ public final class MenuParser {
     public static List<MenuItem> parseItems(final String s, final String type) {
         List<MenuItem> result = new ArrayList<>();
 
-        String namePattern = "(?<name>[\\p{L}\\s\\-,\\(\\)\"]+?)";
+        String namePattern = "(?<name>[\\p{L}\\s\\-,\"]+?)";
         String ingrPattern = "(\\((?<ingr>[\\p{L}0-9\\s,\\.«»\\\\/\\-]+?)\\))??";
         String weightPattern = "(?<w>\\d+)([/\\\\\\d]+)*\\s*(Гр|гр)\\.?";
         String calPattern = "\\((?<cal>\\d+)\\s+(Ккал|ккал)\\.?\\)";
@@ -117,7 +117,7 @@ public final class MenuParser {
         Matcher matcher = saladPattern.matcher(s);
 
         while (matcher.find()) {
-            String name = matcher.group("name").toLowerCase().replace("\\s+", " ");
+            String name = matcher.group("name").toLowerCase().replaceAll("\\s+", " ");
 
             double cal = Double.parseDouble(matcher.group("cal"));
             double price = Double.parseDouble(matcher.group("price").replace("-", "."));
@@ -126,7 +126,7 @@ public final class MenuParser {
             List<String> ingr = new ArrayList<>();
             if (matcher.group("ingr") != null) {
                 for (String ing : splitIngredients(matcher.group("ingr"))) {
-                    ingr.add(ing.toLowerCase().replace("\\s+", " "));
+                    ingr.add(ing.toLowerCase().replaceAll("\\s+", " "));
                 }
             }
 

@@ -28,7 +28,6 @@ public class ModelConverter {
         List<MenuItemDBModel> items = new ArrayList<>();
         menu.stream().forEach(item -> {
             MenuItemDBModel it = menuItemToDBMenuItem(item);
-            it.setMenu(menuDBModel);
             items.add(it);
         });
         menuDBModel.setDate(menu.getDate());

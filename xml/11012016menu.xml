@@ -78,7 +78,7 @@
     <composition/>
   </item>
   <item type="main course">
-    <name>стейк  из индейки</name>
+    <name>стейк из индейки</name>
     <price>130.0</price>
     <calorie>204.0</calorie>
     <weight>100.0</weight>
@@ -204,7 +204,7 @@
     <composition>
       <ingredient>крабовые палочки</ingredient>
       <ingredient>капуста пекинская</ingredient>
-      <ingredient>огурцы  св.</ingredient>
+      <ingredient>огурцы св.</ingredient>
       <ingredient>кукуруза</ingredient>
       <ingredient>яйцо</ingredient>
       <ingredient>майонез</ingredient>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <menu date="04.02.2016">
   <item type="garnish">
-    <name>горошек зеленый  на пару</name>
+    <name>горошек зеленый на пару</name>
     <price>55.0</price>
     <calorie>51.0</calorie>
     <weight>150.0</weight>
@@ -94,14 +94,14 @@
     <composition/>
   </item>
   <item type="main course">
-    <name>куриное филе в соусе томато  пронто</name>
+    <name>куриное филе в соусе томато пронто</name>
     <price>140.0</price>
     <calorie>309.0</calorie>
     <weight>150.0</weight>
     <composition/>
   </item>
   <item type="main course">
-    <name>стейк  из индейки</name>
+    <name>стейк из индейки</name>
     <price>150.0</price>
     <calorie>204.0</calorie>
     <weight>100.0</weight>
@@ -207,7 +207,7 @@
     </composition>
   </item>
   <item type="salad">
-    <name>))</name>
+    <name> </name>
     <price>70.0</price>
     <calorie>321.0</calorie>
     <weight>150.0</weight>
@@ -225,7 +225,7 @@
       <ingredient>лук красн.</ingredient>
       <ingredient>брынза</ingredient>
       <ingredient>зелень</ingredient>
-      <ingredient>масло  раст.</ingredient>
+      <ingredient>масло раст.</ingredient>
     </composition>
   </item>
   <item type="salad">

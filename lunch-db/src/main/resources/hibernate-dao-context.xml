@@ -42,11 +42,9 @@
         <beans:property name="configLocation" value="classpath:hibernate.cfg.xml"/>
     </beans:bean>
 
-    <beans:bean id="menuDAO" class="ru.compscicenter.projects.lunch.db.dao.MenuDAOImpl">
-        <beans:property name="factory" ref="hibernate4AnnotatedSessionFactory"/>
-    </beans:bean>
+    <!-- DAOs -->
 
-    <beans:bean id="menuService" class="ru.compscicenter.projects.lunch.db.service.MenuService">
-        <beans:property name="menuDAO" ref="menuDAO"/>
+    <beans:bean id="menuDAO" class="ru.compscicenter.projects.lunch.db.dao.impl.MenuDAOImpl">
+        <beans:property name="factory" ref="hibernate4AnnotatedSessionFactory"/>
     </beans:bean>
 </beans:beans>

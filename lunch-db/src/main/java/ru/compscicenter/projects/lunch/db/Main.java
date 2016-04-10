@@ -7,12 +7,11 @@ import ru.compscicenter.projects.lunch.estimator.MenuXmlParser;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 
 public class Main {
     public static void main(String[] args) throws Exception {
-        ApplicationContext context = new ClassPathXmlApplicationContext("hibernate-context.xml");
-        MenuService menuService = (MenuService) context.getBean(MenuService.class);
+        ApplicationContext context = new ClassPathXmlApplicationContext("application-context.xml");
+        MenuService menuService = context.getBean(MenuService.class);
 
         final File folder = new File("xml");
 

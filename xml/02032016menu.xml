@@ -108,7 +108,7 @@
     <composition/>
   </item>
   <item type="main course">
-    <name>стейк  куриный</name>
+    <name>стейк куриный</name>
     <price>130.0</price>
     <calorie>204.0</calorie>
     <weight>120.0</weight>
@@ -178,7 +178,7 @@
       <ingredient>соль</ingredient>
       <ingredient>сахар</ingredient>
       <ingredient>уксус</ingredient>
-      <ingredient>масло  растительное</ingredient>
+      <ingredient>масло растительное</ingredient>
     </composition>
   </item>
   <item type="salad">
@@ -251,7 +251,7 @@
       <ingredient>бекон</ingredient>
       <ingredient>гренки</ingredient>
       <ingredient>черри</ingredient>
-      <ingredient>соус  «цезарь»</ingredient>
+      <ingredient>соус «цезарь»</ingredient>
     </composition>
   </item>
 </menu>

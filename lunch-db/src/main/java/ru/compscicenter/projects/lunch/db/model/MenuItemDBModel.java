@@ -13,19 +13,6 @@ public class MenuItemDBModel {
     @Column(name = "id")
     private long id;
 
-
-    @ManyToOne
-    @JoinColumn(name = "menu_id")
-    private MenuDBModel menu;
-
-    public MenuDBModel getMenu() {
-        return menu;
-    }
-
-    public void setMenu(MenuDBModel menu) {
-        this.menu = menu;
-    }
-
     @Column(name = "type")
     private String type;
 

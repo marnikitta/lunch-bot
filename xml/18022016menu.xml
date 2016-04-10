@@ -94,7 +94,7 @@
     <composition/>
   </item>
   <item type="main course">
-    <name>стейк  из индейки</name>
+    <name>стейк из индейки</name>
     <price>150.0</price>
     <calorie>204.0</calorie>
     <weight>100.0</weight>
@@ -129,7 +129,7 @@
     <composition/>
   </item>
   <item type="main course">
-    <name>паста  болоньезе</name>
+    <name>паста болоньезе</name>
     <price>230.0</price>
     <calorie>575.0</calorie>
     <weight>300.0</weight>

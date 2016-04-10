@@ -80,7 +80,7 @@
     <composition/>
   </item>
   <item type="main course">
-    <name>стейк  из индейки</name>
+    <name>стейк из индейки</name>
     <price>150.0</price>
     <calorie>204.0</calorie>
     <weight>100.0</weight>
@@ -115,7 +115,7 @@
     <composition/>
   </item>
   <item type="main course">
-    <name>тар тар из  судака</name>
+    <name>тар тар из судака</name>
     <price>140.0</price>
     <calorie>365.0</calorie>
     <weight>100.0</weight>

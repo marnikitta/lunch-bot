@@ -87,7 +87,7 @@
     <composition/>
   </item>
   <item type="main course">
-    <name>треска  по - польски</name>
+    <name>треска по - польски</name>
     <price>160.0</price>
     <calorie>253.0</calorie>
     <weight>120.0</weight>
@@ -115,7 +115,7 @@
     <composition/>
   </item>
   <item type="main course">
-    <name>паста  болоньезе</name>
+    <name>паста болоньезе</name>
     <price>230.0</price>
     <calorie>575.0</calorie>
     <weight>300.0</weight>
@@ -243,7 +243,7 @@
       <ingredient>бекон</ingredient>
       <ingredient>гренки</ingredient>
       <ingredient>черри</ingredient>
-      <ingredient>соус  «цезарь»</ingredient>
+      <ingredient>соус «цезарь»</ingredient>
     </composition>
   </item>
 </menu>

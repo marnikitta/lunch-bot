@@ -57,7 +57,7 @@
     <composition/>
   </item>
   <item type="main course">
-    <name>стейк  куриный  с сыром и базиликом</name>
+    <name>стейк куриный с сыром и базиликом</name>
     <price>140.0</price>
     <calorie>450.0</calorie>
     <weight>120.0</weight>
@@ -78,7 +78,7 @@
     <composition/>
   </item>
   <item type="main course">
-    <name>треска  по - польски</name>
+    <name>треска по - польски</name>
     <price>160.0</price>
     <calorie>253.0</calorie>
     <weight>120.0</weight>
@@ -108,7 +108,7 @@
     <composition/>
   </item>
   <item type="main course">
-    <name>стейк  из индейки</name>
+    <name>стейк из индейки</name>
     <price>150.0</price>
     <calorie>204.0</calorie>
     <weight>100.0</weight>
@@ -210,7 +210,7 @@
       <ingredient>перец болгарский</ingredient>
       <ingredient>сыр</ingredient>
       <ingredient>картофель</ingredient>
-      <ingredient>огурцы  св.</ingredient>
+      <ingredient>огурцы св.</ingredient>
       <ingredient>капуста пекинская</ingredient>
       <ingredient>масло раст.</ingredient>
     </composition>

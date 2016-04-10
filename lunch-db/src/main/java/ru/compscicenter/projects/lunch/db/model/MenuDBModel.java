@@ -11,11 +11,12 @@ public class MenuDBModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(name = "date")
+    @Column(name = "date", unique = true)
     @Temporal(TemporalType.TIMESTAMP)
     private Calendar date;
 
-    @OneToMany(mappedBy = "menu", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinTable(name = "menu_menu_item", joinColumns = @JoinColumn(name = "menu_id"), inverseJoinColumns = @JoinColumn(name = "menu_item_id"))
     private List<MenuItemDBModel> items;
 
     public Calendar getDate() {
