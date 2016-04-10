@@ -21,6 +21,7 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 
 public class XmlMenuWriter {
+
     private final static SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy");
     private static DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
     private static TransformerFactory transformerFactory = TransformerFactory.newInstance();
@@ -37,9 +38,18 @@ public class XmlMenuWriter {
         return doc;
     }
 
-    public void writeXML(final Menu menuList, final Writer writer) throws TransformerException, ParserConfigurationException, IOException {
+    /**
+     * Пишет объект <code>Menu</code> в <code>writer</code> в формате xml
+     *
+     * @param menu
+     * @param writer
+     * @throws TransformerException
+     * @throws ParserConfigurationException
+     * @throws IOException
+     */
+    public void writeXML(final Menu menu, final Writer writer) throws TransformerException, ParserConfigurationException, IOException {
         Transformer transformer = transformerFactory.newTransformer();
-        Document doc = makeXML(menuList);
+        Document doc = makeXML(menu);
         DOMSource source = new DOMSource(doc);
 
         transformer.setOutputProperty(OutputKeys.METHOD, "xml");

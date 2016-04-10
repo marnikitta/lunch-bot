@@ -7,10 +7,13 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public final class MenuParser {
+
+    private static Logger logger = Logger.getLogger(MenuParser.class.getName());
 
     private MenuParser() {
     }
@@ -78,11 +81,12 @@ public final class MenuParser {
                 default:
                     monthInt = 0;
             }
-            monthInt -= monthInt;
+            monthInt -= 1;
             return new GregorianCalendar(Integer.parseInt(year), monthInt, Integer.parseInt(day));
+        } else {
+            logger.warning("Failed to parse date: " + str);
+            return new GregorianCalendar(1996, 6, 2);
         }
-        System.out.println("wtf");
-        return new GregorianCalendar(1996, 6, 2);
     }
 
     public static List<MenuItem> getItems(final String s) {
@@ -111,15 +115,18 @@ public final class MenuParser {
 
         Pattern saladPattern = Pattern.compile(pat);
         Matcher matcher = saladPattern.matcher(s);
+
         while (matcher.find()) {
-            String name = matcher.group("name");
+            String name = matcher.group("name").toLowerCase().replace("\\s+", " ");
+
             double cal = Double.parseDouble(matcher.group("cal"));
             double price = Double.parseDouble(matcher.group("price").replace("-", "."));
             double weight = Double.parseDouble(matcher.group("w"));
+
             List<String> ingr = new ArrayList<>();
             if (matcher.group("ingr") != null) {
                 for (String ing : splitIngredients(matcher.group("ingr"))) {
-                    ingr.add(ing.toLowerCase());
+                    ingr.add(ing.toLowerCase().replace("\\s+", " "));
                 }
             }
 

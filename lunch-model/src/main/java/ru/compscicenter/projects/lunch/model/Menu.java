@@ -1,6 +1,5 @@
 package ru.compscicenter.projects.lunch.model;
 
-import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
@@ -24,7 +23,7 @@ public class Menu {
             String[] parts = date.split(Pattern.quote("."));
             this.date = new GregorianCalendar(
                     Integer.parseInt(parts[2]),
-                    Integer.parseInt(parts[1]),
+                    Integer.parseInt(parts[1]) - 1,
                     Integer.parseInt(parts[0]));
             items = new ArrayList<>();
         }

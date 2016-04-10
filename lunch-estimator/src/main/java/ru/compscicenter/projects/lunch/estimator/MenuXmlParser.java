@@ -8,7 +8,8 @@ import ru.compscicenter.projects.lunch.model.MenuItem;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import java.io.File;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,19 +28,19 @@ public class MenuXmlParser {
     private static final String TYPE = "type";
     private static final String TAGS = "tags";
 
-    private static Document getDocument(final String filePath) throws Exception {
+    private static Document getDocument(final InputStream stream) throws Exception {
 
         final DocumentBuilderFactory f = DocumentBuilderFactory.newInstance();
         f.setValidating(false);
         final DocumentBuilder builder = f.newDocumentBuilder();
 
-        return builder.parse(new File(filePath));
+        return builder.parse(stream);
     }
 
-    public static List<Menu> parseMenu(final String filePath) throws Exception {
+    public static List<Menu> parseMenu(final InputStream stream) throws Exception {
 
         final List<Menu> menus = new ArrayList<>();
-        final Document doc = getDocument(filePath);
+        final Document doc = getDocument(stream);
 
         final NodeList menusList = doc.getElementsByTagName(MENU);
 
