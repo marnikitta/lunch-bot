@@ -6,6 +6,8 @@ import ru.compscicenter.projects.lunch.db.service.MenuService;
 import ru.compscicenter.projects.lunch.estimator.MenuXmlParser;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 
 public class Main {
     public static void main(String[] args) throws Exception {
@@ -15,7 +17,7 @@ public class Main {
         final File folder = new File("xml");
 
         for (final File fileEntry : folder.listFiles()) {
-            menuService.saveMenu(MenuXmlParser.parseMenu(fileEntry.getPath()).get(0));
+            menuService.saveMenu(MenuXmlParser.parseMenu(new FileInputStream(fileEntry)).get(0));
         }
     }
 }
