@@ -3,6 +3,7 @@ package ru.compscicenter.projects.lunch.estimator;
 import ru.compscicenter.projects.lunch.model.Menu;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -18,7 +19,7 @@ public class Main {
         List<Menu> menus = new ArrayList<>();
 
         for (final File fileEntry : folder.listFiles()) {
-            menus.addAll(MenuXmlParser.parseMenu(fileEntry.getPath()));
+            menus.addAll(MenuXmlParser.parseMenu(new FileInputStream(fileEntry)));
         }
         //menus.addAll(MenuXmlParser.parseMenu("C:\\Users\\--\\IdeaProjects\\lunch_project\\lunch-estimator\\src\\test\\resources\\01022016menutest.xml"));
 
