@@ -6,6 +6,7 @@ import ru.compscicenter.projects.lunch.model.Menu;
 import ru.compscicenter.projects.lunch.model.MenuItem;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +19,7 @@ public class Main {
         List<MenuItem> menuItems = new ArrayList<>();
 
         for (final File fileEntry : folder.listFiles()) {
-            menus.addAll(MenuXmlParser.parseMenu(fileEntry.getPath()));
+            menus.addAll(MenuXmlParser.parseMenu(new FileInputStream(fileEntry)));
         }
 
         for (Menu menu : menus) {

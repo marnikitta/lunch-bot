@@ -1,13 +1,12 @@
 package ru.compscicenter.projects.lunch.model;
 
-import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 
 public class Menu {
-    private final static SimpleDateFormat formatter = new SimpleDateFormat();
+
     private final Calendar date;
     private final List<MenuItem> items;
 
@@ -24,7 +23,7 @@ public class Menu {
             String[] parts = date.split(Pattern.quote("."));
             this.date = new GregorianCalendar(
                     Integer.parseInt(parts[2]),
-                    Integer.parseInt(parts[1]),
+                    Integer.parseInt(parts[1]) - 1,
                     Integer.parseInt(parts[0]));
             items = new ArrayList<>();
         }
@@ -54,16 +53,16 @@ public class Menu {
         return items.size();
     }
 
+    public List<MenuItem> getItemsCopy() {
+        return new ArrayList<>(items);
+    }
+
     public MenuItem getItem(int index) {
         return items.get(index);
     }
 
     public Calendar getDate() {
         return date;
-    }
-
-    public String getNiceDate() {
-        return formatter.format(date.getTime());
     }
 
     @Override
