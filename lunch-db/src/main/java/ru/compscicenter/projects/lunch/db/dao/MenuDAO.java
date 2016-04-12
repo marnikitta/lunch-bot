@@ -13,4 +13,6 @@ public interface MenuDAO {
     public List<MenuDBModel> getAll();
 
     public List<MenuDBModel> getAllForDates(final Calendar start, final Calendar end);
+
+    public MenuDBModel getForDate(final Calendar day);
 }

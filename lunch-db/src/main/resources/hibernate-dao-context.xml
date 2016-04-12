@@ -47,4 +47,5 @@
     <beans:bean id="menuDAO" class="ru.compscicenter.projects.lunch.db.dao.impl.MenuDAOImpl">
         <beans:property name="factory" ref="hibernate4AnnotatedSessionFactory"/>
     </beans:bean>
+
 </beans:beans>

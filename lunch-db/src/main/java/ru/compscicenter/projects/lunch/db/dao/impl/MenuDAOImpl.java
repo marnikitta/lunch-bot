@@ -7,7 +7,6 @@ import org.hibernate.criterion.Restrictions;
 import ru.compscicenter.projects.lunch.db.dao.MenuDAO;
 import ru.compscicenter.projects.lunch.db.model.MenuDBModel;
 
-import javax.transaction.Transactional;
 import java.util.Calendar;
 import java.util.List;
 
@@ -20,14 +19,12 @@ public class MenuDAOImpl implements MenuDAO {
     }
 
     @Override
-    @Transactional
     public void saveOrUpdate(final MenuDBModel menu) {
         Session session = factory.getCurrentSession();
         session.saveOrUpdate(menu);
     }
 
     @Override
-    @Transactional
     public MenuDBModel load(long id) {
         Session session = factory.getCurrentSession();
         Object menu = session.load(MenuDBModel.class, id);
@@ -39,7 +36,6 @@ public class MenuDAOImpl implements MenuDAO {
     }
 
     @Override
-    @Transactional
     public List<MenuDBModel> getAll() {
         Session session = factory.getCurrentSession();
         List<MenuDBModel> menus = session.createCriteria(MenuDBModel.class).list();
@@ -47,11 +43,21 @@ public class MenuDAOImpl implements MenuDAO {
     }
 
     @Override
-    @Transactional
     public List<MenuDBModel> getAllForDates(final Calendar start, final Calendar end) {
         Session session = factory.getCurrentSession();
         Criteria criteria = session.createCriteria(MenuDBModel.class).add(Restrictions.between("date", start, end));
         List<MenuDBModel> menus = criteria.list();
         return menus;
+    }
+
+    @Override
+    public MenuDBModel getForDate(Calendar day) {
+        Session session = factory.getCurrentSession();
+        Criteria criteria = session.createCriteria(MenuDBModel.class).add(Restrictions.eq("date", day));
+        List<MenuDBModel> menus = criteria.list();
+        if (menus != null && menus.size() >= 1) {
+            return menus.get(0);
+        }
+        return null;
     }
 }

@@ -19,6 +19,7 @@ public class ModelConverter {
 
         List<MenuItem> items = new ArrayList<>();
         menuDBModel.getItems().forEach(item -> items.add(dbMenuItemToMenuItem(item)));
+        builder.addAll(items );
 
         return builder.build();
     }

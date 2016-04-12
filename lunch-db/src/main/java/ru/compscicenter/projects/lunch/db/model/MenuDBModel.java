@@ -42,4 +42,21 @@ public class MenuDBModel {
     public void setItems(List<MenuItemDBModel> items) {
         this.items = items;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        MenuDBModel that = (MenuDBModel) o;
+
+        if (id != that.id) return false;
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (int) (id ^ (id >>> 32));
+        return result;
+    }
 }
