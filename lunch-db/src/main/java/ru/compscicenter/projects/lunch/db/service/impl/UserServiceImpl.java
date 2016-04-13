@@ -37,8 +37,10 @@ public class UserServiceImpl implements UserService {
             UserDBModel userDBModel = userDAO.getById(id);
             User user = ModelConverter.dbUserToUser(userDBModel);
             return user;
+        } else {
+            logger.warning("no user for id = " + id);
+            return null;
         }
-        return null;
     }
 
     @Override

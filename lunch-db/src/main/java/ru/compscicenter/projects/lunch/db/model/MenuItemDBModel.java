@@ -1,6 +1,9 @@
 package ru.compscicenter.projects.lunch.db.model;
 
 
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -32,6 +35,7 @@ public class MenuItemDBModel {
     private double price;
 
     @ElementCollection
+    @LazyCollection(LazyCollectionOption.FALSE)
     @CollectionTable(name = "compositions", joinColumns = @JoinColumn(name = "id"))
     @Column(name = "comp")
     private List<String> composition;

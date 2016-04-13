@@ -21,4 +21,17 @@
         <beans:property name="menuService" ref="menuService"/>
         <beans:property name="userDAO" ref="userDAO"/>
     </beans:bean>
+
+    <beans:bean id="deciderService" class="ru.compscicenter.projects.lunch.db.service.impl.DeciderServiceImpl">
+        <beans:property name="menuService" ref="menuService"/>
+        <beans:property name="userService" ref="userService"/>
+        <beans:property name="decider" ref="randomDecider"/>
+        <beans:property name="servingDecider" ref="simpleServingDecider"/>
+    </beans:bean>
+
+    <beans:bean id="randomDecider" class="ru.compscicenter.projects.lunch.estimator.RandomDecider"/>
+
+    <beans:bean id="simpleServingDecider" class="ru.compscicenter.projects.lunch.estimator.SimpleServingDecider">
+        <beans:constructor-arg value="5"/>
+    </beans:bean>
 </beans:beans>

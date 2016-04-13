@@ -68,6 +68,7 @@ public class MenuServiceImpl implements MenuService {
         if (menuDBModel != null) {
             return ModelConverter.dbMenuToMenu(menuDBModel);
         } else {
+            logger.info("no menu for date " + day);
             return null;
         }
     }

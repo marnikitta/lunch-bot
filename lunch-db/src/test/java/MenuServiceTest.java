@@ -48,6 +48,9 @@ public class MenuServiceTest extends AbstractTestNGSpringContextTests {
 
         menus = menuService.getAllForDates(new GregorianCalendar(2016, 1, 1), new GregorianCalendar(2016, 2, 2));
         Assert.assertEquals(menus.size(), 3);
+
+        menus = menuService.getAllForDates(new GregorianCalendar(2016, 1, 1), new GregorianCalendar(2016, 0, 2));
+        Assert.assertEquals(menus.size(), 0);
     }
 
     @Test(dependsOnGroups = {"fillingDB"})
