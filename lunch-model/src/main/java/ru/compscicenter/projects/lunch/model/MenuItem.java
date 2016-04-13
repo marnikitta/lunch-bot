@@ -90,4 +90,18 @@ public class MenuItem {
         result = 31 * result + (composition != null ? composition.hashCode() : 0);
         return result;
     }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("MenuItem{");
+        sb.append("type='").append(type).append('\'');
+        sb.append(", tags='").append(tags).append('\'');
+        sb.append(", name='").append(name).append('\'');
+        sb.append(", weight=").append(weight);
+        sb.append(", calorie=").append(calorie);
+        sb.append(", price=").append(price);
+        sb.append(", composition=").append(composition);
+        sb.append('}');
+        return sb.toString();
+    }
 }

@@ -83,4 +83,13 @@ public class Menu {
         result = 31 * result + (items != null ? items.hashCode() : 0);
         return result;
     }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("Menu{");
+        sb.append("date=").append(date);
+        sb.append(", items=").append(items);
+        sb.append('}');
+        return sb.toString();
+    }
 }
