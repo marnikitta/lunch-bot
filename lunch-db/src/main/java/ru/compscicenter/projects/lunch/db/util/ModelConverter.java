@@ -2,11 +2,15 @@ package ru.compscicenter.projects.lunch.db.util;
 
 import ru.compscicenter.projects.lunch.db.model.MenuDBModel;
 import ru.compscicenter.projects.lunch.db.model.MenuItemDBModel;
+import ru.compscicenter.projects.lunch.db.model.UserDBModel;
 import ru.compscicenter.projects.lunch.model.Menu;
 import ru.compscicenter.projects.lunch.model.MenuItem;
+import ru.compscicenter.projects.lunch.model.User;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class ModelConverter {
     private ModelConverter() {
@@ -19,7 +23,7 @@ public class ModelConverter {
 
         List<MenuItem> items = new ArrayList<>();
         menuDBModel.getItems().forEach(item -> items.add(dbMenuItemToMenuItem(item)));
-        builder.addAll(items );
+        builder.addAll(items);
 
         return builder.build();
     }
@@ -55,5 +59,34 @@ public class ModelConverter {
                 menuItem.getCalorie(),
                 menuItem.getPrice(),
                 menuItem.getComposition());
+    }
+
+    public static UserDBModel userToDBUser(final User user) {
+        UserDBModel userDBModel = new UserDBModel();
+        userDBModel.setId(user.getId());
+
+        Set<MenuItemDBModel> dbSet = new HashSet<>();
+        user.getLoveSet().stream().forEach(item -> dbSet.add(menuItemToDBMenuItem(item)));
+        userDBModel.setLoveSet(dbSet);
+
+        dbSet.clear();
+        user.getHateSet().stream().forEach(item -> dbSet.add(menuItemToDBMenuItem(item)));
+        userDBModel.setHateSet(dbSet);
+
+        return userDBModel;
+    }
+
+    public static User dbUserToUser(final UserDBModel userDBModel) {
+        User user = new User(userDBModel.getId());
+        Set<MenuItem> set = new HashSet<>();
+
+        userDBModel.getLoveSet().stream().forEach(item -> set.add(dbMenuItemToMenuItem(item)));
+        user.getLoveSet().addAll(set);
+
+        set.clear();
+        userDBModel.getHateSet().stream().forEach(item -> set.add(dbMenuItemToMenuItem(item)));
+        user.getHateSet().addAll(set);
+
+        return user;
     }
 }

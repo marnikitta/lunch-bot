@@ -3,6 +3,7 @@ package ru.compscicenter.projects.lunch.db.service.impl;
 import org.springframework.dao.DuplicateKeyException;
 import ru.compscicenter.projects.lunch.db.dao.MenuDAO;
 import ru.compscicenter.projects.lunch.db.model.MenuDBModel;
+import ru.compscicenter.projects.lunch.db.model.MenuItemDBModel;
 import ru.compscicenter.projects.lunch.db.service.MenuService;
 import ru.compscicenter.projects.lunch.db.util.ModelConverter;
 import ru.compscicenter.projects.lunch.model.Menu;
@@ -69,5 +70,17 @@ public class MenuServiceImpl implements MenuService {
         } else {
             return null;
         }
+    }
+
+    @Override
+    @Transactional
+    public List<MenuItemDBModel> getAllItems() {
+        logger.info("getting all items");
+        List<MenuItemDBModel> result = menuDAO.getAllItems();
+        if (result != null) {
+            Set<MenuItemDBModel> menuItemDBModels = new HashSet<>(result);
+            return new ArrayList<>(menuItemDBModels);
+        }
+        return null;
     }
 }

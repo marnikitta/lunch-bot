@@ -3,11 +3,9 @@
              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
              xmlns:beans="http://www.springframework.org/schema/beans"
              xmlns:context="http://www.springframework.org/schema/context"
-             xmlns:tx="http://www.springframework.org/schema/tx"
              xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
-		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
     <context:property-placeholder location="classpath:spring.properties"/>
 
@@ -17,5 +15,10 @@
 
     <beans:bean id="menuService" class="ru.compscicenter.projects.lunch.db.service.impl.MenuServiceImpl">
         <beans:property name="menuDAO" ref="menuDAO"/>
+    </beans:bean>
+
+    <beans:bean id="userService" class="ru.compscicenter.projects.lunch.db.service.impl.UserServiceImpl">
+        <beans:property name="menuService" ref="menuService"/>
+        <beans:property name="userDAO" ref="userDAO"/>
     </beans:bean>
 </beans:beans>

@@ -1,5 +1,6 @@
 package ru.compscicenter.projects.lunch.db.service;
 
+import ru.compscicenter.projects.lunch.db.model.MenuItemDBModel;
 import ru.compscicenter.projects.lunch.model.Menu;
 
 import java.util.Calendar;
@@ -16,4 +17,6 @@ public interface MenuService {
     public List<Menu> getAllForDates(Calendar start, Calendar end);
 
     public Menu getForDate(Calendar day);
+
+    public List<MenuItemDBModel> getAllItems();
 }

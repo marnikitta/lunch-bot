@@ -18,6 +18,7 @@
             <beans:list>
                 <beans:value>ru.compscicenter.projects.lunch.db.model.MenuItemDBModel</beans:value>
                 <beans:value>ru.compscicenter.projects.lunch.db.model.MenuDBModel</beans:value>
+                <beans:value>ru.compscicenter.projects.lunch.db.model.UserDBModel</beans:value>
             </beans:list>
         </beans:property>
         <beans:property name="configLocation" value="classpath:hibernate-test.cfg.xml"/>

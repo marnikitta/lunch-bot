@@ -37,6 +37,7 @@
             <beans:list>
                 <beans:value>ru.compscicenter.projects.lunch.db.model.MenuItemDBModel</beans:value>
                 <beans:value>ru.compscicenter.projects.lunch.db.model.MenuDBModel</beans:value>
+                <beans:value>ru.compscicenter.projects.lunch.db.model.UserDBModel</beans:value>
             </beans:list>
         </beans:property>
         <beans:property name="configLocation" value="classpath:hibernate.cfg.xml"/>
@@ -45,6 +46,10 @@
     <!-- DAOs -->
 
     <beans:bean id="menuDAO" class="ru.compscicenter.projects.lunch.db.dao.impl.MenuDAOImpl">
+        <beans:property name="factory" ref="hibernate4AnnotatedSessionFactory"/>
+    </beans:bean>
+
+    <beans:bean id="userDAO" class="ru.compscicenter.projects.lunch.db.dao.impl.UserDAOImpl">
         <beans:property name="factory" ref="hibernate4AnnotatedSessionFactory"/>
     </beans:bean>
 

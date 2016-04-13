@@ -6,6 +6,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import ru.compscicenter.projects.lunch.db.dao.MenuDAO;
 import ru.compscicenter.projects.lunch.db.model.MenuDBModel;
+import ru.compscicenter.projects.lunch.db.model.MenuItemDBModel;
 
 import java.util.Calendar;
 import java.util.List;
@@ -22,17 +23,6 @@ public class MenuDAOImpl implements MenuDAO {
     public void saveOrUpdate(final MenuDBModel menu) {
         Session session = factory.getCurrentSession();
         session.saveOrUpdate(menu);
-    }
-
-    @Override
-    public MenuDBModel load(long id) {
-        Session session = factory.getCurrentSession();
-        Object menu = session.load(MenuDBModel.class, id);
-        if (menu instanceof MenuDBModel) {
-            return (MenuDBModel) menu;
-        } else {
-            return null;
-        }
     }
 
     @Override
@@ -59,5 +49,12 @@ public class MenuDAOImpl implements MenuDAO {
             return menus.get(0);
         }
         return null;
+    }
+
+    @Override
+    public List<MenuItemDBModel> getAllItems() {
+        Session session = factory.getCurrentSession();
+        List<MenuItemDBModel> result = session.createCriteria(MenuItemDBModel.class).list();
+        return result;
     }
 }
