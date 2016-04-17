@@ -53,6 +53,7 @@ public class TelegramMethodExecutor {
             }
             stream.close();
             logger.info("Response: " + stringBuilder.toString());
+            return stringBuilder.toString();
         } catch (IOException e) {
             e.printStackTrace();
         }

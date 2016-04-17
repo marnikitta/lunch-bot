@@ -1,6 +1,5 @@
 package ru.compscicenter.projects.lunch.web.service.impl;
 
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 import ru.compscicenter.projects.lunch.web.service.TelegramService;
@@ -16,18 +15,21 @@ import java.util.logging.Logger;
 public class TelegramServiceImpl implements TelegramService {
 
     private static Logger logger = Logger.getLogger(TelegramService.class.getName());
+    private static String token = null;
 
     @Override
     public String getToken() {
-        try {
-            Properties prop = new Properties();
-            InputStream inputStream = TelegramServiceImpl.class.getClassLoader().getResourceAsStream("token.properties");
-            prop.load(inputStream);
-            return prop.getProperty("token");
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (token == null) {
+            try {
+                Properties prop = new Properties();
+                InputStream inputStream = TelegramServiceImpl.class.getClassLoader().getResourceAsStream("token.properties");
+                prop.load(inputStream);
+                token = prop.getProperty("token");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
-        return null;
+        return token;
     }
 
     @Override
@@ -39,15 +41,23 @@ public class TelegramServiceImpl implements TelegramService {
     }
 
 
+    //TODO: remove shitty code!
     @Override
     public void handleUpdate(String json) {
-        JSONObject jsonObject = (JSONObject) JSONValue.parse(json);
-        if (jsonObject.containsKey("ok") && jsonObject.get("ok") == "true") {
-            JSONArray updates = (JSONArray) jsonObject.get("response");
-            sendMessage(0, json);
-        } else {
-            logger.severe("NOT OK RESPONSE: " + json);
-            throw new IllegalStateException("ok == false");
-        }
+        logger.info(json);
+        JSONObject update = (JSONObject) JSONValue.parse(json);
+        JSONObject message = (JSONObject) update.get("message");
+        long id = (Long) ((JSONObject) message.get("from")).get("id");
+        String text = (String) message.get("text");
+        sendMessage(id, text);
+    }
+
+    @Override
+    public void update() {
+        Map<String, String> map = new HashMap<>();
+        map.put("limit", "1");
+        map.put("offset", "-1");
+        String response = TelegramMethodExecutor.doMethod("getUpdates", map, getToken());
+        handleUpdate(response);
     }
 }

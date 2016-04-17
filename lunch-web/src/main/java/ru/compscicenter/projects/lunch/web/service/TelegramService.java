@@ -6,4 +6,6 @@ public interface TelegramService {
     public void sendMessage(long id, String message);
 
     public void handleUpdate(String json);
+
+    public void update();
 }
