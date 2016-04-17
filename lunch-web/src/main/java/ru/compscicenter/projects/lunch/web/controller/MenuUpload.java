@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ru.compscicenter.projects.lunch.web.service.DeciderService;
+import ru.compscicenter.projects.lunch.web.service.MenuService;
 
 import javax.annotation.Resource;
 
@@ -21,10 +22,13 @@ public class MenuUpload {
     @Resource(name = "deciderService")
     DeciderService deciderService;
 
+    @Resource(name = "menuService")
+    MenuService menuService;
+
     @RequestMapping(value = "/", produces = "application/json; charset=utf-8")
     @ResponseBody
     public String helloWorlder() {
-        return "Hello worldd!";
+        return "Hello world!";
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "upload")
@@ -34,30 +38,18 @@ public class MenuUpload {
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "upload")
-    public String handleFileUpload(@RequestParam("name") String name,
-                                   @RequestParam("file") MultipartFile file,
+    @ResponseBody
+    public String handleFileUpload(@RequestParam("file") MultipartFile file,
                                    RedirectAttributes redirectAttributes) {
-        if (name.contains("/")) {
-            redirectAttributes.addFlashAttribute("message", "Folder separators not allowed");
-            return "redirect:upload";
-        }
-        if (name.contains("/")) {
-            redirectAttributes.addFlashAttribute("message", "Relative pathnames not allowed");
-            return "redirect:upload";
-        }
-
         if (!file.isEmpty()) {
             try {
-                redirectAttributes.addFlashAttribute("message",
-                        "You successfully uploaded " + name + "!");
+                menuService.upload(file.getInputStream());
+                return "OK!";
             } catch (Exception e) {
-                redirectAttributes.addFlashAttribute("message",
-                        "You failed to upload " + name + " => " + e.getMessage());
+                return ("You failed to upload " + e.getMessage());
             }
         } else {
-            redirectAttributes.addFlashAttribute("message",
-                    "You failed to upload " + name + " because the file was empty");
+            return "File is empty!";
         }
-        return "redirect:upload";
     }
 }

@@ -1,22 +1,14 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>${title}</title>
+    <title> Menu upload </title>
 </head>
 <body>
 <div>
-    <form method="POST" enctype="multipart/form-data" action="/upload">
+    <form method="POST" enctype="multipart/form-data" action="/lunch-web/upload">
         <table>
             <tr>
-                <td>${message}</td>
-            </tr>
-            <tr>
-                <td>File to upload:</td>
                 <td><input type="file" name="file"/></td>
-            </tr>
-            <tr>
-                <td>Name:</td>
-                <td><input type="text" name="name"/></td>
             </tr>
             <tr>
                 <td></td>

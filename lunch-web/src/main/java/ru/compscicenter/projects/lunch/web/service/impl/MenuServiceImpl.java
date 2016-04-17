@@ -2,13 +2,18 @@ package ru.compscicenter.projects.lunch.web.service.impl;
 
 import org.springframework.dao.DuplicateKeyException;
 import ru.compscicenter.projects.lunch.model.Menu;
+import ru.compscicenter.projects.lunch.parser.PDFToMenu;
 import ru.compscicenter.projects.lunch.web.dao.MenuDAO;
+import ru.compscicenter.projects.lunch.web.exception.MenuDuplicateException;
+import ru.compscicenter.projects.lunch.web.exception.MenuUploadingException;
 import ru.compscicenter.projects.lunch.web.model.MenuDBModel;
 import ru.compscicenter.projects.lunch.web.model.MenuItemDBModel;
 import ru.compscicenter.projects.lunch.web.service.MenuService;
 import ru.compscicenter.projects.lunch.web.util.ModelConverter;
 
 import javax.transaction.Transactional;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.*;
 import java.util.logging.Logger;
 
@@ -83,5 +88,23 @@ public class MenuServiceImpl implements MenuService {
             return new ArrayList<>(menuItemDBModels);
         }
         return null;
+    }
+
+    @Override
+    @Transactional
+    public Menu upload(InputStream stream) throws MenuUploadingException, MenuDuplicateException {
+        try {
+            Menu menu = PDFToMenu.parsePDF(stream);
+            if (null == getForDate(menu.getDate())) {
+                saveMenu(menu);
+                return menu;
+            } else {
+                throw new MenuDuplicateException("Already has menu for date " + menu.getDate());
+            }
+        } catch (IOException e) {
+            logger.info("Uploading menu wrong format");
+            throw new MenuUploadingException("Uploading menu wrong format");
+        }
+
     }
 }

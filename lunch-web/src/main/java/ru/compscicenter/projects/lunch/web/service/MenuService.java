@@ -1,8 +1,11 @@
 package ru.compscicenter.projects.lunch.web.service;
 
 import ru.compscicenter.projects.lunch.model.Menu;
+import ru.compscicenter.projects.lunch.web.exception.MenuDuplicateException;
+import ru.compscicenter.projects.lunch.web.exception.MenuUploadingException;
 import ru.compscicenter.projects.lunch.web.model.MenuItemDBModel;
 
+import java.io.InputStream;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.List;
@@ -19,4 +22,6 @@ public interface MenuService {
     public Menu getForDate(Calendar day);
 
     public List<MenuItemDBModel> getAllItems();
+
+    public Menu upload(InputStream stream) throws MenuUploadingException, MenuDuplicateException;
 }
