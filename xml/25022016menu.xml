@@ -101,7 +101,7 @@
     <composition/>
   </item>
   <item type="main course">
-    <name>стейк  из индейки</name>
+    <name>стейк из индейки</name>
     <price>143.0</price>
     <calorie>204.0</calorie>
     <weight>100.0</weight>
@@ -174,7 +174,7 @@
       <ingredient>соль</ingredient>
       <ingredient>сахар</ingredient>
       <ingredient>уксус</ingredient>
-      <ingredient>масло  растительное</ingredient>
+      <ingredient>масло растительное</ingredient>
     </composition>
   </item>
   <item type="salad">

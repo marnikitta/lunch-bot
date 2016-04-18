@@ -87,14 +87,14 @@
     <composition/>
   </item>
   <item type="main course">
-    <name>стейк  куриный  с сыром и базиликом</name>
+    <name>стейк куриный с сыром и базиликом</name>
     <price>140.0</price>
     <calorie>450.0</calorie>
     <weight>120.0</weight>
     <composition/>
   </item>
   <item type="main course">
-    <name>тар тар из  судака</name>
+    <name>тар тар из судака</name>
     <price>140.0</price>
     <calorie>365.0</calorie>
     <weight>100.0</weight>
@@ -201,12 +201,12 @@
       <ingredient>краб. палочки</ingredient>
       <ingredient>морковь</ingredient>
       <ingredient>сыр копченый</ingredient>
-      <ingredient>лук  зел.</ingredient>
+      <ingredient>лук зел.</ingredient>
       <ingredient>майонез</ingredient>
     </composition>
   </item>
   <item type="salad">
-    <name>))</name>
+    <name> </name>
     <price>70.0</price>
     <calorie>321.0</calorie>
     <weight>150.0</weight>
@@ -232,7 +232,7 @@
     <composition>
       <ingredient>кур. филе г\к</ingredient>
       <ingredient>язык гов.</ingredient>
-      <ingredient>горошек  конс.</ingredient>
+      <ingredient>горошек конс.</ingredient>
       <ingredient>картофель</ingredient>
       <ingredient>рак. шейки</ingredient>
       <ingredient>черри</ingredient>

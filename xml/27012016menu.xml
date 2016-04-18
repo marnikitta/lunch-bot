@@ -115,7 +115,7 @@
     </composition>
   </item>
   <item type="main course">
-    <name>паста  болоньезе</name>
+    <name>паста болоньезе</name>
     <price>230.0</price>
     <calorie>575.0</calorie>
     <weight>300.0</weight>
@@ -167,7 +167,7 @@
       <ingredient>соль</ingredient>
       <ingredient>сахар</ingredient>
       <ingredient>уксус</ingredient>
-      <ingredient>масло  растительное</ingredient>
+      <ingredient>масло растительное</ingredient>
     </composition>
   </item>
   <item type="salad">
@@ -195,7 +195,7 @@
       <ingredient>помидор</ingredient>
       <ingredient>тунец</ingredient>
       <ingredient>лук красный</ingredient>
-      <ingredient>масло  раст.</ingredient>
+      <ingredient>масло раст.</ingredient>
     </composition>
   </item>
   <item type="salad">
@@ -219,13 +219,13 @@
     <weight>150.0</weight>
     <composition>
       <ingredient>печень кур.</ingredient>
-      <ingredient>салат  микс</ingredient>
+      <ingredient>салат микс</ingredient>
       <ingredient>сухарики</ingredient>
       <ingredient>чеснок</ingredient>
       <ingredient>горчица</ingredient>
       <ingredient>уксус</ingredient>
       <ingredient>соль</ingredient>
-      <ingredient>масло   раст.</ingredient>
+      <ingredient>масло раст.</ingredient>
       <ingredient>специи</ingredient>
     </composition>
   </item>

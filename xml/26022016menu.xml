@@ -101,7 +101,7 @@
     <composition/>
   </item>
   <item type="main course">
-    <name>стейк  из индейки</name>
+    <name>стейк из индейки</name>
     <price>143.0</price>
     <calorie>204.0</calorie>
     <weight>100.0</weight>
@@ -196,7 +196,7 @@
       <ingredient>яйцо</ingredient>
       <ingredient>огурец св.</ingredient>
       <ingredient>кап. пекин.</ingredient>
-      <ingredient>сок  лимона</ingredient>
+      <ingredient>сок лимона</ingredient>
       <ingredient>майонез</ingredient>
     </composition>
   </item>
@@ -238,7 +238,7 @@
       <ingredient>бекон</ingredient>
       <ingredient>гренки</ingredient>
       <ingredient>черри</ingredient>
-      <ingredient>соус  «цезарь»</ingredient>
+      <ingredient>соус «цезарь»</ingredient>
     </composition>
   </item>
 </menu>

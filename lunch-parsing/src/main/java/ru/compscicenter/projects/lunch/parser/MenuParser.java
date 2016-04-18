@@ -1,5 +1,7 @@
 package ru.compscicenter.projects.lunch.parser;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.compscicenter.projects.lunch.model.Menu;
 import ru.compscicenter.projects.lunch.model.MenuItem;
 
@@ -7,13 +9,12 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public final class MenuParser {
 
-    private static Logger logger = Logger.getLogger(MenuParser.class.getName());
+    private static Logger logger = LoggerFactory.getLogger(MenuParser.class);
 
     private MenuParser() {
     }
@@ -84,7 +85,7 @@ public final class MenuParser {
             monthInt -= 1;
             return new GregorianCalendar(Integer.parseInt(year), monthInt, Integer.parseInt(day));
         } else {
-            logger.warning("Failed to parse date: " + str);
+            logger.warn("Failed to parse date: " + str);
             return new GregorianCalendar(1996, 6, 2);
         }
     }
@@ -105,7 +106,7 @@ public final class MenuParser {
     public static List<MenuItem> parseItems(final String s, final String type) {
         List<MenuItem> result = new ArrayList<>();
 
-        String namePattern = "(?<name>[\\p{L}\\s\\-,\\(\\)\"]+?)";
+        String namePattern = "(?<name>[\\p{L}\\s\\-,\"]+?)";
         String ingrPattern = "(\\((?<ingr>[\\p{L}0-9\\s,\\.«»\\\\/\\-]+?)\\))??";
         String weightPattern = "(?<w>\\d+)([/\\\\\\d]+)*\\s*(Гр|гр)\\.?";
         String calPattern = "\\((?<cal>\\d+)\\s+(Ккал|ккал)\\.?\\)";
@@ -117,7 +118,7 @@ public final class MenuParser {
         Matcher matcher = saladPattern.matcher(s);
 
         while (matcher.find()) {
-            String name = matcher.group("name").toLowerCase().replace("\\s+", " ");
+            String name = matcher.group("name").toLowerCase().replaceAll("\\s+", " ");
 
             double cal = Double.parseDouble(matcher.group("cal"));
             double price = Double.parseDouble(matcher.group("price").replace("-", "."));
@@ -126,7 +127,7 @@ public final class MenuParser {
             List<String> ingr = new ArrayList<>();
             if (matcher.group("ingr") != null) {
                 for (String ing : splitIngredients(matcher.group("ingr"))) {
-                    ingr.add(ing.toLowerCase().replace("\\s+", " "));
+                    ingr.add(ing.toLowerCase().replaceAll("\\s+", " "));
                 }
             }
 

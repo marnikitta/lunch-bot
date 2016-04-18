@@ -73,7 +73,7 @@
     <composition/>
   </item>
   <item type="main course">
-    <name>стейк  из индейки</name>
+    <name>стейк из индейки</name>
     <price>150.0</price>
     <calorie>204.0</calorie>
     <weight>100.0</weight>
@@ -176,7 +176,7 @@
       <ingredient>соль</ingredient>
       <ingredient>сахар</ingredient>
       <ingredient>уксус</ingredient>
-      <ingredient>масло  раст.</ingredient>
+      <ingredient>масло раст.</ingredient>
     </composition>
   </item>
   <item type="salad">
@@ -190,7 +190,7 @@
       <ingredient>яйцо</ingredient>
       <ingredient>огурец св.</ingredient>
       <ingredient>кап. пекин.</ingredient>
-      <ingredient>сок  лимона</ingredient>
+      <ingredient>сок лимона</ingredient>
       <ingredient>майонез</ingredient>
     </composition>
   </item>
@@ -203,14 +203,14 @@
       <ingredient>кур. печень</ingredient>
       <ingredient>картофель</ingredient>
       <ingredient>морковь</ingredient>
-      <ingredient>лук  жар</ingredient>
+      <ingredient>лук жар</ingredient>
       <ingredient>яйцо</ingredient>
       <ingredient>чеснок</ingredient>
       <ingredient>майонез</ingredient>
     </composition>
   </item>
   <item type="salad">
-    <name>))</name>
+    <name> </name>
     <price>70.0</price>
     <calorie>321.0</calorie>
     <weight>150.0</weight>
