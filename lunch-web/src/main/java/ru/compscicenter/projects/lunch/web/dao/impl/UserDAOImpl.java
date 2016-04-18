@@ -31,6 +31,7 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public boolean contains(long id) {
+        //TODO: optimize
         Session session = factory.getCurrentSession();
         List<UserDBModel> list = session.createCriteria(UserDBModel.class).add(Restrictions.eq("id", id)).list();
         if (list == null || list.size() == 0) {
