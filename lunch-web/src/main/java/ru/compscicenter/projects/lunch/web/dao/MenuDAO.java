@@ -16,4 +16,6 @@ public interface MenuDAO {
     public MenuDBModel getForDate(final Calendar day);
 
     public List<MenuItemDBModel> getAllItems();
+
+    public boolean contains(Calendar calendar);
 }

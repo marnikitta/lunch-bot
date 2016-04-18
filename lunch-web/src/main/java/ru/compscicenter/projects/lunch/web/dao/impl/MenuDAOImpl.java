@@ -57,4 +57,16 @@ public class MenuDAOImpl implements MenuDAO {
         List<MenuItemDBModel> result = session.createCriteria(MenuItemDBModel.class).list();
         return result;
     }
+
+    @Override
+    public boolean contains(Calendar calendar) {
+        //TODO: optimize
+        Session session = factory.getCurrentSession();
+        Criteria criteria = session.createCriteria(MenuDBModel.class).add(Restrictions.eq("date", calendar));
+        List<MenuDBModel> menus = criteria.list();
+        if (menus != null && menus.size() >= 1) {
+            return true;
+        }
+        return false;
+    }
 }

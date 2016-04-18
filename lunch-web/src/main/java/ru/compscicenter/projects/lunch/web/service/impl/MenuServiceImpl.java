@@ -30,7 +30,7 @@ public class MenuServiceImpl implements MenuService {
     @Transactional
     public void saveMenu(final Menu menu) throws MenuDuplicateException {
         MenuDBModel menuDBModel = ModelConverter.menuToDBMenu(menu);
-        if (getForDate(menuDBModel.getDate()) != null) {
+        if (contains(menuDBModel.getDate())) {
             logger.debug("Already has entry for date: " + menu.getDate());
             throw new MenuDuplicateException("Already has entry for date: " + menu.getDate());
         }
@@ -81,13 +81,19 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     @Transactional
+    public boolean contains(Calendar day) {
+        return menuDAO.contains(day);
+    }
+
+    @Override
+    @Transactional
     public List<MenuItemDBModel> getAllItems() {
         List<MenuItemDBModel> result = menuDAO.getAllItems();
         if (result != null) {
             Set<MenuItemDBModel> menuItemDBModels = new HashSet<>(result);
             return new ArrayList<>(menuItemDBModels);
         }
-        return null;
+        return new ArrayList<>();
     }
 
     @Override

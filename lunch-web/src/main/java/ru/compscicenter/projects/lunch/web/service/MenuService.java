@@ -21,6 +21,8 @@ public interface MenuService {
 
     public Menu getForDate(Calendar day);
 
+    public boolean contains(Calendar day);
+
     public List<MenuItemDBModel> getAllItems();
 
     public Menu upload(InputStream stream) throws MenuUploadingException, MenuDuplicateException;
