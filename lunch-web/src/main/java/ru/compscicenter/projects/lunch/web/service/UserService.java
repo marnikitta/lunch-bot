@@ -6,4 +6,6 @@ public interface UserService {
     public User getUserById(long id);
 
     public void makeRandomUser(long id);
+
+    public boolean exists(long id);
 }

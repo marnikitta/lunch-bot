@@ -11,11 +11,11 @@ import java.util.Collection;
 import java.util.List;
 
 public interface MenuService {
-    public void saveMenu(Menu menu);
+    public void saveMenu(Menu menu) throws MenuDuplicateException;
 
     public List<Menu> getAll();
 
-    public void saveAll(Collection<? extends Menu> coll);
+    public void saveAll(Collection<? extends Menu> coll) throws MenuDuplicateException;
 
     public List<Menu> getAllForDates(Calendar start, Calendar end);
 

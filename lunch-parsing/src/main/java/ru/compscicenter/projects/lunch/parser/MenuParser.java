@@ -1,5 +1,7 @@
 package ru.compscicenter.projects.lunch.parser;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.compscicenter.projects.lunch.model.Menu;
 import ru.compscicenter.projects.lunch.model.MenuItem;
 
@@ -7,13 +9,12 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public final class MenuParser {
 
-    private static Logger logger = Logger.getLogger(MenuParser.class.getName());
+    private static Logger logger = LoggerFactory.getLogger(MenuParser.class);
 
     private MenuParser() {
     }
@@ -84,7 +85,7 @@ public final class MenuParser {
             monthInt -= 1;
             return new GregorianCalendar(Integer.parseInt(year), monthInt, Integer.parseInt(day));
         } else {
-            logger.warning("Failed to parse date: " + str);
+            logger.warn("Failed to parse date: " + str);
             return new GregorianCalendar(1996, 6, 2);
         }
     }

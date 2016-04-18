@@ -13,8 +13,8 @@ import java.util.List;
 import java.util.Set;
 
 public class ModelConverter {
-    private ModelConverter() {
 
+    private ModelConverter() {
     }
 
     public static Menu dbMenuToMenu(final MenuDBModel menuDBModel) {

@@ -25,11 +25,4 @@ public class WebHook {
         telegramService.sendMessage(169022871, a);
         telegramService.handleUpdate(a);
     }
-
-    @RequestMapping("/update")
-    @ResponseBody
-    public String update() {
-        telegramService.update();
-        return "OK";
-    }
 }

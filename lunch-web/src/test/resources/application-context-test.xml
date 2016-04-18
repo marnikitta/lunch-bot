@@ -6,7 +6,7 @@
              xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd">
 
-    <beans:import resource="application-context.xml"/>
+    <beans:import resource="context/application-context.xml"/>
 
     <jdbc:embedded-database id="dataSource" type="HSQL">
     </jdbc:embedded-database>

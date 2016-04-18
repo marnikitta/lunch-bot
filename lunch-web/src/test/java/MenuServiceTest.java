@@ -6,6 +6,7 @@ import org.testng.annotations.BeforeGroups;
 import org.testng.annotations.Test;
 import ru.compscicenter.projects.lunch.estimator.MenuXmlParser;
 import ru.compscicenter.projects.lunch.model.Menu;
+import ru.compscicenter.projects.lunch.web.exception.MenuDuplicateException;
 import ru.compscicenter.projects.lunch.web.service.MenuService;
 
 import javax.annotation.Resource;
@@ -31,7 +32,7 @@ public class MenuServiceTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test(groups = "fillingDB")
-    public void saveTest() {
+    public void saveTest() throws MenuDuplicateException {
         menuService.saveAll(list);
     }
 
@@ -59,8 +60,8 @@ public class MenuServiceTest extends AbstractTestNGSpringContextTests {
         Assert.assertEquals(menu.size(), 29);
     }
 
-    @Test(dependsOnGroups = {"fillingDB"}, expectedExceptions = org.springframework.dao.DuplicateKeyException.class)
-    public void saveCopy() {
+    @Test(dependsOnGroups = {"fillingDB"}, expectedExceptions = MenuDuplicateException.class)
+    public void saveCopy() throws MenuDuplicateException {
         menuService.saveAll(list);
     }
 }

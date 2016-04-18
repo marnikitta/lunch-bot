@@ -1,5 +1,7 @@
 package ru.compscicenter.projects.lunch.web.service.impl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.compscicenter.projects.lunch.estimator.Decider;
 import ru.compscicenter.projects.lunch.estimator.ServingDecider;
 import ru.compscicenter.projects.lunch.model.Menu;
@@ -16,16 +18,15 @@ import javax.transaction.Transactional;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class DeciderServiceImpl implements DeciderService {
 
+
+    private static Logger logger = LoggerFactory.getLogger(DeciderServiceImpl.class);
     private Decider decider;
     private UserService userService;
     private MenuService menuService;
     private ServingDecider servingDecider;
-    private static Logger logger = Logger.getLogger(DeciderServiceImpl.class.getName());
 
     public void setServingDecider(ServingDecider servingDecider) {
         this.servingDecider = servingDecider;
@@ -45,12 +46,14 @@ public class DeciderServiceImpl implements DeciderService {
 
     @Override
     @Transactional
-    public List<MenuItem> getForDate(long userId, Calendar date) {
-        logger.log(Level.FINE, "Getting for date");
+    public List<MenuItem> getForDate(final long userId, final Calendar date) {
+        if (date == null) {
+            throw new NullPointerException("date is null");
+        }
 
         List<Menu> data = menuService.getAllForDates(new GregorianCalendar(1996, 1, 1), date);
         if (data.size() == 0) {
-            logger.warning("Knowledge base is empty for " + date.toString());
+            logger.warn("Knowledge base is empty for " + date.toString());
             throw new NoMenuForDateException("Knowledge base is empty for " + date.toString());
         }
         MenuKnowledge knowledge = new MenuKnowledge(data);
@@ -62,7 +65,7 @@ public class DeciderServiceImpl implements DeciderService {
 
         Menu menu = menuService.getForDate(date);
         if (menu == null) {
-            logger.warning("There is no menu for date " + date);
+            logger.warn("There is no menu for date " + date);
             throw new NoMenuForDateException("There is no menu for date " + date);
         }
         List<MenuItem> items = menu.getItemsCopy();

@@ -19,7 +19,7 @@ import java.util.List;
 
 public class Main {
     public static void main(String[] args) throws Exception {
-        ApplicationContext context = new ClassPathXmlApplicationContext("application-context.xml");
+        ApplicationContext context = new ClassPathXmlApplicationContext("context/application-context.xml");
         MenuService menuService = context.getBean(MenuService.class);
 
         Path path = Paths.get("xml");

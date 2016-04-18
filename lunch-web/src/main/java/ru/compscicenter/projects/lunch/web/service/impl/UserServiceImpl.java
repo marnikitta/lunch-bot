@@ -1,5 +1,7 @@
 package ru.compscicenter.projects.lunch.web.service.impl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.DuplicateKeyException;
 import ru.compscicenter.projects.lunch.model.User;
 import ru.compscicenter.projects.lunch.web.dao.UserDAO;
@@ -13,10 +15,10 @@ import javax.transaction.Transactional;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.logging.Logger;
 
 public class UserServiceImpl implements UserService {
-    private static Logger logger = Logger.getLogger(MenuServiceImpl.class.getName());
+
+    private static Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
     private MenuService menuService;
 
@@ -32,25 +34,23 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public User getUserById(long id) {
-        if (userDAO.contains(id)) {
+    public User getUserById(final long id) {
+        if (exists(id)) {
             UserDBModel userDBModel = userDAO.getById(id);
-            User user = ModelConverter.dbUserToUser(userDBModel);
-            return user;
+            return ModelConverter.dbUserToUser(userDBModel);
         } else {
-            logger.warning("no user for id = " + id);
+            logger.debug("There is no user for id = " + id);
             return null;
         }
     }
 
     @Override
     @Transactional
-    public void makeRandomUser(long id) {
+    public void makeRandomUser(final long id) {
         if (userDAO.contains(id)) {
-            logger.severe("Already has user with id=" + id);
+            logger.debug("Already has user with id=" + id);
             throw new DuplicateKeyException("Already has user with id=" + id);
         }
-        logger.info("Making random user");
         List<MenuItemDBModel> menuList = menuService.getAllItems();
         Collections.shuffle(menuList);
 
@@ -61,5 +61,11 @@ public class UserServiceImpl implements UserService {
         user.setHateSet(new HashSet<>());
 
         userDAO.saveOrUpdate(user);
+    }
+
+    @Override
+    @Transactional
+    public boolean exists(final long id) {
+        return userDAO.contains(id);
     }
 }

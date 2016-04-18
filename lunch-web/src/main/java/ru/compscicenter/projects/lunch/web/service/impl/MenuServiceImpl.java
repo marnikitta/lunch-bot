@@ -1,6 +1,7 @@
 package ru.compscicenter.projects.lunch.web.service.impl;
 
-import org.springframework.dao.DuplicateKeyException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.compscicenter.projects.lunch.model.Menu;
 import ru.compscicenter.projects.lunch.parser.PDFToMenu;
 import ru.compscicenter.projects.lunch.web.dao.MenuDAO;
@@ -15,11 +16,11 @@ import javax.transaction.Transactional;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
-import java.util.logging.Logger;
 
 public class MenuServiceImpl implements MenuService {
 
-    private static Logger logger = Logger.getLogger(MenuServiceImpl.class.getName());
+    private static Logger logger = LoggerFactory.getLogger(MenuServiceImpl.class);
+
     private MenuDAO menuDAO;
 
     public void setMenuDAO(MenuDAO menuDAO) {
@@ -27,11 +28,11 @@ public class MenuServiceImpl implements MenuService {
     }
 
     @Transactional
-    public void saveMenu(Menu menu) {
+    public void saveMenu(final Menu menu) throws MenuDuplicateException {
         MenuDBModel menuDBModel = ModelConverter.menuToDBMenu(menu);
         if (getForDate(menuDBModel.getDate()) != null) {
-            logger.severe("Already has entry for date: " + menu.getDate());
-            throw new DuplicateKeyException("Already has entry for date: " + menu.getDate());
+            logger.debug("Already has entry for date: " + menu.getDate());
+            throw new MenuDuplicateException("Already has entry for date: " + menu.getDate());
         }
         menuDAO.saveOrUpdate(menuDBModel);
     }
@@ -49,7 +50,7 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     @Transactional
-    public void saveAll(Collection<? extends Menu> coll) {
+    public void saveAll(final Collection<? extends Menu> coll) throws MenuDuplicateException {
         for (Menu menu : coll) {
             saveMenu(menu);
         }
@@ -57,7 +58,7 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     @Transactional
-    public List<Menu> getAllForDates(Calendar start, Calendar end) {
+    public List<Menu> getAllForDates(final Calendar start, final Calendar end) {
         List<MenuDBModel> list = menuDAO.getAllForDates(start, end);
         Set<Menu> result = new LinkedHashSet<>();
         for (MenuDBModel menuDB : list) {
@@ -68,12 +69,12 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     @Transactional
-    public Menu getForDate(Calendar day) {
+    public Menu getForDate(final Calendar day) {
         MenuDBModel menuDBModel = menuDAO.getForDate(day);
         if (menuDBModel != null) {
             return ModelConverter.dbMenuToMenu(menuDBModel);
         } else {
-            logger.info("no menu for date " + day);
+            logger.debug("No menu for date " + day);
             return null;
         }
     }
@@ -81,7 +82,6 @@ public class MenuServiceImpl implements MenuService {
     @Override
     @Transactional
     public List<MenuItemDBModel> getAllItems() {
-        logger.info("getting all items");
         List<MenuItemDBModel> result = menuDAO.getAllItems();
         if (result != null) {
             Set<MenuItemDBModel> menuItemDBModels = new HashSet<>(result);
@@ -92,7 +92,7 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     @Transactional
-    public Menu upload(InputStream stream) throws MenuUploadingException, MenuDuplicateException {
+    public Menu upload(final InputStream stream) throws MenuUploadingException, MenuDuplicateException {
         try {
             Menu menu = PDFToMenu.parsePDF(stream);
             if (null == getForDate(menu.getDate())) {
@@ -102,9 +102,8 @@ public class MenuServiceImpl implements MenuService {
                 throw new MenuDuplicateException("Already has menu for date " + menu.getDate());
             }
         } catch (IOException e) {
-            logger.info("Uploading menu wrong format");
-            throw new MenuUploadingException("Uploading menu wrong format");
+            logger.debug("Uploading menu wrong format", e);
+            throw new MenuUploadingException("Uploading menu wrong format", e);
         }
-
     }
 }

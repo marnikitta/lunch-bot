@@ -7,11 +7,8 @@ import ru.compscicenter.projects.lunch.web.dao.UserDAO;
 import ru.compscicenter.projects.lunch.web.model.UserDBModel;
 
 import java.util.List;
-import java.util.logging.Logger;
 
 public class UserDAOImpl implements UserDAO {
-
-    private static Logger logger = Logger.getLogger(UserDAOImpl.class.getName());
 
     private SessionFactory factory;
 
@@ -28,7 +25,6 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public void saveOrUpdate(UserDBModel userDBModel) {
-        logger.info("saving user");
         Session session = factory.getCurrentSession();
         session.saveOrUpdate(userDBModel);
     }

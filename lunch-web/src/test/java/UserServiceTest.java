@@ -36,4 +36,14 @@ public class UserServiceTest extends AbstractTestNGSpringContextTests {
         Assert.assertNotNull(userService.getUserById(2));
         Assert.assertNotNull(userService.getUserById(3));
     }
+
+    @Test(dependsOnGroups = "creatingUsers")
+    public void userExists() {
+        Assert.assertTrue(!userService.exists(5));
+        Assert.assertTrue(!userService.exists(5));
+        Assert.assertTrue(!userService.exists(123));
+        Assert.assertTrue(userService.exists(1));
+        Assert.assertTrue(userService.exists(2));
+        Assert.assertTrue(userService.exists(2));
+    }
 }

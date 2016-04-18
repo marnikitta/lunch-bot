@@ -5,5 +5,5 @@
              xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <beans:import resource="classpath:servlet-context.xml"/>
+    <beans:import resource="classpath:context/servlet-context.xml"/>
 </beans:beans>

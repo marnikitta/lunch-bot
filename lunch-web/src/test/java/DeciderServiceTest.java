@@ -35,13 +35,13 @@ public class DeciderServiceTest extends AbstractTestNGSpringContextTests {
     public void getForWrongDate() {
         final long id = 1;
         final Calendar calendar = new GregorianCalendar(2016, 2, 5);
-        List<MenuItem> items = deciderService.getForDate(id, calendar);
+        deciderService.getForDate(id, calendar);
     }
 
     @Test(dependsOnGroups = "creatingUsers", expectedExceptions = NoSuchUserException.class)
     public void getForWrongUser() {
         final long id = 4;
         final Calendar calendar = new GregorianCalendar(2016, 2, 5);
-        List<MenuItem> items = deciderService.getForDate(id, calendar);
+        deciderService.getForDate(id, calendar);
     }
 }

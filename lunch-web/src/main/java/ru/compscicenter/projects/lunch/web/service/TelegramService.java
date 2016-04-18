@@ -3,9 +3,7 @@ package ru.compscicenter.projects.lunch.web.service;
 public interface TelegramService {
     public String getToken();
 
-    public void sendMessage(long id, String message);
+    public void sendMessage(final long id, final String message);
 
-    public void handleUpdate(String json);
-
-    public void update();
+    public void handleUpdate(final String json);
 }

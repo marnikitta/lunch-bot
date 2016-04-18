@@ -13,19 +13,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
-import java.util.logging.LogManager;
 
 public class Main {
     private final static SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy");
 
     public static void main(String[] args) {
-        try {
-            LogManager.getLogManager().readConfiguration(
-                    Main.class.getResourceAsStream("/logging.properties"));
-        } catch (IOException e) {
-            System.err.println("Could not setup logger configuration: " + e.toString());
-        }
-
         try {
             new Main().run();
         } catch (Exception e) {
