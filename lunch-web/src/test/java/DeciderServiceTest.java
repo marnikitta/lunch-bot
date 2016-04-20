@@ -40,8 +40,8 @@ public class DeciderServiceTest extends AbstractTestNGSpringContextTests {
 
     @Test(dependsOnGroups = "creatingUsers", expectedExceptions = NoSuchUserException.class)
     public void getForWrongUser() {
-        final long id = 4;
-        final Calendar calendar = new GregorianCalendar(2016, 2, 5);
+        final long id = 404;
+        final Calendar calendar = new GregorianCalendar(2016, 2, 2);
         deciderService.getForDate(id, calendar);
     }
 }

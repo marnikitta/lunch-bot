@@ -2,11 +2,8 @@ package ru.compscicenter.projects.lunch.web.dao.impl;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.criterion.Restrictions;
 import ru.compscicenter.projects.lunch.web.dao.UserDAO;
 import ru.compscicenter.projects.lunch.web.model.UserDBModel;
-
-import java.util.List;
 
 public class UserDAOImpl implements UserDAO {
 
@@ -19,8 +16,8 @@ public class UserDAOImpl implements UserDAO {
     @Override
     public UserDBModel getById(long id) {
         Session session = factory.getCurrentSession();
-        UserDBModel userDBModel = (UserDBModel) session.load(UserDBModel.class, id);
-        return userDBModel;
+        Object userDBModel = session.load(UserDBModel.class, id);
+        return (UserDBModel) userDBModel;
     }
 
     @Override
@@ -33,11 +30,20 @@ public class UserDAOImpl implements UserDAO {
     public boolean contains(long id) {
         //TODO: optimize
         Session session = factory.getCurrentSession();
-        List<UserDBModel> list = session.createCriteria(UserDBModel.class).add(Restrictions.eq("id", id)).list();
-        if (list == null || list.size() == 0) {
-            return false;
-        } else {
+        Object object = session.get(UserDBModel.class, id);
+        if (object != null) {
             return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public void delete(long id) {
+        Session session = factory.getCurrentSession();
+        Object userDBModel = session.get(UserDBModel.class, id);
+        if (userDBModel != null) {
+            session.delete((UserDBModel) userDBModel);
         }
     }
 }

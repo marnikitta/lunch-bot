@@ -1,14 +1,15 @@
 package ru.compscicenter.projects.lunch.web.service;
 
 import ru.compscicenter.projects.lunch.model.Menu;
+import ru.compscicenter.projects.lunch.model.MenuItem;
 import ru.compscicenter.projects.lunch.web.exception.MenuDuplicateException;
 import ru.compscicenter.projects.lunch.web.exception.MenuUploadingException;
-import ru.compscicenter.projects.lunch.web.model.MenuItemDBModel;
 
 import java.io.InputStream;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.List;
+import java.util.regex.PatternSyntaxException;
 
 public interface MenuService {
     public void saveMenu(Menu menu) throws MenuDuplicateException;
@@ -21,9 +22,13 @@ public interface MenuService {
 
     public Menu getForDate(Calendar day);
 
+    public MenuItem getForNameAndPrice(String name, double price);
+
+    public List<MenuItem> getForNameAndPriceRegex(String regex, double lower, double upper) throws PatternSyntaxException;
+
     public boolean contains(Calendar day);
 
-    public List<MenuItemDBModel> getAllItems();
+    public List<MenuItem> getAllItems();
 
     public Menu upload(InputStream stream) throws MenuUploadingException, MenuDuplicateException;
 }

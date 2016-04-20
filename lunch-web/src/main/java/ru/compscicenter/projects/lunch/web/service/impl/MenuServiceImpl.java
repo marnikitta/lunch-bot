@@ -3,6 +3,7 @@ package ru.compscicenter.projects.lunch.web.service.impl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.compscicenter.projects.lunch.model.Menu;
+import ru.compscicenter.projects.lunch.model.MenuItem;
 import ru.compscicenter.projects.lunch.parser.PDFToMenu;
 import ru.compscicenter.projects.lunch.web.dao.MenuDAO;
 import ru.compscicenter.projects.lunch.web.exception.MenuDuplicateException;
@@ -16,6 +17,9 @@ import javax.transaction.Transactional;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class MenuServiceImpl implements MenuService {
 
@@ -27,6 +31,7 @@ public class MenuServiceImpl implements MenuService {
         this.menuDAO = menuDAO;
     }
 
+    @Override
     @Transactional
     public void saveMenu(final Menu menu) throws MenuDuplicateException {
         MenuDBModel menuDBModel = ModelConverter.menuToDBMenu(menu);
@@ -41,10 +46,7 @@ public class MenuServiceImpl implements MenuService {
     @Transactional
     public List<Menu> getAll() {
         List<MenuDBModel> list = menuDAO.getAll();
-        Set<Menu> result = new LinkedHashSet<>();
-        for (MenuDBModel menuDB : list) {
-            result.add(ModelConverter.dbMenuToMenu(menuDB));
-        }
+        Set<Menu> result = list.stream().map(ModelConverter::dbMenuToMenu).collect(Collectors.toCollection(() -> new LinkedHashSet<>()));
         return new ArrayList<>(result);
     }
 
@@ -60,10 +62,7 @@ public class MenuServiceImpl implements MenuService {
     @Transactional
     public List<Menu> getAllForDates(final Calendar start, final Calendar end) {
         List<MenuDBModel> list = menuDAO.getAllForDates(start, end);
-        Set<Menu> result = new LinkedHashSet<>();
-        for (MenuDBModel menuDB : list) {
-            result.add(ModelConverter.dbMenuToMenu(menuDB));
-        }
+        Set<Menu> result = list.stream().map(ModelConverter::dbMenuToMenu).collect(Collectors.toCollection(LinkedHashSet::new));
         return new ArrayList<>(result);
     }
 
@@ -81,19 +80,45 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     @Transactional
+    public MenuItem getForNameAndPrice(String name, double price) {
+        MenuItemDBModel model = menuDAO.getForNameAndPrice(name, price);
+        if (model != null) {
+            return ModelConverter.dbMenuItemToMenuItem(model);
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    @Transactional
+    public List<MenuItem> getForNameAndPriceRegex(String regex, double lower, double upper) {
+        Pattern pattern = Pattern.compile(regex);
+
+        List<MenuItemDBModel> all = menuDAO.getAllItems();
+        Set<MenuItem> result = new HashSet<>();
+
+        for (MenuItemDBModel model : all) {
+            Matcher matcher = pattern.matcher(model.getName());
+            if (matcher.matches() && model.getPrice() >= lower && model.getPrice() <= upper) {
+                result.add(ModelConverter.dbMenuItemToMenuItem(model));
+            }
+        }
+        return new ArrayList<>(result);
+    }
+
+    @Override
+    @Transactional
     public boolean contains(Calendar day) {
         return menuDAO.contains(day);
     }
 
     @Override
     @Transactional
-    public List<MenuItemDBModel> getAllItems() {
-        List<MenuItemDBModel> result = menuDAO.getAllItems();
-        if (result != null) {
-            Set<MenuItemDBModel> menuItemDBModels = new HashSet<>(result);
-            return new ArrayList<>(menuItemDBModels);
-        }
-        return new ArrayList<>();
+    public List<MenuItem> getAllItems() {
+        List<MenuItemDBModel> allItems = menuDAO.getAllItems();
+        Set<MenuItem> result = allItems.stream().map(ModelConverter::dbMenuItemToMenuItem).collect(Collectors.toSet());
+
+        return new ArrayList<>(result);
     }
 
     @Override
@@ -108,7 +133,6 @@ public class MenuServiceImpl implements MenuService {
                 throw new MenuDuplicateException("Already has menu for date " + menu.getDate());
             }
         } catch (IOException e) {
-            logger.debug("Uploading menu wrong format", e);
             throw new MenuUploadingException("Uploading menu wrong format", e);
         }
     }

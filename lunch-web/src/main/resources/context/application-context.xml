@@ -19,8 +19,8 @@
     </beans:bean>
 
     <beans:bean id="userService" class="ru.compscicenter.projects.lunch.web.service.impl.UserServiceImpl">
-        <beans:property name="menuService" ref="menuService"/>
         <beans:property name="userDAO" ref="userDAO"/>
+        <beans:property name="menuDAO" ref="menuDAO"/>
     </beans:bean>
 
     <beans:bean id="deciderService" class="ru.compscicenter.projects.lunch.web.service.impl.DeciderServiceImpl">
@@ -36,5 +36,8 @@
         <beans:constructor-arg value="5"/>
     </beans:bean>
 
-    <beans:bean id="telegramService" class="ru.compscicenter.projects.lunch.web.service.impl.TelegramServiceImpl"/>
+    <beans:bean id="telegramService" class="ru.compscicenter.projects.lunch.web.service.impl.TelegramServiceImpl">
+        <beans:property name="userService" ref="userService"/>
+        <beans:property name="menuService" ref="menuService"/>
+    </beans:bean>
 </beans:beans>

@@ -18,4 +18,6 @@ public interface MenuDAO {
     public List<MenuItemDBModel> getAllItems();
 
     public boolean contains(Calendar calendar);
+
+    public MenuItemDBModel getForNameAndPrice(String name, double price);
 }

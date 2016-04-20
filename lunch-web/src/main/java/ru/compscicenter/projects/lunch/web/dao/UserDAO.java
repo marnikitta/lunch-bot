@@ -8,4 +8,6 @@ public interface UserDAO {
     public void saveOrUpdate(UserDBModel userDBModel);
 
     public boolean contains(long id);
+
+    public void delete(long id);
 }

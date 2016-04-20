@@ -1,12 +1,14 @@
 package ru.compscicenter.projects.lunch.web;
 
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-import ru.compscicenter.projects.lunch.web.service.TelegramService;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class MessageSendTest {
     public static void main(String[] args) {
-        ApplicationContext context = new ClassPathXmlApplicationContext("context/application-context.xml");
-        TelegramService telegramService = context.getBean(TelegramService.class);
+        String text = "/list -r";
+        String list = "\\/list(\\s+(?<regex>-r))?(\\s+-n\\s+(?<name>\\\".*\\\"))?(\\s+-p\\s+(?<price>[\\d]+))?\\s*";
+        Pattern pattern = Pattern.compile(list);
+        Matcher matcher = pattern.matcher(text);
+        System.out.println(matcher.matches());
     }
 }
