@@ -11,10 +11,10 @@ public interface Decider {
     /**
      * Сортирует список блюд на основании предпочтений пользователя и базы знаний.
      * По убыванию предпочтения
-     *
-     * @param sample    список блюд, который необходимо отсортировать
+     *  @param sample    список блюд, который необходимо отсортировать
      * @param knowledge база знаний
      * @param user      пользователь, на предпочтениях которого основывается алгоритм
+     * @return sorted sample list
      */
-    public void range(final List<? extends MenuItem> sample, final MenuKnowledge knowledge, final User user);
+    public List range(final List<? extends MenuItem> sample, final MenuKnowledge knowledge, final User user);
 }
