@@ -80,8 +80,8 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     @Transactional
-    public MenuItem getForNameAndPrice(String name, double price) {
-        MenuItemDBModel model = menuDAO.getForNameAndPrice(name, price);
+    public MenuItem getForName(String name) {
+        MenuItemDBModel model = menuDAO.getForName(name);
         if (model != null) {
             return ModelConverter.dbMenuItemToMenuItem(model);
         } else {
@@ -91,7 +91,7 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     @Transactional
-    public List<MenuItem> getForNameAndPriceRegex(String regex, double lower, double upper) {
+    public List<MenuItem> getForNameRegex(String regex) {
         Pattern pattern = Pattern.compile(regex);
 
         List<MenuItemDBModel> all = menuDAO.getAllItems();
@@ -99,7 +99,7 @@ public class MenuServiceImpl implements MenuService {
 
         for (MenuItemDBModel model : all) {
             Matcher matcher = pattern.matcher(model.getName());
-            if (matcher.matches() && model.getPrice() >= lower && model.getPrice() <= upper) {
+            if (matcher.matches()) {
                 result.add(ModelConverter.dbMenuItemToMenuItem(model));
             }
         }

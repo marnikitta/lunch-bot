@@ -22,9 +22,9 @@ public interface MenuService {
 
     public Menu getForDate(Calendar day);
 
-    public MenuItem getForNameAndPrice(String name, double price);
+    public MenuItem getForName(String name);
 
-    public List<MenuItem> getForNameAndPriceRegex(String regex, double lower, double upper) throws PatternSyntaxException;
+    public List<MenuItem> getForNameRegex(String regex) throws PatternSyntaxException;
 
     public boolean contains(Calendar day);
 

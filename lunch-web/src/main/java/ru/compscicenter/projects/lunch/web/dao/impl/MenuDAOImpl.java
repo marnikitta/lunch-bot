@@ -68,16 +68,13 @@ public class MenuDAOImpl implements MenuDAO {
         Session session = factory.getCurrentSession();
         Criteria criteria = session.createCriteria(MenuDBModel.class).add(Restrictions.eq("date", calendar));
         List<MenuDBModel> menus = criteria.list();
-        if (menus != null && menus.size() >= 1) {
-            return true;
-        }
-        return false;
+        return menus != null && menus.size() >= 1;
     }
 
     @Override
-    public MenuItemDBModel getForNameAndPrice(String name, double price) {
+    public MenuItemDBModel getForName(String name) {
         Session session = factory.getCurrentSession();
-        Criteria criteria = session.createCriteria(MenuItemDBModel.class).add(Restrictions.eq("name", name)).add(Restrictions.eq("price", price));
+        Criteria criteria = session.createCriteria(MenuItemDBModel.class).add(Restrictions.eq("name", name));
         List<MenuItemDBModel> menuItems = criteria.setMaxResults(1).list();
         if (menuItems != null && menuItems.size() >= 1) {
             return menuItems.get(0);

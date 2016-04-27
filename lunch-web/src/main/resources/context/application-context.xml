@@ -39,5 +39,6 @@
     <beans:bean id="telegramService" class="ru.compscicenter.projects.lunch.web.service.impl.TelegramServiceImpl">
         <beans:property name="userService" ref="userService"/>
         <beans:property name="menuService" ref="menuService"/>
+        <beans:property name="deciderService" ref="deciderService"/>
     </beans:bean>
 </beans:beans>

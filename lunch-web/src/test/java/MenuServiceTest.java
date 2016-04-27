@@ -81,32 +81,31 @@ public class MenuServiceTest extends AbstractTestNGSpringContextTests {
 
     @Test(dependsOnGroups = "fillingDB")
     public void getForNameExistsTest() {
-        MenuItem item = menuService.getForNameAndPrice("картофельное пюре", 55.0);
+        MenuItem item = menuService.getForName("картофельное пюре");
         Assert.assertNotNull(item);
         Assert.assertEquals(item.getName(), "картофельное пюре");
-        Assert.assertEquals(item.getPrice(), 55.0);
     }
 
     @Test(dependsOnGroups = "fillingDB")
     public void getForNameNonExistsTest() {
-        MenuItem item = menuService.getForNameAndPrice("асфальт", 1234);
+        MenuItem item = menuService.getForName("асфальт");
         Assert.assertNull(item);
     }
 
     @Test(dependsOnGroups = "fillingDB")
     public void getForRegex() {
-        List<MenuItem> items = menuService.getForNameAndPriceRegex(".*", 0, 255);
+        List<MenuItem> items = menuService.getForNameRegex(".*");
         Assert.assertTrue(items.size() > 5);
 
-        items = menuService.getForNameAndPriceRegex("асфальт", 0, 255);
+        items = menuService.getForNameRegex("асфальт");
         Assert.assertEquals(items.size(), 0);
 
-        items = menuService.getForNameAndPriceRegex(".*суп.*", 0, 255);
+        items = menuService.getForNameRegex(".*суп.*");
         Assert.assertEquals(items.size(), 4);
     }
 
     @Test(dependsOnGroups = "fillingDB", expectedExceptions = PatternSyntaxException.class)
     public void getForWrongRegex() {
-        List<MenuItem> items = menuService.getForNameAndPriceRegex("[*", 0, 255);
+        List<MenuItem> items = menuService.getForNameRegex("[*");
     }
 }

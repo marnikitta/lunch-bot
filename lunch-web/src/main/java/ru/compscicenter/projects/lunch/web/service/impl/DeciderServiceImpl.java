@@ -45,6 +45,23 @@ public class DeciderServiceImpl implements DeciderService {
     }
 
     @Override
+    public double sumForPeriod(final long userId, final Calendar start, final Calendar end) {
+        double result = 0;
+
+        Calendar it = start;
+        while (!it.getTime().after(end.getTime())) {
+            try {
+                List<MenuItem> menuItems = getForDate(userId, it);
+                result += menuItems.stream().mapToDouble(MenuItem::getPrice).sum();
+            } catch (NoMenuForDateException e) {
+                logger.warn("Summing", e);
+            }
+            it.add(Calendar.MONTH, 1);
+        }
+        return result;
+    }
+
+    @Override
     @Transactional
     public List<MenuItem> getForDate(final long userId, final Calendar date) {
         if (date == null) {

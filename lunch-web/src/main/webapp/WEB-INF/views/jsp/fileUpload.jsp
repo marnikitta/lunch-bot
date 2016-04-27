@@ -5,7 +5,7 @@
 </head>
 <body>
 <div>
-    <form method="POST" enctype="multipart/form-data" action="/lunch-web/upload">
+    <form method="POST" enctype="multipart/form-data" action="./upload">
         <table>
             <tr>
                 <td><input type="file" name="file"/></td>

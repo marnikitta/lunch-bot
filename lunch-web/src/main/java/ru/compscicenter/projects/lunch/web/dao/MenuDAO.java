@@ -19,5 +19,5 @@ public interface MenuDAO {
 
     public boolean contains(Calendar calendar);
 
-    public MenuItemDBModel getForNameAndPrice(String name, double price);
+    public MenuItemDBModel getForName(String name);
 }

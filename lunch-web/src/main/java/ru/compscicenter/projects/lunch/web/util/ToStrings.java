@@ -2,26 +2,27 @@ package ru.compscicenter.projects.lunch.web.util;
 
 import ru.compscicenter.projects.lunch.model.MenuItem;
 
-import java.util.Collections;
 import java.util.List;
 
 public class ToStrings {
     private ToStrings() {
     }
 
-    public static String menuItems(List<? extends MenuItem> collection) {
+    public static String menuItemsToString(List<? extends MenuItem> collection, int offset, int limit) {
         StringBuilder stringBuilder = new StringBuilder();
-        Collections.shuffle(collection);
-        for (int i = 0; i < Math.min(collection.size(), 10); ++i) {
-            stringBuilder.append(menuItem(collection.get(i)) + "\n");
+        if (collection.size() <= offset) {
+            return "";
         }
-        if (collection.size() > 10) {
-            stringBuilder.append("...showing only first 10 rows...\n");
+        for (int i = offset; i < offset + Math.min(collection.size(), limit); ++i) {
+            stringBuilder.append(meuItemToString(collection.get(i))).append("\n");
+        }
+        if (collection.size() > limit) {
+            stringBuilder.append("...showing only first ").append(limit).append(" rows...\n");
         }
         return stringBuilder.toString();
     }
 
-    public static String menuItem(MenuItem menuItem) {
+    public static String meuItemToString(MenuItem menuItem) {
         return menuItem.getName() + " - " + menuItem.getPrice();
     }
 }

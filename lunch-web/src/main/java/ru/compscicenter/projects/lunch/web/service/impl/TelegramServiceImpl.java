@@ -4,7 +4,9 @@ import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.compscicenter.projects.lunch.model.Menu;
 import ru.compscicenter.projects.lunch.model.MenuItem;
+import ru.compscicenter.projects.lunch.web.service.DeciderService;
 import ru.compscicenter.projects.lunch.web.service.MenuService;
 import ru.compscicenter.projects.lunch.web.service.TelegramService;
 import ru.compscicenter.projects.lunch.web.service.UserService;
@@ -13,10 +15,7 @@ import ru.compscicenter.projects.lunch.web.util.ToStrings;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -26,6 +25,11 @@ public class TelegramServiceImpl implements TelegramService {
 
     private UserService userService;
     private MenuService menuService;
+    private DeciderService deciderService;
+
+    public void setDeciderService(DeciderService deciderService) {
+        this.deciderService = deciderService;
+    }
 
     public void setMenuService(MenuService menuService) {
         this.menuService = menuService;
@@ -38,7 +42,7 @@ public class TelegramServiceImpl implements TelegramService {
     private static String token = null;
 
     private static final String HELP = "/help - show help" + "\n" +
-            "/list [-r] [-n \"<MEAL_NAME>|<REGEX>\"] [-p <MAX_PRICE>|<EXACT_PRICE>]";
+            "/list [-r] [<MEAL_NAME>|<REGEX>]";
 
     @Override
     public String getToken() {
@@ -81,6 +85,8 @@ public class TelegramServiceImpl implements TelegramService {
 
     @Override
     public void handleUpdate(final String json) {
+        logger.info(json);
+
         try {
             JSONObject update = (JSONObject) JSONValue.parse(json);
             JSONObject message = (JSONObject) update.get("message");
@@ -88,27 +94,44 @@ public class TelegramServiceImpl implements TelegramService {
             long from = (Long) ((JSONObject) message.get("from")).get("id");
             long chat = (Long) ((JSONObject) message.get("chat")).get("id");
 
-            registerUser(from);
+            try {
+                registerUser(from);
 
-            if (message.containsKey("text")) {
-                String text = (String) message.get("text");
-                text = text.replaceAll("@.*", "");
+                if (message.containsKey("text")) {
+                    String text = (String) message.get("text");
+                    text = text.replaceAll("@.*", "");
 
-                handleTextQuery(from, chat, text);
+                    handleTextQuery(from, chat, text);
+                }
+            } catch (Exception e) {
+                logger.error("smth went wrong", e);
+                sendMessage(chat, "Ooops... Something went wrong", null);
+                sendMessage(169022871, "Exception: " + e.toString(), null);
             }
 
         } catch (Exception e) {
+            logger.error("Error during update parsing", e);
             sendMessage(169022871, "Exception: " + e.toString(), null);
         }
     }
 
     public void handleTextQuery(long from, long chat, String text) {
-        String list = "\\/list(\\s+(?<regex>-r))?(\\s+-n\\s+\\\"(?<name>.*)\\\")?(\\s+-p\\s+(?<price>[\\d]+))?\\s*";
+        String list = "\\/list(\\s+(?<regex>-r))?\\s+(?<name>.*?)?\\s*";
+        String menu = "\\/menu?(\\s+(?<date>\\d+\\.\\d+.\\d+))?\\s*";
+        String day = "\\/day?(\\s+(?<date>\\d+\\.\\d+.\\d+))?\\s*";
+        String sum = "\\/sum?(\\s+(?<date>\\d+.\\d+))?\\s*";
+
         String start = "\\/start";
         String help = "\\/help";
 
         if (text.matches(list)) {
             handleList(chat, text);
+        } else if (text.matches(menu)) {
+            handleMenu(chat, text);
+        } else if (text.matches(day)) {
+            handleDecisionForDay(from, chat, text);
+        } else if (text.matches(sum)) {
+            handleSum(from, chat, text);
         } else if (text.matches(help)) {
             sendHelp(chat);
         } else if (text.matches(start)) {
@@ -119,31 +142,116 @@ public class TelegramServiceImpl implements TelegramService {
         }
     }
 
-    public void handleList(long chat, String text) {
-        String list = "\\/list(\\s+(?<regex>-r))?(\\s+-n\\s+\\\"(?<name>.*)\\\")?(\\s+-p\\s+(?<price>[\\d]+))?\\s*";
+    private void handleSum(long from, long chat, String text) {
+        String sum = "\\/sum?(\\s+(?<date>\\d+.\\d+))?\\s*";
+
+        Pattern pattern = Pattern.compile(sum);
+        Matcher matcher = pattern.matcher(text);
+        if (matcher.matches()) {
+            Calendar end = new GregorianCalendar();
+            Calendar start = new GregorianCalendar();
+            start.set(Calendar.DAY_OF_MONTH, 1);
+
+            if (matcher.group("date") != null) {
+                String[] splitted = matcher.group("date").split("\\.");
+                try {
+                    start = new GregorianCalendar(Integer.parseInt(splitted[1]), Integer.parseInt(splitted[0]) - 1, 1);
+                    end = new GregorianCalendar(Integer.parseInt(splitted[1]),
+                            Integer.parseInt(splitted[0]),
+                            start.getActualMaximum(Calendar.DAY_OF_MONTH));
+                } catch (Exception e) {
+                    sendMessage(chat, "Wrong date format. Try dd.mm.yyyy", null);
+                    return;
+                }
+            }
+            sendMessage(chat, "Sum for your period: " + deciderService.sumForPeriod(from, start, end), null);
+            sendMessage(chat, "Make sure that there is menu for each day", null);
+        } else {
+            throw new IllegalArgumentException(text);
+        }
+    }
+
+
+    private void handleDecisionForDay(long from, long chat, String text) {
+        String day = "\\/day?(\\s+(?<date>\\d+\\.\\d+.\\d+))?\\s*";
+
+        Pattern pattern = Pattern.compile(day);
+        Matcher matcher = pattern.matcher(text);
+        if (matcher.matches()) {
+            Calendar calendar = new GregorianCalendar();
+            if (matcher.group("date") != null) {
+                String[] splitted = matcher.group("date").split("\\.");
+                try {
+                    calendar = new GregorianCalendar(Integer.parseInt(splitted[2]), Integer.parseInt(splitted[1]) - 1, Integer.parseInt(splitted[0]));
+                } catch (Exception e) {
+                    sendMessage(chat, "Wrong date format. Try dd.mm.yyyy", null);
+                    return;
+                }
+            }
+            if (!menuService.contains(calendar)) {
+                sendMessage(chat, "No menu found for your date", null);
+            } else {
+                List<MenuItem> items = deciderService.getForDate(from, calendar);
+                sendMessage(chat, ToStrings.menuItemsToString(items, 0, 10), null);
+                sendMessage(chat, "Sum:" + items.stream().mapToDouble(MenuItem::getPrice).sum(), null);
+            }
+
+        } else {
+            throw new IllegalArgumentException(text);
+        }
+
+    }
+
+    private void handleMenu(long chat, String text) {
+        String menu = "\\/menu?(\\s+(?<date>\\d+\\.\\d+.\\d+))?\\s*";
+        Pattern pattern = Pattern.compile(menu);
+        Matcher matcher = pattern.matcher(text);
+        if (matcher.matches()) {
+            Calendar calendar = new GregorianCalendar();
+            if (matcher.group("date") != null) {
+                String[] splitted = matcher.group("date").split("\\.");
+                try {
+                    calendar = new GregorianCalendar(Integer.parseInt(splitted[2]), Integer.parseInt(splitted[1]) - 1, Integer.parseInt(splitted[0]));
+                } catch (Exception e) {
+                    sendMessage(chat, "Wrong date format. Try dd.mm.yyyy", null);
+                    return;
+                }
+            }
+            if (!menuService.contains(calendar)) {
+                sendMessage(chat, "No menu found for your date", null);
+            } else {
+                Menu menu1 = menuService.getForDate(calendar);
+                sendMessage(chat, ToStrings.menuItemsToString(menu1.getItemsCopy(), 0, 100), null);
+            }
+        } else {
+            throw new IllegalArgumentException(text);
+        }
+    }
+
+    private void handleList(long chat, String text) {
+        String list = "\\/list(\\s+(?<regex>-r))?\\s+(?<name>.*?)?\\s*";
         Pattern pattern = Pattern.compile(list);
         Matcher matcher = pattern.matcher(text);
         if (matcher.matches()) {
+
             String name = ".*";
+
             if (matcher.group("name") != null) {
                 name = matcher.group("name");
             }
-            double price = 1000;
-            if (matcher.group("price") != null) {
-                price = Double.parseDouble(matcher.group("price"));
+
+            if (matcher.group("regex") == null) {
+                name = ".*" + name + ".*";
             }
 
-            if (matcher.group("regex") != null || text.equals("/list")) {
-                List<MenuItem> items = menuService.getForNameAndPriceRegex(name, 0, price);
-                sendMessage(chat, ToStrings.menuItems(items), null);
-            } else {
-                MenuItem menuItem = menuService.getForNameAndPrice(name, price);
-                if (menuItem != null) {
-                    sendMessage(chat, ToStrings.menuItem(menuItem), null);
-                } else {
-                    sendMessage(chat, "No such item", null);
-                }
+            List<MenuItem> items = menuService.getForNameRegex(name);
+            if (items.size() == 0) {
+                sendMessage(chat, "I haven't found such dishes in my database", null);
+
             }
+            sendMessage(chat, ToStrings.menuItemsToString(items, 0, 20), null);
+        } else {
+            throw new IllegalArgumentException(text);
         }
     }
 
@@ -156,21 +264,19 @@ public class TelegramServiceImpl implements TelegramService {
         sendHelp(chat);
     }
 
+    //ПРОБЛЕМА!!! НЕ ПОЛУЧАЕТСЯ ЗАГРУЖАТЬ МЕНЮШКИ НА СЕРВЕРЕ, СЛЕТАЕТ КОДИРОВКА, ПОЛУЧАЕМ КУЧУ ВОПРОСОВ.
+    //НАДО ФИКСИТЬ
     /*
         Надо:
             1. Если сообщение из конфы, к каждому ответу прикреплять упоминание человека, который написал
             2. Обрабатывать инлайн запросы
             3. Хендлить ok:false в запросах
             4. Организовать по-человечески
+            5. Хэндлить исключения!!!
         Команды:
             /list [-r] [-n <MEAL_NAME>] [-p <PRICE> | <LOWER_PRICE>, <UPPER_PRICE>]
             /rand
             /test
-                /love <regex>
-                /hate <regex>
-                /love -f <regex>
-                /hate -f <regex>
-                /cancel
             /month <MONTH number>
             /period <START_DATE> <END_DATE>
             /today
