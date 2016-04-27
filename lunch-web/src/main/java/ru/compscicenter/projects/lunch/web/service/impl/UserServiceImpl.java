@@ -14,8 +14,8 @@ import ru.compscicenter.projects.lunch.web.service.UserService;
 import ru.compscicenter.projects.lunch.web.util.ModelConverter;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 
 public class UserServiceImpl implements UserService {
@@ -59,8 +59,8 @@ public class UserServiceImpl implements UserService {
         UserDBModel user = new UserDBModel();
         user.setId(id);
         int max = Math.min(menuList.size(), 10);
-        user.setLoveSet(new HashSet<>(menuList.subList(0, max)));
-        user.setHateSet(new HashSet<>());
+        user.setLoveList(menuList.subList(0, max));
+        user.setHateList(new ArrayList<>());
 
         userDAO.saveOrUpdate(user);
     }
@@ -87,8 +87,8 @@ public class UserServiceImpl implements UserService {
     public void reset(long id) {
         if (exists(id)) {
             UserDBModel user = userDAO.getById(id);
-            user.getLoveSet().clear();
-            user.getHateSet().clear();
+            user.getLoveList().clear();
+            user.getHateList().clear();
             userDAO.saveOrUpdate(user);
         } else {
             throw new NoSuchUserException("No user with id = " + id);

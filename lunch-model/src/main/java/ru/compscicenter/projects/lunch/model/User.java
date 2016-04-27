@@ -1,36 +1,35 @@
 package ru.compscicenter.projects.lunch.model;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 public class User {
     private final long id;
 
-    private final Set<MenuItem> loveSet;
-    private final Set<MenuItem> hateSet;
+    private final List<MenuItem> loveList;
+    private final List<MenuItem> hateList;
 
-    public User(final long id, final Collection<? extends MenuItem> loveCol, final Collection<? extends MenuItem> hateCol) {
+    public User(final long id, final List<? extends MenuItem> loveCol, final List<? extends MenuItem> hateCol) {
         this.id = id;
-        this.loveSet = new HashSet<>(loveCol);
-        this.hateSet = new HashSet<>(hateCol);
+        this.loveList = new ArrayList<>(loveCol);
+        this.hateList = new ArrayList<>(hateCol);
     }
 
     public User(final long id) {
         this.id = id;
-        this.hateSet = new HashSet<>();
-        this.loveSet = new HashSet<>();
+        this.hateList = new ArrayList<>();
+        this.loveList = new ArrayList<>();
     }
 
     public long getId() {
         return id;
     }
 
-    public Set<MenuItem> getLoveSet() {
-        return loveSet;
+    public List<MenuItem> getLoveList() {
+        return loveList;
     }
 
-    public Set<MenuItem> getHateSet() {
-        return hateSet;
+    public List<MenuItem> getHateList() {
+        return hateList;
     }
 }

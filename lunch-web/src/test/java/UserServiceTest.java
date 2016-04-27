@@ -29,8 +29,8 @@ public class UserServiceTest extends AbstractTestNGSpringContextTests {
         userService.makeRandomUser(101);
         userService.reset(101);
         Assert.assertTrue(userService.exists(101));
-        Assert.assertEquals(userService.getUserById(101).getLoveSet().size(), 0);
-        Assert.assertEquals(userService.getUserById(101).getHateSet().size(), 0);
+        Assert.assertEquals(userService.getUserById(101).getLoveList().size(), 0);
+        Assert.assertEquals(userService.getUserById(101).getHateList().size(), 0);
     }
 
     @Test(dependsOnGroups = "creatingUsers", expectedExceptions = org.springframework.dao.DuplicateKeyException.class)

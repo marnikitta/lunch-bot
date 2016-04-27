@@ -8,9 +8,8 @@ import ru.compscicenter.projects.lunch.web.model.MenuItemDBModel;
 import ru.compscicenter.projects.lunch.web.model.UserDBModel;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+import java.util.stream.Collectors;
 
 public class ModelConverter {
 
@@ -65,27 +64,17 @@ public class ModelConverter {
         UserDBModel userDBModel = new UserDBModel();
         userDBModel.setId(user.getId());
 
-        Set<MenuItemDBModel> dbSet = new HashSet<>();
-        user.getLoveSet().stream().forEach(item -> dbSet.add(menuItemToDBMenuItem(item)));
-        userDBModel.setLoveSet(dbSet);
-
-        dbSet.clear();
-        user.getHateSet().stream().forEach(item -> dbSet.add(menuItemToDBMenuItem(item)));
-        userDBModel.setHateSet(dbSet);
+        userDBModel.setLoveList(user.getLoveList().stream().map(ModelConverter::menuItemToDBMenuItem).collect(Collectors.toList()));
+        userDBModel.setHateList(user.getHateList().stream().map(ModelConverter::menuItemToDBMenuItem).collect(Collectors.toList()));
 
         return userDBModel;
     }
 
     public static User dbUserToUser(final UserDBModel userDBModel) {
         User user = new User(userDBModel.getId());
-        Set<MenuItem> set = new HashSet<>();
 
-        userDBModel.getLoveSet().stream().forEach(item -> set.add(dbMenuItemToMenuItem(item)));
-        user.getLoveSet().addAll(set);
-
-        set.clear();
-        userDBModel.getHateSet().stream().forEach(item -> set.add(dbMenuItemToMenuItem(item)));
-        user.getHateSet().addAll(set);
+        userDBModel.getLoveList().stream().map(ModelConverter::dbMenuItemToMenuItem).forEach(user.getLoveList()::add);
+        userDBModel.getHateList().stream().map(ModelConverter::dbMenuItemToMenuItem).forEach(user.getHateList()::add);
 
         return user;
     }
