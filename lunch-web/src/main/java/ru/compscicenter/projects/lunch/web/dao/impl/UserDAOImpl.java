@@ -31,11 +31,7 @@ public class UserDAOImpl implements UserDAO {
         //TODO: optimize
         Session session = factory.getCurrentSession();
         Object object = session.get(UserDBModel.class, id);
-        if (object != null) {
-            return true;
-        } else {
-            return false;
-        }
+        return object != null;
     }
 
     @Override

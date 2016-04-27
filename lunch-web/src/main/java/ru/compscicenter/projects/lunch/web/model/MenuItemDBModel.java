@@ -68,32 +68,8 @@ public class MenuItemDBModel {
         return id;
     }
 
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public void setTags(String tags) {
-        this.tags = tags;
-    }
-
     public void setName(String name) {
         this.name = name;
-    }
-
-    public void setWeight(double weight) {
-        this.weight = weight;
-    }
-
-    public void setCalorie(double calorie) {
-        this.calorie = calorie;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
-    }
-
-    public void setComposition(List<String> composition) {
-        this.composition = composition;
     }
 
     public String getType() {

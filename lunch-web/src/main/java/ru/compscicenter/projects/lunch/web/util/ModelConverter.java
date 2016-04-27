@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ModelConverter {
+public final class ModelConverter {
 
     private ModelConverter() {
     }

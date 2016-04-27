@@ -48,15 +48,15 @@ public class DeciderServiceImpl implements DeciderService {
     public double sumForPeriod(final long userId, final Calendar start, final Calendar end) {
         double result = 0;
 
-        Calendar it = start;
+        Calendar it = (Calendar) start.clone();
         while (!it.getTime().after(end.getTime())) {
             try {
                 List<MenuItem> menuItems = getForDate(userId, it);
                 result += menuItems.stream().mapToDouble(MenuItem::getPrice).sum();
             } catch (NoMenuForDateException e) {
-                logger.warn("Summing", e);
+                logger.debug("Summing", e);
             }
-            it.add(Calendar.MONTH, 1);
+            it.add(Calendar.DAY_OF_MONTH, 1);
         }
         return result;
     }
@@ -68,23 +68,22 @@ public class DeciderServiceImpl implements DeciderService {
             throw new NullPointerException("date is null");
         }
 
-        List<Menu> data = menuService.getAllForDates(new GregorianCalendar(1996, 1, 1), date);
-        if (data.size() == 0) {
-            logger.warn("Knowledge base is empty for " + date.toString());
-            throw new NoMenuForDateException("Knowledge base is empty for " + date.toString());
+        Menu menu = menuService.getForDate(date);
+        if (menu == null) {
+            throw new NoMenuForDateException("There is no menu for date " + date);
         }
-        MenuKnowledge knowledge = new MenuKnowledge(data);
 
         User user = userService.getUserById(userId);
         if (user == null) {
             throw new NoSuchUserException("No such user  " + userId);
         }
 
-        Menu menu = menuService.getForDate(date);
-        if (menu == null) {
-            logger.warn("There is no menu for date " + date);
-            throw new NoMenuForDateException("There is no menu for date " + date);
+        List<Menu> data = menuService.getAllForDates(new GregorianCalendar(1996, 1, 1), date);
+        if (data.size() == 0) {
+            throw new NoMenuForDateException("Knowledge base is empty for " + date.toString());
         }
+        MenuKnowledge knowledge = new MenuKnowledge(data);
+
         List<MenuItem> items = menu.getItemsCopy();
         decider.range(items, knowledge, user);
 

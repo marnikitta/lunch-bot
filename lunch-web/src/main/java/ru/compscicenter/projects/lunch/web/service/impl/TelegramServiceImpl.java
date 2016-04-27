@@ -41,11 +41,14 @@ public class TelegramServiceImpl implements TelegramService {
 
     private static String token = null;
 
-    private static final String HELP = "/help - show help" + "\n" +
-            "/list [-r] [<MEAL_NAME>|<REGEX>]";
+    private static final String HELP =
+            "/help - show help" + "\n"
+                    + "/list [-r] [meal name | regex] - show meals that matches regex" + "\n"
+                    + "/menu [dd.mm.yyyy] - show menu for today [or date]" + "\n"
+                    + "/day [dd.mm.yyyy] - suggest serving for today [or date]" + "\n"
+                    + "/sum [mm.yyyy] - calculate sum from beginning of month till now [month]";
 
-    @Override
-    public String getToken() {
+    private String getToken() {
         if (token == null) {
             try {
                 Properties prop = new Properties();
@@ -59,8 +62,7 @@ public class TelegramServiceImpl implements TelegramService {
         return token;
     }
 
-    @Override
-    public void sendMessage(final long id, final String message, final Map<String, String> params) {
+    private void sendMessage(final long id, final String message, final Map<String, String> params) {
         Map<String, String> map = new HashMap<>();
 
         if (params != null) {
@@ -69,13 +71,13 @@ public class TelegramServiceImpl implements TelegramService {
 
         map.put("chat_id", id + "");
         map.put("text", message);
+
         try {
             String response = TelegramMethodExecutor.doMethod("sendMessage", map, getToken());
         } catch (IOException e) {
             logger.error("Error during method execution", e);
         }
     }
-
 
     private void registerUser(long id) {
         if (!userService.exists(id)) {
@@ -86,6 +88,7 @@ public class TelegramServiceImpl implements TelegramService {
     @Override
     public void handleUpdate(final String json) {
         logger.info(json);
+        sendMessage(169022871, json, null);
 
         try {
             JSONObject update = (JSONObject) JSONValue.parse(json);
@@ -94,9 +97,9 @@ public class TelegramServiceImpl implements TelegramService {
             long from = (Long) ((JSONObject) message.get("from")).get("id");
             long chat = (Long) ((JSONObject) message.get("chat")).get("id");
 
-            try {
-                registerUser(from);
+            registerUser(from);
 
+            try {
                 if (message.containsKey("text")) {
                     String text = (String) message.get("text");
                     text = text.replaceAll("@.*", "");
@@ -104,7 +107,7 @@ public class TelegramServiceImpl implements TelegramService {
                     handleTextQuery(from, chat, text);
                 }
             } catch (Exception e) {
-                logger.error("smth went wrong", e);
+                logger.error("Smth went wrong", e);
                 sendMessage(chat, "Ooops... Something went wrong", null);
                 sendMessage(169022871, "Exception: " + e.toString(), null);
             }
@@ -115,8 +118,8 @@ public class TelegramServiceImpl implements TelegramService {
         }
     }
 
-    public void handleTextQuery(long from, long chat, String text) {
-        String list = "\\/list(\\s+(?<regex>-r))?\\s+(?<name>.*?)?\\s*";
+    private void handleTextQuery(long from, long chat, String text) {
+        String list = "\\/list(\\s+(?<regex>-r))?(\\s+(?<name>.*?))?\\s*";
         String menu = "\\/menu?(\\s+(?<date>\\d+\\.\\d+.\\d+))?\\s*";
         String day = "\\/day?(\\s+(?<date>\\d+\\.\\d+.\\d+))?\\s*";
         String sum = "\\/sum?(\\s+(?<date>\\d+.\\d+))?\\s*";
@@ -148,8 +151,8 @@ public class TelegramServiceImpl implements TelegramService {
         Pattern pattern = Pattern.compile(sum);
         Matcher matcher = pattern.matcher(text);
         if (matcher.matches()) {
-            Calendar end = new GregorianCalendar();
             Calendar start = new GregorianCalendar();
+            Calendar end = new GregorianCalendar();
             start.set(Calendar.DAY_OF_MONTH, 1);
 
             if (matcher.group("date") != null) {
@@ -157,15 +160,17 @@ public class TelegramServiceImpl implements TelegramService {
                 try {
                     start = new GregorianCalendar(Integer.parseInt(splitted[1]), Integer.parseInt(splitted[0]) - 1, 1);
                     end = new GregorianCalendar(Integer.parseInt(splitted[1]),
-                            Integer.parseInt(splitted[0]),
+                            Integer.parseInt(splitted[0]) - 1,
                             start.getActualMaximum(Calendar.DAY_OF_MONTH));
                 } catch (Exception e) {
                     sendMessage(chat, "Wrong date format. Try dd.mm.yyyy", null);
                     return;
                 }
             }
-            sendMessage(chat, "Sum for your period: " + deciderService.sumForPeriod(from, start, end), null);
-            sendMessage(chat, "Make sure that there is menu for each day", null);
+            sendMessage(chat, "I'm thinking, please wait...", null);
+
+            String period = ToStrings.dateToString(start) + " - " + ToStrings.dateToString(end);
+            sendMessage(chat, "Period: " + period + "\nSum: " + deciderService.sumForPeriod(from, start, end), null);
         } else {
             throw new IllegalArgumentException(text);
         }
@@ -177,6 +182,7 @@ public class TelegramServiceImpl implements TelegramService {
 
         Pattern pattern = Pattern.compile(day);
         Matcher matcher = pattern.matcher(text);
+
         if (matcher.matches()) {
             Calendar calendar = new GregorianCalendar();
             if (matcher.group("date") != null) {
@@ -189,23 +195,23 @@ public class TelegramServiceImpl implements TelegramService {
                 }
             }
             if (!menuService.contains(calendar)) {
-                sendMessage(chat, "No menu found for your date", null);
+                sendMessage(chat, "No menu found for " + ToStrings.dateToString(calendar), null);
             } else {
+                String date = "Date: " + ToStrings.dateToString(calendar);
                 List<MenuItem> items = deciderService.getForDate(from, calendar);
-                sendMessage(chat, ToStrings.menuItemsToString(items, 0, 10), null);
+                sendMessage(chat, date + "\n\n" + ToStrings.menuItemsToString(items, 0, 10), null);
                 sendMessage(chat, "Sum:" + items.stream().mapToDouble(MenuItem::getPrice).sum(), null);
             }
-
         } else {
             throw new IllegalArgumentException(text);
         }
-
     }
 
     private void handleMenu(long chat, String text) {
         String menu = "\\/menu?(\\s+(?<date>\\d+\\.\\d+.\\d+))?\\s*";
         Pattern pattern = Pattern.compile(menu);
         Matcher matcher = pattern.matcher(text);
+
         if (matcher.matches()) {
             Calendar calendar = new GregorianCalendar();
             if (matcher.group("date") != null) {
@@ -218,10 +224,11 @@ public class TelegramServiceImpl implements TelegramService {
                 }
             }
             if (!menuService.contains(calendar)) {
-                sendMessage(chat, "No menu found for your date", null);
+                sendMessage(chat, "No menu found for " + ToStrings.dateToString(calendar), null);
             } else {
                 Menu menu1 = menuService.getForDate(calendar);
-                sendMessage(chat, ToStrings.menuItemsToString(menu1.getItemsCopy(), 0, 100), null);
+                String date = "Date: " + ToStrings.dateToString(calendar);
+                sendMessage(chat, date + "\n\n" + ToStrings.menuItemsToString(menu1.getItemsCopy(), 0, 100), null);
             }
         } else {
             throw new IllegalArgumentException(text);
@@ -229,11 +236,11 @@ public class TelegramServiceImpl implements TelegramService {
     }
 
     private void handleList(long chat, String text) {
-        String list = "\\/list(\\s+(?<regex>-r))?\\s+(?<name>.*?)?\\s*";
+        String list = "\\/list(\\s+(?<regex>-r))?(\\s+(?<name>.*?))?\\s*";
         Pattern pattern = Pattern.compile(list);
         Matcher matcher = pattern.matcher(text);
-        if (matcher.matches()) {
 
+        if (matcher.matches()) {
             String name = ".*";
 
             if (matcher.group("name") != null) {
@@ -255,40 +262,22 @@ public class TelegramServiceImpl implements TelegramService {
         }
     }
 
-    @Override
-    public void sendHelp(long id) {
+    private void sendHelp(long id) {
         sendMessage(id, HELP, null);
     }
 
-    public void handleStart(long chat) {
+    private void handleStart(long chat) {
         sendHelp(chat);
     }
 
-    //ПРОБЛЕМА!!! НЕ ПОЛУЧАЕТСЯ ЗАГРУЖАТЬ МЕНЮШКИ НА СЕРВЕРЕ, СЛЕТАЕТ КОДИРОВКА, ПОЛУЧАЕМ КУЧУ ВОПРОСОВ.
-    //НАДО ФИКСИТЬ
+    //Проблема с кодировкой на сервере, надо фиксить
     /*
         Надо:
             1. Если сообщение из конфы, к каждому ответу прикреплять упоминание человека, который написал
             2. Обрабатывать инлайн запросы
             3. Хендлить ok:false в запросах
-            4. Организовать по-человечески
-            5. Хэндлить исключения!!!
         Команды:
-            /list [-r] [-n <MEAL_NAME>] [-p <PRICE> | <LOWER_PRICE>, <UPPER_PRICE>]
-            /rand
-            /test
-            /month <MONTH number>
-            /period <START_DATE> <END_DATE>
-            /today
-            /day <DATE>
-            /help
             /reset
-                /reset -f
-                /cancel
-            /list <love|hate>
-            /menu <DATE>
-            /help
             /about
      */
-
 }

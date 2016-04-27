@@ -6,10 +6,6 @@ import ru.compscicenter.projects.lunch.model.User;
 import java.util.List;
 
 public interface UserService {
-    public final static int LOVE = 1;
-    public final static int HATE = -1;
-    public final static int NEUTRAL = 0;
-
     public User getUserById(long id);
 
     public void makeRandomUser(long id);

@@ -1,6 +1,6 @@
 package ru.compscicenter.projects.lunch.web.exception;
 
-public class NoSuchUserException extends IllegalStateException{
+public class NoSuchUserException extends IllegalStateException {
     public NoSuchUserException() {
     }
 

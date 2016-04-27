@@ -13,7 +13,7 @@ import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.util.Map;
 
-public class TelegramMethodExecutor {
+public final class TelegramMethodExecutor {
     private final static String HOST = "api.telegram.org";
 
     private static Logger logger = LoggerFactory.getLogger(TelegramMethodExecutor.class);
