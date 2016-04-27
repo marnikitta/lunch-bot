@@ -1,5 +1,6 @@
-package ru.compscicenter.projects.lunch.estimator;
+package ru.compscicenter.projects.lunch.estimator.impl;
 
+import ru.compscicenter.projects.lunch.estimator.Decider;
 import ru.compscicenter.projects.lunch.model.MenuItem;
 import ru.compscicenter.projects.lunch.model.MenuKnowledge;
 import ru.compscicenter.projects.lunch.model.User;

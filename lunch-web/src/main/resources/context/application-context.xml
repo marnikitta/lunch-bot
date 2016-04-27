@@ -30,9 +30,9 @@
         <beans:property name="servingDecider" ref="simpleServingDecider"/>
     </beans:bean>
 
-    <beans:bean id="randomDecider" class="ru.compscicenter.projects.lunch.estimator.RandomDecider"/>
+    <beans:bean id="randomDecider" class="ru.compscicenter.projects.lunch.estimator.impl.RandomDecider"/>
 
-    <beans:bean id="simpleServingDecider" class="ru.compscicenter.projects.lunch.estimator.SimpleServingDecider">
+    <beans:bean id="simpleServingDecider" class="ru.compscicenter.projects.lunch.estimator.impl.SimpleServingDecider">
         <beans:constructor-arg value="5"/>
     </beans:bean>
 
