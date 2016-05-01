@@ -4,6 +4,7 @@ import ru.compscicenter.projects.lunch.model.Menu;
 import ru.compscicenter.projects.lunch.model.MenuItem;
 import ru.compscicenter.projects.lunch.web.exception.MenuDuplicateException;
 import ru.compscicenter.projects.lunch.web.exception.MenuUploadingException;
+import ru.compscicenter.projects.lunch.web.model.MenuItemDBModel;
 
 import java.io.InputStream;
 import java.util.Calendar;
@@ -29,6 +30,8 @@ public interface MenuService {
     public boolean contains(Calendar day);
 
     public List<MenuItem> getAllItems();
+
+    public List<MenuItemDBModel> getAllDBItems();
 
     public Menu upload(InputStream stream) throws MenuUploadingException, MenuDuplicateException;
 }

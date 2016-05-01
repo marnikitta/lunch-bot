@@ -12,5 +12,5 @@ public interface Clusterer {
      * @param collection коллекция блюд
      * @return блюдо - номер кластера
      */
-    public Map<MenuItem, Integer> doCluster(List<? extends MenuItem> sample);
+    public Map<MenuItem, Integer> doCluster(List<? extends MenuItem> sample) throws DeciderException;
 }

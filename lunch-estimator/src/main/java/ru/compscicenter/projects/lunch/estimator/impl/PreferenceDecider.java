@@ -26,15 +26,15 @@ public class PreferenceDecider implements Decider {
     private static final int MIN_DF = 0;
 
     @Override
-    public List range(final List<? extends MenuItem> sample, final MenuKnowledge knowledge, final User user) {
+    public List<MenuItem> range(final List<? extends MenuItem> sample, final MenuKnowledge knowledge, final User user) {
 
         MenuItemClustering clusterer = new MenuItemClustering(NUMBER_OF_CLUSTERS, NUMBER_OF_ITERATIONS, MIN_DF);
-        List sortSample = null;
+        List<MenuItem> sortSample = null;
 
 
         try {
 
-            clusterer.fit(new ArrayList(knowledge.getList()));
+            clusterer.fit(new ArrayList<>(knowledge.getList()));
 
             List<Integer> preferenceClusters = new ArrayList<>();
             List loveSet = user.getLoveList();
@@ -70,5 +70,4 @@ public class PreferenceDecider implements Decider {
         return sortSample;
 
     }
-
 }

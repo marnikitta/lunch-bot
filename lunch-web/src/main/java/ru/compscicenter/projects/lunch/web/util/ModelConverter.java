@@ -47,7 +47,7 @@ public final class ModelConverter {
                 menuItemDBModel.getWeight(),
                 menuItemDBModel.getCalorie(),
                 menuItemDBModel.getPrice(),
-                menuItemDBModel.getComposition());
+                new ArrayList<>(menuItemDBModel.getComposition())); //Костыль. Иначе equals стремно работает
     }
 
     public static MenuItemDBModel menuItemToDBMenuItem(final MenuItem menuItem) {
@@ -57,7 +57,7 @@ public final class ModelConverter {
                 menuItem.getWeight(),
                 menuItem.getCalorie(),
                 menuItem.getPrice(),
-                menuItem.getComposition());
+                new ArrayList<>(menuItem.getComposition())); // Аналогичный костыль
     }
 
     public static UserDBModel userToDBUser(final User user) {

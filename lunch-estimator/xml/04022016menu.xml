@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<menu date="04.02.2016">
+  <item type="garnish">
+    <name>горошек зеленый на пару</name>
+    <price>55.0</price>
+    <calorie>51.0</calorie>
+    <weight>150.0</weight>
+    <composition/>
+  </item>
+  <item type="garnish">
+    <name>гречка отварная</name>
+    <price>45.0</price>
+    <calorie>240.0</calorie>
+    <weight>150.0</weight>
+    <composition/>
+  </item>
+  <item type="garnish">
+    <name>картофельное пюре</name>
+    <price>55.0</price>
+    <calorie>202.0</calorie>
+    <weight>180.0</weight>
+    <composition/>
+  </item>
+  <item type="garnish">
+    <name>маш отварной</name>
+    <price>70.0</price>
+    <calorie>450.0</calorie>
+    <weight>150.0</weight>
+    <composition/>
+  </item>
+  <item type="garnish">
+    <name>рис отварной</name>
+    <price>40.0</price>
+    <calorie>180.0</calorie>
+    <weight>150.0</weight>
+    <composition/>
+  </item>
+  <item type="garnish">
+    <name>цветная капуста в сливочном соусе</name>
+    <price>60.0</price>
+    <calorie>173.0</calorie>
+    <weight>180.0</weight>
+    <composition/>
+  </item>
+  <item type="main course">
+    <name>кабачки, запеченные с помидорами и сыром</name>
+    <price>160.0</price>
+    <calorie>242.0</calorie>
+    <weight>200.0</weight>
+    <composition/>
+  </item>
+  <item type="main course">
+    <name>курочка запеченная с овощами</name>
+    <price>130.0</price>
+    <calorie>543.0</calorie>
+    <weight>120.0</weight>
+    <composition/>
+  </item>
+  <item type="main course">
+    <name>свинина по - милански</name>
+    <price>160.0</price>
+    <calorie>493.0</calorie>
+    <weight>130.0</weight>
+    <composition/>
+  </item>
+  <item type="main course">
+    <name>говядина отварная</name>
+    <price>170.0</price>
+    <calorie>195.0</calorie>
+    <weight>100.0</weight>
+    <composition>
+      <ingredient>диетическая</ingredient>
+    </composition>
+  </item>
+  <item type="main course">
+    <name>лосось в соусе терияки</name>
+    <price>220.0</price>
+    <calorie>327.0</calorie>
+    <weight>120.0</weight>
+    <composition/>
+  </item>
+  <item type="main course">
+    <name>поджарка из свинины</name>
+    <price>150.0</price>
+    <calorie>447.0</calorie>
+    <weight>150.0</weight>
+    <composition/>
+  </item>
+  <item type="main course">
+    <name>фасоль с перцем и грибами</name>
+    <price>130.0</price>
+    <calorie>199.0</calorie>
+    <weight>200.0</weight>
+    <composition/>
+  </item>
+  <item type="main course">
+    <name>куриное филе в соусе томато пронто</name>
+    <price>140.0</price>
+    <calorie>309.0</calorie>
+    <weight>150.0</weight>
+    <composition/>
+  </item>
+  <item type="main course">
+    <name>стейк из индейки</name>
+    <price>150.0</price>
+    <calorie>204.0</calorie>
+    <weight>100.0</weight>
+    <composition/>
+  </item>
+  <item type="main course">
+    <name>треска в яйце</name>
+    <price>150.0</price>
+    <calorie>199.0</calorie>
+    <weight>100.0</weight>
+    <composition/>
+  </item>
+  <item type="main course">
+    <name>манты от шефа</name>
+    <price>180.0</price>
+    <calorie>553.0</calorie>
+    <weight>240.0</weight>
+    <composition/>
+  </item>
+  <item type="main course">
+    <name>паста вегетарианская</name>
+    <price>180.0</price>
+    <calorie>308.0</calorie>
+    <weight>300.0</weight>
+    <composition/>
+  </item>
+  <item type="main course">
+    <name>треска с кремом из порея и опятами</name>
+    <price>320.0</price>
+    <calorie>383.0</calorie>
+    <weight>220.0</weight>
+    <composition/>
+  </item>
+  <item type="soup">
+    <name>суп грибной с перловкой</name>
+    <price>60.0</price>
+    <calorie>111.0</calorie>
+    <weight>250.0</weight>
+    <composition/>
+  </item>
+  <item type="soup">
+    <name>бульон куриный с сухариками</name>
+    <price>55.0</price>
+    <calorie>150.0</calorie>
+    <weight>250.0</weight>
+    <composition/>
+  </item>
+  <item type="soup">
+    <name>щи из свежей капусты с говядиной</name>
+    <price>70.0</price>
+    <calorie>112.0</calorie>
+    <weight>250.0</weight>
+    <composition/>
+  </item>
+  <item type="soup">
+    <name>суп горячий томатный от шефа</name>
+    <price>100.0</price>
+    <calorie>134.0</calorie>
+    <weight>250.0</weight>
+    <composition/>
+  </item>
+  <item type="salad">
+    <name>салат витаминный с морковью</name>
+    <price>50.0</price>
+    <calorie>84.0</calorie>
+    <weight>150.0</weight>
+    <composition>
+      <ingredient>капуста б/к</ingredient>
+      <ingredient>морковь</ingredient>
+      <ingredient>соль</ingredient>
+      <ingredient>сахар</ingredient>
+      <ingredient>уксус</ingredient>
+      <ingredient>масло растительное</ingredient>
+    </composition>
+  </item>
+  <item type="salad">
+    <name>салат карнавал</name>
+    <price>90.0</price>
+    <calorie>336.0</calorie>
+    <weight>150.0</weight>
+    <composition>
+      <ingredient>лосось</ingredient>
+      <ingredient>картофель</ingredient>
+      <ingredient>томат</ingredient>
+      <ingredient>майонез</ingredient>
+      <ingredient>зелень</ingredient>
+      <ingredient>специи</ingredient>
+    </composition>
+  </item>
+  <item type="salad">
+    <name>салат нежный</name>
+    <price>70.0</price>
+    <calorie>455.0</calorie>
+    <weight>150.0</weight>
+    <composition>
+      <ingredient>ветчина</ingredient>
+      <ingredient>огурец свежий</ingredient>
+      <ingredient>рис</ingredient>
+      <ingredient>лук зеленый</ingredient>
+      <ingredient>яйцо</ingredient>
+      <ingredient>сыр</ingredient>
+      <ingredient>майонез</ingredient>
+    </composition>
+  </item>
+  <item type="salad">
+    <name> </name>
+    <price>70.0</price>
+    <calorie>321.0</calorie>
+    <weight>150.0</weight>
+    <composition/>
+  </item>
+  <item type="salad">
+    <name>салат шопский</name>
+    <price>75.0</price>
+    <calorie>121.0</calorie>
+    <weight>150.0</weight>
+    <composition>
+      <ingredient>огурец</ingredient>
+      <ingredient>помидор</ingredient>
+      <ingredient>паприка</ingredient>
+      <ingredient>лук красн.</ingredient>
+      <ingredient>брынза</ingredient>
+      <ingredient>зелень</ingredient>
+      <ingredient>масло раст.</ingredient>
+    </composition>
+  </item>
+  <item type="salad">
+    <name>капрезе</name>
+    <price>180.0</price>
+    <calorie>172.0</calorie>
+    <weight>250.0</weight>
+    <composition>
+      <ingredient>помидоры</ingredient>
+      <ingredient>моцарелла</ingredient>
+      <ingredient>айсберг</ingredient>
+      <ingredient>бальзамик</ingredient>
+      <ingredient>соус песто</ingredient>
+    </composition>
+  </item>
+</menu>

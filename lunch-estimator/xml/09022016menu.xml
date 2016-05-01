@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<menu date="09.02.2016">
+  <item type="garnish">
+    <name>гречка отварная</name>
+    <price>45.0</price>
+    <calorie>240.0</calorie>
+    <weight>150.0</weight>
+    <composition/>
+  </item>
+  <item type="garnish">
+    <name>картофельное пюре</name>
+    <price>55.0</price>
+    <calorie>202.0</calorie>
+    <weight>180.0</weight>
+    <composition/>
+  </item>
+  <item type="garnish">
+    <name>овощи на пару</name>
+    <price>55.0</price>
+    <calorie>51.0</calorie>
+    <weight>150.0</weight>
+    <composition/>
+  </item>
+  <item type="garnish">
+    <name>рис отварной</name>
+    <price>40.0</price>
+    <calorie>180.0</calorie>
+    <weight>150.0</weight>
+    <composition/>
+  </item>
+  <item type="garnish">
+    <name>фасоль стручковая с жареным луком</name>
+    <price>60.0</price>
+    <calorie>58.0</calorie>
+    <weight>150.0</weight>
+    <composition/>
+  </item>
+  <item type="garnish">
+    <name>чечевица по- эльзаски</name>
+    <price>60.0</price>
+    <calorie>211.0</calorie>
+    <weight>200.0</weight>
+    <composition/>
+  </item>
+  <item type="main course">
+    <name>ассорти из овощей</name>
+    <price>160.0</price>
+    <calorie>187.0</calorie>
+    <weight>200.0</weight>
+    <composition/>
+  </item>
+  <item type="main course">
+    <name>говядина отварная</name>
+    <price>170.0</price>
+    <calorie>195.0</calorie>
+    <weight>100.0</weight>
+    <composition>
+      <ingredient>диетическая</ingredient>
+    </composition>
+  </item>
+  <item type="main course">
+    <name>котлета куриная с ветчиной и сыром</name>
+    <price>130.0</price>
+    <calorie>313.0</calorie>
+    <weight>100.0</weight>
+    <composition/>
+  </item>
+  <item type="main course">
+    <name>лосось с лимоном на пару</name>
+    <price>220.0</price>
+    <calorie>267.0</calorie>
+    <weight>120.0</weight>
+    <composition/>
+  </item>
+  <item type="main course">
+    <name>индейка под соусом карри</name>
+    <price>150.0</price>
+    <calorie>437.0</calorie>
+    <weight>150.0</weight>
+    <composition/>
+  </item>
+  <item type="main course">
+    <name>котлеты печеночные</name>
+    <price>110.0</price>
+    <calorie>230.0</calorie>
+    <weight>120.0</weight>
+    <composition/>
+  </item>
+  <item type="main course">
+    <name>курочка под дижонским соусом</name>
+    <price>140.0</price>
+    <calorie>228.0</calorie>
+    <weight>170.0</weight>
+    <composition/>
+  </item>
+  <item type="main course">
+    <name>нут с овощами</name>
+    <price>120.0</price>
+    <calorie>435.0</calorie>
+    <weight>220.0</weight>
+    <composition/>
+  </item>
+  <item type="main course">
+    <name>шницель куриный</name>
+    <price>130.0</price>
+    <calorie>178.0</calorie>
+    <weight>110.0</weight>
+    <composition/>
+  </item>
+  <item type="main course">
+    <name>паста с лососем и морепродуктами</name>
+    <price>230.0</price>
+    <calorie>475.0</calorie>
+    <weight>300.0</weight>
+    <composition/>
+  </item>
+  <item type="main course">
+    <name>свинина запеченная с овощами</name>
+    <price>160.0</price>
+    <calorie>586.0</calorie>
+    <weight>120.0</weight>
+    <composition/>
+  </item>
+  <item type="main course">
+    <name>фахитос из говядины</name>
+    <price>280.0</price>
+    <calorie>324.0</calorie>
+    <weight>220.0</weight>
+    <composition/>
+  </item>
+  <item type="main course">
+    <name>фунчоза с овощами и курицей</name>
+    <price>230.0</price>
+    <calorie>389.0</calorie>
+    <weight>350.0</weight>
+    <composition/>
+  </item>
+  <item type="soup">
+    <name>бульон куриный с рисом</name>
+    <price>55.0</price>
+    <calorie>150.0</calorie>
+    <weight>250.0</weight>
+    <composition/>
+  </item>
+  <item type="soup">
+    <name>суп - пюре грибной</name>
+    <price>75.0</price>
+    <calorie>165.0</calorie>
+    <weight>250.0</weight>
+    <composition/>
+  </item>
+  <item type="soup">
+    <name>щи из свежей капусты с говядиной</name>
+    <price>70.0</price>
+    <calorie>112.0</calorie>
+    <weight>250.0</weight>
+    <composition/>
+  </item>
+  <item type="salad">
+    <name>салат с ветчиной</name>
+    <price>70.0</price>
+    <calorie>368.0</calorie>
+    <weight>150.0</weight>
+    <composition>
+      <ingredient>ветчина</ingredient>
+      <ingredient>огурцы свеж</ingredient>
+      <ingredient>яйцо</ingredient>
+      <ingredient>паприка</ingredient>
+      <ingredient>сыр</ingredient>
+      <ingredient>майонез</ingredient>
+    </composition>
+  </item>
+  <item type="salad">
+    <name>салат слоёный с курочкой</name>
+    <price>70.0</price>
+    <calorie>389.0</calorie>
+    <weight>150.0</weight>
+    <composition>
+      <ingredient>картофель</ingredient>
+      <ingredient>сыр гауда</ingredient>
+      <ingredient>огурцы солёные</ingredient>
+      <ingredient>кур. филе</ingredient>
+      <ingredient>помидоры</ingredient>
+      <ingredient>чеснок</ingredient>
+      <ingredient>кинза</ingredient>
+      <ingredient>майонез</ingredient>
+    </composition>
+  </item>
+  <item type="salad">
+    <name>винегрет</name>
+    <price>50.0</price>
+    <calorie>138.0</calorie>
+    <weight>150.0</weight>
+    <composition>
+      <ingredient>картофель</ingredient>
+      <ingredient>свекла</ingredient>
+      <ingredient>морковь</ingredient>
+      <ingredient>огурцы сол.</ingredient>
+      <ingredient>горошек конс.</ingredient>
+      <ingredient>лук зел.</ingredient>
+      <ingredient>уксус</ingredient>
+      <ingredient>масло раст.</ingredient>
+    </composition>
+  </item>
+  <item type="salad">
+    <name>салат весенний</name>
+    <price>60.0</price>
+    <calorie>168.0</calorie>
+    <weight>150.0</weight>
+    <composition>
+      <ingredient>редис</ingredient>
+      <ingredient>огурцы свежие</ingredient>
+      <ingredient>яйцо</ingredient>
+      <ingredient>сметана</ingredient>
+      <ingredient>лук зел.</ingredient>
+    </composition>
+  </item>
+  <item type="salad">
+    <name>салат роскошный</name>
+    <price>90.0</price>
+    <calorie>259.0</calorie>
+    <weight>150.0</weight>
+    <composition>
+      <ingredient>лосось с\с</ingredient>
+      <ingredient>краб. палочки</ingredient>
+      <ingredient>яйцо</ingredient>
+      <ingredient>огурец св.</ingredient>
+      <ingredient>кап. пекин.</ingredient>
+      <ingredient>сок лимона</ingredient>
+      <ingredient>майонез</ingredient>
+    </composition>
+  </item>
+  <item type="salad">
+    <name>салат шопский</name>
+    <price>75.0</price>
+    <calorie>121.0</calorie>
+    <weight>150.0</weight>
+    <composition>
+      <ingredient>огурец</ingredient>
+      <ingredient>помидор</ingredient>
+      <ingredient>паприка</ingredient>
+      <ingredient>лук красн.</ingredient>
+      <ingredient>брынза</ingredient>
+      <ingredient>зелень</ingredient>
+      <ingredient>масло раст.</ingredient>
+    </composition>
+  </item>
+  <item type="salad">
+    <name>лосось шеф посола с лимоном и зеленью</name>
+    <price>190.0</price>
+    <calorie>263.0</calorie>
+    <weight>150.0</weight>
+    <composition>
+      <ingredient>лосось с/с</ingredient>
+      <ingredient>сок апельсина</ingredient>
+      <ingredient>айсберг</ingredient>
+      <ingredient>лимон</ingredient>
+      <ingredient>маслины</ingredient>
+      <ingredient>зелень</ingredient>
+    </composition>
+  </item>
+</menu>

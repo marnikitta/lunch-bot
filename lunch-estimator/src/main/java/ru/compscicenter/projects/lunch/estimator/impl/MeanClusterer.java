@@ -1,10 +1,10 @@
 package ru.compscicenter.projects.lunch.estimator.impl;
 
 import ru.compscicenter.projects.lunch.estimator.Clusterer;
+import ru.compscicenter.projects.lunch.estimator.DeciderException;
 import ru.compscicenter.projects.lunch.model.MenuItem;
 import ru.compscicenter.projects.lunch.tagger.MenuItemClustering;
 import ru.compscicenter.projects.lunch.tagger.MenuItemLocation;
-import ru.compscicenter.projects.lunch.tagger.MinDfException;
 
 import java.util.HashMap;
 import java.util.List;
@@ -20,7 +20,7 @@ public class MeanClusterer implements Clusterer {
     private static final int MIN_DF = 0;
 
     @Override
-    public Map<MenuItem, Integer> doCluster(List<? extends MenuItem> sample) {
+    public Map<MenuItem, Integer> doCluster(List<? extends MenuItem> sample) throws DeciderException {
 
         MenuItemClustering clusterer = new MenuItemClustering(NUMBER_OF_CLUSTERS, NUMBER_OF_ITERATIONS, MIN_DF);
         Map<MenuItem, Integer> clusterMap = null;
@@ -35,10 +35,9 @@ public class MeanClusterer implements Clusterer {
                 }
             }
 
-        } catch (MinDfException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            throw new DeciderException(e);
         }
-
         return clusterMap;
     }
 }

@@ -46,5 +46,6 @@ public class Main {
         final Calendar calendar = new GregorianCalendar(2016, 2, 2);
         List<MenuItem> items = deciderService.getForDate(id, calendar);
         System.out.println(items);
+
     }
 }

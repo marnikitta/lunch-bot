@@ -122,6 +122,12 @@ public class MenuServiceImpl implements MenuService {
     }
 
     @Override
+    public List<MenuItemDBModel> getAllDBItems() {
+        List<MenuItemDBModel> allItems = menuDAO.getAllItems();
+        return allItems;
+    }
+
+    @Override
     @Transactional
     public Menu upload(final InputStream stream) throws MenuUploadingException, MenuDuplicateException {
         try {

@@ -8,6 +8,7 @@ import ru.compscicenter.projects.lunch.web.dao.MenuDAO;
 import ru.compscicenter.projects.lunch.web.model.MenuDBModel;
 import ru.compscicenter.projects.lunch.web.model.MenuItemDBModel;
 
+import javax.transaction.Transactional;
 import java.util.Calendar;
 import java.util.List;
 
@@ -52,6 +53,7 @@ public class MenuDAOImpl implements MenuDAO {
     }
 
     @Override
+    @Transactional
     public List<MenuItemDBModel> getAllItems() {
         Session session = factory.getCurrentSession();
         List<MenuItemDBModel> result = session.createCriteria(MenuItemDBModel.class).list();

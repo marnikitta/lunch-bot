@@ -84,9 +84,8 @@ public class DeciderServiceImpl implements DeciderService {
         }
         MenuKnowledge knowledge = new MenuKnowledge(data);
 
-        List<MenuItem> items = menu.getItemsCopy();
-        decider.range(items, knowledge, user);
+        List<MenuItem> result = decider.range(menu.getItemsCopy(), knowledge, user);
 
-        return servingDecider.serve(items);
+        return servingDecider.serve(result);
     }
 }
