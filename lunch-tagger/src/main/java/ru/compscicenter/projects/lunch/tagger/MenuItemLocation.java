@@ -2,25 +2,22 @@ package ru.compscicenter.projects.lunch.tagger;
 
 
 import org.apache.commons.math3.ml.clustering.Clusterable;
+import ru.compscicenter.projects.lunch.model.MenuItem;
 
 public class MenuItemLocation implements Clusterable {
 
-    private final String name;
-    private final double price;
-    private final double weight;
+    private final MenuItem menuItem;
     private final double[] point;
 
-    public MenuItemLocation(double[] tfidf, double price, double weight, String name) {
+    public MenuItemLocation(double[] tfidf, MenuItem menuItem) {
         point = new double[tfidf.length + 2];
 
         System.arraycopy(tfidf, 0, point, 0, tfidf.length);
 
-        point[tfidf.length] = price;
-        point[tfidf.length + 1] = weight;
+        point[tfidf.length] = menuItem.getPrice();
+        point[tfidf.length + 1] = menuItem.getWeight();
 
-        this.name = name;
-        this.price = price;
-        this.weight = weight;
+        this.menuItem = menuItem;
     }
 
     @Override
@@ -28,15 +25,7 @@ public class MenuItemLocation implements Clusterable {
         return point;
     }
 
-    public String getName(){
-        return name;
-    }
-
-    public double getPrice(){
-        return price;
-    }
-
-    public double getWeight(){
-        return weight;
+    public MenuItem getMenuItem() {
+        return menuItem;
     }
 }

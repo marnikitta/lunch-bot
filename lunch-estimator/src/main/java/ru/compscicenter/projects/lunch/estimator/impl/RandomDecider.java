@@ -10,7 +10,8 @@ import java.util.List;
 
 public class RandomDecider implements Decider {
     @Override
-    public void range(List<? extends MenuItem> sample, MenuKnowledge knowledge, User user) {
+    public List<? extends MenuItem> range(List<? extends MenuItem> sample, MenuKnowledge knowledge, User user) {
         Collections.shuffle(sample);
+        return sample;
     }
 }
