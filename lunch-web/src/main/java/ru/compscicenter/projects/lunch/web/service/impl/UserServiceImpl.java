@@ -3,7 +3,6 @@ package ru.compscicenter.projects.lunch.web.service.impl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DuplicateKeyException;
-import ru.compscicenter.projects.lunch.model.MenuItem;
 import ru.compscicenter.projects.lunch.model.User;
 import ru.compscicenter.projects.lunch.web.dao.MenuDAO;
 import ru.compscicenter.projects.lunch.web.dao.UserDAO;
@@ -93,15 +92,5 @@ public class UserServiceImpl implements UserService {
         } else {
             throw new NoSuchUserException("No user with id = " + id);
         }
-    }
-
-    @Override
-    public MenuItem addForNameAndPrice(long id, String name, double price, int type) {
-        return null;
-    }
-
-    @Override
-    public List<MenuItem> addForNameAndPriceRegex(long id, String regex, double lower, double upper, int type) {
-        return null;
     }
 }

@@ -38,7 +38,7 @@ public class MenuUpload {
 
     @RequestMapping(method = RequestMethod.POST, value = "upload")
     @ResponseBody
-    public String handleFileUpload(@RequestParam("file") MultipartFile file) {
+    public String handleFileUpload(@RequestParam("file") final MultipartFile file) {
         if (!file.isEmpty()) {
             try {
                 menuService.upload(file.getInputStream());

@@ -23,7 +23,7 @@ public class MenuDBModel {
         return date;
     }
 
-    public void setDate(Calendar date) {
+    public void setDate(final Calendar date) {
         this.date = date;
     }
 
@@ -31,7 +31,7 @@ public class MenuDBModel {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(final long id) {
         this.id = id;
     }
 
@@ -39,12 +39,12 @@ public class MenuDBModel {
         return items;
     }
 
-    public void setItems(List<MenuItemDBModel> items) {
+    public void setItems(final List<MenuItemDBModel> items) {
         this.items = items;
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 

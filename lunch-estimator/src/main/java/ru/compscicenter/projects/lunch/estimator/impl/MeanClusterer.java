@@ -13,7 +13,7 @@ import java.util.Map;
 
 public class MeanClusterer implements Clusterer {
 
-    private static final int NUMBER_OF_CLUSTERS = 10;
+    private static final int NUMBER_OF_CLUSTERS = 8;
 
     private static final int NUMBER_OF_ITERATIONS = 10000;
 

@@ -16,13 +16,13 @@ public class WebHook {
 
     @RequestMapping(value = "/hook", method = RequestMethod.POST)
     @ResponseBody
-    public void hook(@RequestBody String a) {
+    public void hook(@RequestBody final String a) {
         telegramService.handleUpdate(a);
     }
 
     @RequestMapping(value = "/hook", method = RequestMethod.GET)
     @ResponseBody
-    public void test(@RequestParam(value = "a") String a) {
+    public void test(@RequestParam(value = "a") final String a) {
         telegramService.handleUpdate(a);
     }
 }

@@ -46,7 +46,7 @@ public class MenuServiceImpl implements MenuService {
     @Transactional
     public List<Menu> getAll() {
         List<MenuDBModel> list = menuDAO.getAll();
-        Set<Menu> result = list.stream().map(ModelConverter::dbMenuToMenu).collect(Collectors.toCollection(() -> new LinkedHashSet<>()));
+        Set<Menu> result = list.stream().map(ModelConverter::dbMenuToMenu).collect(Collectors.toSet());
         return new ArrayList<>(result);
     }
 
@@ -73,7 +73,7 @@ public class MenuServiceImpl implements MenuService {
         if (menuDBModel != null) {
             return ModelConverter.dbMenuToMenu(menuDBModel);
         } else {
-            logger.debug("No menu for date " + day);
+            logger.debug("No menuPattern for date " + day);
             return null;
         }
     }
@@ -123,8 +123,7 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     public List<MenuItemDBModel> getAllDBItems() {
-        List<MenuItemDBModel> allItems = menuDAO.getAllItems();
-        return allItems;
+        return menuDAO.getAllItems();
     }
 
     @Override
@@ -132,14 +131,16 @@ public class MenuServiceImpl implements MenuService {
     public Menu upload(final InputStream stream) throws MenuUploadingException, MenuDuplicateException {
         try {
             Menu menu = PDFToMenu.parsePDF(stream);
+            logger.info(menu.getItemsCopy().get(0).getName());
+            System.out.println(menu.getItemsCopy().get(0).getName());
             if (null == getForDate(menu.getDate())) {
                 saveMenu(menu);
                 return menu;
             } else {
-                throw new MenuDuplicateException("Already has menu for date " + menu.getDate());
+                throw new MenuDuplicateException("Already has menuPattern for date " + menu.getDate());
             }
         } catch (IOException e) {
-            throw new MenuUploadingException("Uploading menu wrong format", e);
+            throw new MenuUploadingException("Uploading menuPattern wrong format", e);
         }
     }
 }

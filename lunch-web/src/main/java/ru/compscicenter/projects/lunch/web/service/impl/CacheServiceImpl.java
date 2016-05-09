@@ -16,18 +16,18 @@ import java.util.Map;
 public class CacheServiceImpl implements CacheService {
 
 
-    public static double LIFE_TIME = 8e7;
+    private static double LIFE_TIME = 8e7;
     private Map<MenuItemDBModel, Integer> cached = null;
     private long lastUpdate = -1;
 
     private MenuService menuService;
 
-    public void setMenuService(MenuService menuService) {
+    public void setMenuService(final MenuService menuService) {
         this.menuService = menuService;
     }
 
     @Override
-    public Map<MenuItemDBModel, Integer> getClusters() throws DeciderException {
+    public Map<MenuItemDBModel, Integer> getClusters() {
         if (cached == null || System.nanoTime() - lastUpdate > LIFE_TIME) {
             update();
         }
@@ -40,7 +40,7 @@ public class CacheServiceImpl implements CacheService {
         update();
     }
 
-    private synchronized void update() throws DeciderException {
+    private synchronized void update() {
         if (!(cached == null || System.currentTimeMillis() - lastUpdate > LIFE_TIME)) {
             return;
         }

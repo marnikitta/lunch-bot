@@ -4,12 +4,11 @@ import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.compscicenter.projects.lunch.estimator.DeciderException;
 import ru.compscicenter.projects.lunch.model.Menu;
 import ru.compscicenter.projects.lunch.model.MenuItem;
-import ru.compscicenter.projects.lunch.web.service.DeciderService;
-import ru.compscicenter.projects.lunch.web.service.MenuService;
-import ru.compscicenter.projects.lunch.web.service.TelegramService;
-import ru.compscicenter.projects.lunch.web.service.UserService;
+import ru.compscicenter.projects.lunch.web.model.Game;
+import ru.compscicenter.projects.lunch.web.service.*;
 import ru.compscicenter.projects.lunch.web.util.TelegramMethodExecutor;
 import ru.compscicenter.projects.lunch.web.util.ToStrings;
 
@@ -26,6 +25,11 @@ public class TelegramServiceImpl implements TelegramService {
     private UserService userService;
     private MenuService menuService;
     private DeciderService deciderService;
+    private GameService gameService;
+
+    public void setGameService(GameService gameService) {
+        this.gameService = gameService;
+    }
 
     public void setDeciderService(DeciderService deciderService) {
         this.deciderService = deciderService;
@@ -46,7 +50,23 @@ public class TelegramServiceImpl implements TelegramService {
                     + "/list [-r] [meal name | regex] - show meals that matches regex" + "\n"
                     + "/menu [dd.mm.yyyy] - show menu for today [or date]" + "\n"
                     + "/day [dd.mm.yyyy] - suggest serving for today [or date]" + "\n"
-                    + "/sum [mm.yyyy] - calculate sum from beginning of month till now [month]";
+                    + "/play - improve decider algorithm" + "\n"
+                    + "/cancel - cancel current operation" + "\n"
+                    + "/sum [mm.yyyy] - calculate sum from beginning of month till now [month]" + "\n\n"
+                    + "Examples:" + "\n"
+                    + "\t/list карто" + "\n"
+                    + "\t/menu 15.02.2016" + "\n"
+                    + "\t/day 15.02.2016" + "\n"
+                    + "\t/sum 02.2016";
+
+    private static final String listPattern = "\\/list(\\s+(?<regex>-r))?(\\s+(?<name>.*))?\\s*";
+    private static final String menuPattern = "\\/menu?(\\s+(?<date>\\d+\\.\\d+.\\d+))?\\s*";
+    private static final String dayPattern = "\\/day?(\\s+(?<date>\\d+\\.\\d+.\\d+))?\\s*";
+    private static final String sumPatter = "\\/sum?(\\s+(?<date>\\d+.\\d+))?\\s*";
+    private static final String playPattern = "\\/play\\s*";
+    private static final String resetPattern = "\\/reset\\s*";
+    private static final String votePattern = ".*\\(\\$(?<word>\\w*=*)\\)";
+    private static final String cancelPattern = "\\/cancel\\s*";
 
     private String getToken() {
         if (token == null) {
@@ -74,12 +94,13 @@ public class TelegramServiceImpl implements TelegramService {
 
         try {
             String response = TelegramMethodExecutor.doMethod("sendMessage", map, getToken());
+            logger.info("Response: " + response);
         } catch (IOException e) {
             logger.error("Error during method execution", e);
         }
     }
 
-    private void registerUser(long id) {
+    private void registerUser(final long id) {
         if (!userService.exists(id)) {
             userService.createUser(id);
         }
@@ -118,37 +139,61 @@ public class TelegramServiceImpl implements TelegramService {
         }
     }
 
-    private void handleTextQuery(long from, long chat, String text) {
-        String list = "\\/list(\\s+(?<regex>-r))?(\\s+(?<name>.*?))?\\s*";
-        String menu = "\\/menu?(\\s+(?<date>\\d+\\.\\d+.\\d+))?\\s*";
-        String day = "\\/day?(\\s+(?<date>\\d+\\.\\d+.\\d+))?\\s*";
-        String sum = "\\/sum?(\\s+(?<date>\\d+.\\d+))?\\s*";
 
+    private void handleTextQuery(final long from, final long chat, final String text) {
         String start = "\\/start";
         String help = "\\/help";
 
-        if (text.matches(list)) {
+        if (text.matches(listPattern)) {
             handleList(chat, text);
-        } else if (text.matches(menu)) {
+        } else if (text.matches(menuPattern)) {
             handleMenu(chat, text);
-        } else if (text.matches(day)) {
+        } else if (text.matches(dayPattern)) {
             handleDecisionForDay(from, chat, text);
-        } else if (text.matches(sum)) {
+        } else if (text.matches(sumPatter)) {
             handleSum(from, chat, text);
+        } else if (text.matches(playPattern)) {
+            handlePlay(chat, from);
+        } else if (text.matches(start)) {
+            handleStart(chat, from);
+        } else if (text.matches(cancelPattern)) {
+            sendHelp(chat);
+        } else if (text.matches(resetPattern)) {
+            resetHandle(from, chat);
         } else if (text.matches(help)) {
             sendHelp(chat);
-        } else if (text.matches(start)) {
-            handleStart(chat);
+        } else if (text.matches(votePattern)) {
+            handleVote(from, chat, text);
         } else {
             sendMessage(chat, "No such command " + text, null);
             sendHelp(chat);
         }
     }
 
-    private void handleSum(long from, long chat, String text) {
-        String sum = "\\/sum?(\\s+(?<date>\\d+.\\d+))?\\s*";
+    private void resetHandle(final long from, final long chat) {
+        userService.reset(from);
+        sendMessage(chat, "Reset was done", null);
+    }
 
-        Pattern pattern = Pattern.compile(sum);
+    private void handleVote(final long from, final long chat, final String text) {
+        Pattern pattern = Pattern.compile(votePattern);
+        Matcher matcher = pattern.matcher(text);
+
+        if (matcher.matches()) {
+            String info = matcher.group("word");
+
+            String[] ids = ToStrings.decode(info).split("#");
+            long gameId = Long.parseLong(ids[0]);
+            long winnerId = Long.parseLong(ids[1]);
+            gameService.setResult(from, gameId, winnerId);
+            handlePlay(chat, from);
+        } else {
+            throw new IllegalStateException(text);
+        }
+    }
+
+    private void handleSum(final long from, final long chat, final String text) {
+        Pattern pattern = Pattern.compile(sumPatter);
         Matcher matcher = pattern.matcher(text);
         if (matcher.matches()) {
             Calendar start = new GregorianCalendar();
@@ -177,10 +222,8 @@ public class TelegramServiceImpl implements TelegramService {
     }
 
 
-    private void handleDecisionForDay(long from, long chat, String text) {
-        String day = "\\/day?(\\s+(?<date>\\d+\\.\\d+.\\d+))?\\s*";
-
-        Pattern pattern = Pattern.compile(day);
+    private void handleDecisionForDay(final long from, final long chat, final String text) {
+        Pattern pattern = Pattern.compile(dayPattern);
         Matcher matcher = pattern.matcher(text);
 
         if (matcher.matches()) {
@@ -207,9 +250,8 @@ public class TelegramServiceImpl implements TelegramService {
         }
     }
 
-    private void handleMenu(long chat, String text) {
-        String menu = "\\/menu?(\\s+(?<date>\\d+\\.\\d+.\\d+))?\\s*";
-        Pattern pattern = Pattern.compile(menu);
+    private void handleMenu(final long chat, final String text) {
+        Pattern pattern = Pattern.compile(menuPattern);
         Matcher matcher = pattern.matcher(text);
 
         if (matcher.matches()) {
@@ -235,9 +277,8 @@ public class TelegramServiceImpl implements TelegramService {
         }
     }
 
-    private void handleList(long chat, String text) {
-        String list = "\\/list(\\s+(?<regex>-r))?(\\s+(?<name>.*?))?\\s*";
-        Pattern pattern = Pattern.compile(list);
+    private void handleList(final long chat, final String text) {
+        Pattern pattern = Pattern.compile(listPattern);
         Matcher matcher = pattern.matcher(text);
 
         if (matcher.matches()) {
@@ -262,22 +303,28 @@ public class TelegramServiceImpl implements TelegramService {
         }
     }
 
-    private void sendHelp(long id) {
+    public void handlePlay(final long chat, final long user) {
+        try {
+            Game g = gameService.getNextGame(user);
+            sendMessage(chat, ToStrings.gameToString(g), new HashMap<String, String>() {
+                        {
+                            put("reply_markup", ToStrings.gameToKeyBoard(g));
+                        }
+                    }
+            );
+        } catch (DeciderException e) {
+            sendMessage(chat, "Sth went wrong...", null);
+        }
+    }
+
+    private void sendHelp(final long id) {
         sendMessage(id, HELP, null);
     }
 
-    private void handleStart(long chat) {
+    private void handleStart(final long chat, final long from) {
         sendHelp(chat);
+        handlePlay(chat, from);
     }
 
     //Проблема с кодировкой на сервере, надо фиксить
-    /*
-        Надо:
-            1. Если сообщение из конфы, к каждому ответу прикреплять упоминание человека, который написал
-            2. Обрабатывать инлайн запросы
-            3. Хендлить ok:false в запросах
-        Команды:
-            /reset
-            /about
-     */
 }

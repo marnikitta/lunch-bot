@@ -42,7 +42,7 @@ public class MenuDAOImpl implements MenuDAO {
     }
 
     @Override
-    public MenuDBModel getForDate(Calendar day) {
+    public MenuDBModel getForDate(final Calendar day) {
         Session session = factory.getCurrentSession();
         Criteria criteria = session.createCriteria(MenuDBModel.class).add(Restrictions.eq("date", day));
         List<MenuDBModel> menus = criteria.list();
@@ -65,8 +65,7 @@ public class MenuDAOImpl implements MenuDAO {
     }
 
     @Override
-    public boolean contains(Calendar calendar) {
-        //TODO: optimize
+    public boolean contains(final Calendar calendar) {
         Session session = factory.getCurrentSession();
         Criteria criteria = session.createCriteria(MenuDBModel.class).add(Restrictions.eq("date", calendar));
         List<MenuDBModel> menus = criteria.list();
@@ -74,7 +73,7 @@ public class MenuDAOImpl implements MenuDAO {
     }
 
     @Override
-    public MenuItemDBModel getForName(String name) {
+    public MenuItemDBModel getForName(final String name) {
         Session session = factory.getCurrentSession();
         Criteria criteria = session.createCriteria(MenuItemDBModel.class).add(Restrictions.eq("name", name));
         List<MenuItemDBModel> menuItems = criteria.setMaxResults(1).list();

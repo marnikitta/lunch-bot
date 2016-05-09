@@ -70,7 +70,7 @@ public class DeciderServiceImpl implements DeciderService {
 
         Menu menu = menuService.getForDate(date);
         if (menu == null) {
-            throw new NoMenuForDateException("There is no menu for date " + date);
+            throw new NoMenuForDateException("There is no menuPattern for date " + date);
         }
 
         User user = userService.getUserById(userId);

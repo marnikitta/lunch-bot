@@ -30,7 +30,7 @@
         <beans:property name="servingDecider" ref="simpleServingDecider"/>
     </beans:bean>
 
-    <beans:bean id="randomDecider" class="ru.compscicenter.projects.lunch.estimator.impl.RandomDecider"/>
+    <beans:bean id="randomDecider" class="ru.compscicenter.projects.lunch.estimator.impl.PreferenceDecider"/>
 
     <beans:bean id="simpleServingDecider" class="ru.compscicenter.projects.lunch.estimator.impl.SimpleServingDecider">
         <beans:constructor-arg value="5"/>
@@ -39,7 +39,6 @@
     <beans:bean id="gameService" class="ru.compscicenter.projects.lunch.web.service.impl.GameServiceImpl">
         <beans:property name="cacheService" ref="cacheService"/>
         <beans:property name="gameDao" ref="gameDAO"/>
-        <beans:property name="menuDAO" ref="menuDAO"/>
         <beans:property name="userDAO" ref="userDAO"/>
     </beans:bean>
 
@@ -51,5 +50,6 @@
         <beans:property name="userService" ref="userService"/>
         <beans:property name="menuService" ref="menuService"/>
         <beans:property name="deciderService" ref="deciderService"/>
+        <beans:property name="gameService" ref="gameService"/>
     </beans:bean>
 </beans:beans>

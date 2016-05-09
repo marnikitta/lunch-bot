@@ -6,5 +6,5 @@ import ru.compscicenter.projects.lunch.web.model.Game;
 public interface GameService {
     public Game getNextGame(long userId) throws DeciderException;
 
-    public void setResult(long userId, long gameId, long winnerId);
+    public void setResult(long userId, long gameId, long winnerId) throws DeciderException;
 }

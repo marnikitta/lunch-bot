@@ -18,22 +18,34 @@ public class GameDaoImpl implements GameDao {
     }
 
     @Override
-    public List<Game> loadAll(UserDBModel user) {
+    public List<Game> loadAll(final UserDBModel user) {
         Session session = factory.getCurrentSession();
         List<Game> games = session.createCriteria(Game.class).add(Restrictions.eq("user", user)).list();
         return games;
     }
 
     @Override
-    public List<Game> getUnfinished(UserDBModel user) {
+    public List<Game> getUnfinished(final UserDBModel user) {
         Session session = factory.getCurrentSession();
         List<Game> games = session.createCriteria(Game.class).add(Restrictions.eq("user", user)).add(Restrictions.isNull("winner")).list();
         return games;
     }
 
     @Override
-    public void addGame(Game game) {
+    public void addGame(final Game game) {
         Session session = factory.getCurrentSession();
         session.saveOrUpdate(game);
+    }
+
+    @Override
+    public Game getById(final long id) {
+        Session session = factory.getCurrentSession();
+        return (Game) session.get(Game.class, id);
+    }
+
+    public List<Game> getFinnished(final UserDBModel user) {
+        Session session = factory.getCurrentSession();
+        List<Game> games = session.createCriteria(Game.class).add(Restrictions.eq("user", user)).add(Restrictions.isNotNull("winner")).list();
+        return games;
     }
 }

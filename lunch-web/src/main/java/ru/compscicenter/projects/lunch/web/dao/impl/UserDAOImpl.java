@@ -14,32 +14,31 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public UserDBModel getById(long id) {
+    public UserDBModel getById(final long id) {
         Session session = factory.getCurrentSession();
         Object userDBModel = session.load(UserDBModel.class, id);
         return (UserDBModel) userDBModel;
     }
 
     @Override
-    public void saveOrUpdate(UserDBModel userDBModel) {
+    public void saveOrUpdate(final UserDBModel userDBModel) {
         Session session = factory.getCurrentSession();
         session.saveOrUpdate(userDBModel);
     }
 
     @Override
-    public boolean contains(long id) {
-        //TODO: optimize
+    public boolean contains(final long id) {
         Session session = factory.getCurrentSession();
         Object object = session.get(UserDBModel.class, id);
         return object != null;
     }
 
     @Override
-    public void delete(long id) {
+    public void delete(final long id) {
         Session session = factory.getCurrentSession();
         Object userDBModel = session.get(UserDBModel.class, id);
         if (userDBModel != null) {
-            session.delete((UserDBModel) userDBModel);
+            session.delete(userDBModel);
         }
     }
 }

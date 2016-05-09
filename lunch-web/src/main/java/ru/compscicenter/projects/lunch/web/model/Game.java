@@ -29,25 +29,29 @@ public class Game {
     public Game() {
     }
 
-    public Game(MenuItemDBModel first, MenuItemDBModel second, MenuItemDBModel winner) {
+    public Game(final UserDBModel user,
+                final MenuItemDBModel first,
+                final MenuItemDBModel second,
+                final MenuItemDBModel winner) {
+        this.user = user;
         this.first = first;
         this.second = second;
         this.winner = winner;
+    }
+
+    public long getId() {
+        return id;
     }
 
     public UserDBModel getUser() {
         return user;
     }
 
-    public void setUser(UserDBModel user) {
-        this.user = user;
-    }
-
     public MenuItemDBModel getFirst() {
         return first;
     }
 
-    public void setFirst(MenuItemDBModel first) {
+    public void setFirst(final MenuItemDBModel first) {
         this.first = first;
     }
 
@@ -55,7 +59,7 @@ public class Game {
         return second;
     }
 
-    public void setSecond(MenuItemDBModel second) {
+    public void setSecond(final MenuItemDBModel second) {
         this.second = second;
     }
 
@@ -63,7 +67,7 @@ public class Game {
         return winner;
     }
 
-    public void setWinner(MenuItemDBModel winner) {
+    public void setWinner(final MenuItemDBModel winner) {
         this.winner = winner;
     }
 }

@@ -6,7 +6,6 @@ import java.util.Calendar;
 import java.util.List;
 
 public interface DeciderService {
-
     public double sumForPeriod(long userId, Calendar start, Calendar end);
 
     public List<MenuItem> getForDate(long userId, Calendar date);

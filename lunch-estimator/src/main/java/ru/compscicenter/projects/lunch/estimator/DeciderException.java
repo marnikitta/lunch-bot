@@ -1,6 +1,6 @@
 package ru.compscicenter.projects.lunch.estimator;
 
-public class DeciderException extends Exception {
+public class DeciderException extends RuntimeException {
     public DeciderException() {
         super();
     }

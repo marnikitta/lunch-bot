@@ -10,11 +10,11 @@ public class UserDBModel {
     @Column(name = "id")
     private long id;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany
     @JoinTable(name = "userlove_menu_item", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "menu_item_id"))
     private List<MenuItemDBModel> loveList;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany
     @JoinTable(name = "userhate_menu_item", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "menu_item_id"))
     private List<MenuItemDBModel> hateList;
 
@@ -22,7 +22,7 @@ public class UserDBModel {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(final long id) {
         this.id = id;
     }
 
@@ -30,7 +30,7 @@ public class UserDBModel {
         return loveList;
     }
 
-    public void setLoveList(List<MenuItemDBModel> loveList) {
+    public void setLoveList(final List<MenuItemDBModel> loveList) {
         this.loveList = loveList;
     }
 
@@ -38,7 +38,7 @@ public class UserDBModel {
         return hateList;
     }
 
-    public void setHateList(List<MenuItemDBModel> hateList) {
+    public void setHateList(final List<MenuItemDBModel> hateList) {
         this.hateList = hateList;
     }
 }
