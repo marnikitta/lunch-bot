@@ -14,7 +14,7 @@ public final class ToStrings {
     private ToStrings() {
     }
 
-    private static SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+    private static SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
 
     public static String dateToString(final Calendar calendar) {
         return sdf.format(calendar.getTime());

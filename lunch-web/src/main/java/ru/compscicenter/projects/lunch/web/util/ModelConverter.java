@@ -20,20 +20,19 @@ public final class ModelConverter {
         Menu.Builder builder = new Menu.Builder();
         builder.setDate(menuDBModel.getDate());
 
-        List<MenuItem> items = new ArrayList<>();
-        menuDBModel.getItems().forEach(item -> items.add(dbMenuItemToMenuItem(item)));
-        builder.addAll(items);
+        List<MenuItem> items = menuDBModel.getItems().stream().
+                map(ModelConverter::dbMenuItemToMenuItem).
+                collect(Collectors.toList());
 
+        builder.addAll(items);
         return builder.build();
     }
 
     public static MenuDBModel menuToDBMenu(final Menu menu) {
         MenuDBModel menuDBModel = new MenuDBModel();
-        List<MenuItemDBModel> items = new ArrayList<>();
-        menu.stream().forEach(item -> {
-            MenuItemDBModel it = menuItemToDBMenuItem(item);
-            items.add(it);
-        });
+        List<MenuItemDBModel> items = menu.stream().
+                map(ModelConverter::menuItemToDBMenuItem).
+                collect(Collectors.toList());
         menuDBModel.setDate(menu.getDate());
         menuDBModel.setItems(items);
         return menuDBModel;
@@ -64,8 +63,12 @@ public final class ModelConverter {
         UserDBModel userDBModel = new UserDBModel();
         userDBModel.setId(user.getId());
 
-        userDBModel.setLoveList(user.getLoveList().stream().map(ModelConverter::menuItemToDBMenuItem).collect(Collectors.toList()));
-        userDBModel.setHateList(user.getHateList().stream().map(ModelConverter::menuItemToDBMenuItem).collect(Collectors.toList()));
+        userDBModel.setLoveList(user.getLoveList().stream().
+                map(ModelConverter::menuItemToDBMenuItem).
+                collect(Collectors.toList()));
+        userDBModel.setHateList(user.getHateList().stream().
+                map(ModelConverter::menuItemToDBMenuItem).
+                collect(Collectors.toList()));
 
         return userDBModel;
     }

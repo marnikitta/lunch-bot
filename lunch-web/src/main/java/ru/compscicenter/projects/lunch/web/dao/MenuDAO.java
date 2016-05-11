@@ -3,21 +3,24 @@ package ru.compscicenter.projects.lunch.web.dao;
 import ru.compscicenter.projects.lunch.web.model.MenuDBModel;
 import ru.compscicenter.projects.lunch.web.model.MenuItemDBModel;
 
+import javax.annotation.Nullable;
 import java.util.Calendar;
 import java.util.List;
 
-public interface MenuDAO {
-    public void saveOrUpdate(final MenuDBModel menu);
+public interface MenuDao {
+    void saveOrUpdate(final MenuDBModel menu);
 
-    public List<MenuDBModel> getAll();
+    List<MenuDBModel> getAll();
 
-    public List<MenuDBModel> getAllForDates(final Calendar start, final Calendar end);
+    List<MenuDBModel> getAllForDates(final Calendar start, final Calendar end);
 
-    public MenuDBModel getForDate(final Calendar day);
+    @Nullable
+    MenuDBModel getForDate(final Calendar day);
 
-    public List<MenuItemDBModel> getAllItems();
+    List<MenuItemDBModel> getAllItems();
 
-    public boolean contains(Calendar calendar);
+    boolean contains(Calendar calendar);
 
-    public MenuItemDBModel getForName(String name);
+    @Nullable
+    MenuItemDBModel getForName(String name);
 }

@@ -3,16 +3,19 @@ package ru.compscicenter.projects.lunch.web.dao.impl;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
-import ru.compscicenter.projects.lunch.web.dao.MenuDAO;
+import ru.compscicenter.projects.lunch.web.dao.MenuDao;
 import ru.compscicenter.projects.lunch.web.model.MenuDBModel;
 import ru.compscicenter.projects.lunch.web.model.MenuItemDBModel;
 
+import javax.annotation.Nullable;
 import javax.transaction.Transactional;
 import java.util.Calendar;
 import java.util.List;
 
-public class MenuDAOImpl implements MenuDAO {
+@SuppressWarnings("unchecked")
+public class MenuDaoImpl implements MenuDao {
 
     private SessionFactory factory;
 
@@ -29,19 +32,18 @@ public class MenuDAOImpl implements MenuDAO {
     @Override
     public List<MenuDBModel> getAll() {
         Session session = factory.getCurrentSession();
-        List<MenuDBModel> menus = session.createCriteria(MenuDBModel.class).list();
-        return menus;
+        return session.createCriteria(MenuDBModel.class).list();
     }
 
     @Override
     public List<MenuDBModel> getAllForDates(final Calendar start, final Calendar end) {
         Session session = factory.getCurrentSession();
         Criteria criteria = session.createCriteria(MenuDBModel.class).add(Restrictions.between("date", start, end));
-        List<MenuDBModel> menus = criteria.list();
-        return menus;
+        return criteria.list();
     }
 
     @Override
+    @Nullable
     public MenuDBModel getForDate(final Calendar day) {
         Session session = factory.getCurrentSession();
         Criteria criteria = session.createCriteria(MenuDBModel.class).add(Restrictions.eq("date", day));
@@ -56,23 +58,19 @@ public class MenuDAOImpl implements MenuDAO {
     @Transactional
     public List<MenuItemDBModel> getAllItems() {
         Session session = factory.getCurrentSession();
-        List<MenuItemDBModel> result = session.createCriteria(MenuItemDBModel.class).list();
-        if (result != null) {
-            return result;
-        } else {
-            return null;
-        }
+        return session.createCriteria(MenuItemDBModel.class).list();
     }
 
     @Override
     public boolean contains(final Calendar calendar) {
         Session session = factory.getCurrentSession();
-        Criteria criteria = session.createCriteria(MenuDBModel.class).add(Restrictions.eq("date", calendar));
-        List<MenuDBModel> menus = criteria.list();
-        return menus != null && menus.size() >= 1;
+        Criteria criteria = session.createCriteria(MenuDBModel.class).add(Restrictions.eq("date", calendar)).setProjection(Projections.rowCount());
+        Number count = (Number) criteria.uniqueResult();
+        return count.intValue() != 0;
     }
 
     @Override
+    @Nullable
     public MenuItemDBModel getForName(final String name) {
         Session session = factory.getCurrentSession();
         Criteria criteria = session.createCriteria(MenuItemDBModel.class).add(Restrictions.eq("name", name));

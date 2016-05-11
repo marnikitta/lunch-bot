@@ -15,12 +15,12 @@
     <beans:import resource="hibernate-dao-context.xml"/>
 
     <beans:bean id="menuService" class="ru.compscicenter.projects.lunch.web.service.impl.MenuServiceImpl">
-        <beans:property name="menuDAO" ref="menuDAO"/>
+        <beans:property name="menuDao" ref="menuDAO"/>
     </beans:bean>
 
     <beans:bean id="userService" class="ru.compscicenter.projects.lunch.web.service.impl.UserServiceImpl">
-        <beans:property name="userDAO" ref="userDAO"/>
-        <beans:property name="menuDAO" ref="menuDAO"/>
+        <beans:property name="userDao" ref="userDAO"/>
+        <beans:property name="menuDao" ref="menuDAO"/>
     </beans:bean>
 
     <beans:bean id="deciderService" class="ru.compscicenter.projects.lunch.web.service.impl.DeciderServiceImpl">
@@ -32,14 +32,13 @@
 
     <beans:bean id="randomDecider" class="ru.compscicenter.projects.lunch.estimator.impl.PreferenceDecider"/>
 
-    <beans:bean id="simpleServingDecider" class="ru.compscicenter.projects.lunch.estimator.impl.SimpleServingDecider">
-        <beans:constructor-arg value="5"/>
+    <beans:bean id="simpleServingDecider" class="ru.compscicenter.projects.lunch.estimator.impl.AnotherServingDecider">
     </beans:bean>
 
     <beans:bean id="gameService" class="ru.compscicenter.projects.lunch.web.service.impl.GameServiceImpl">
         <beans:property name="cacheService" ref="cacheService"/>
         <beans:property name="gameDao" ref="gameDAO"/>
-        <beans:property name="userDAO" ref="userDAO"/>
+        <beans:property name="userDao" ref="userDAO"/>
     </beans:bean>
 
     <beans:bean id="cacheService" class="ru.compscicenter.projects.lunch.web.service.impl.CacheServiceImpl">

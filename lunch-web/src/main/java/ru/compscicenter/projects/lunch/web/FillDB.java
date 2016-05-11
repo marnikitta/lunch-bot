@@ -22,7 +22,7 @@ public class FillDB {
             if (Files.isRegularFile(filePath)) {
                 try {
                     Menu menu = MenuXmlParser.parseMenu(new BufferedInputStream(Files.newInputStream(filePath))).get(0);
-                    list.addAll(menu.getItemsCopy());
+                    list.addAll(menu.getItems());
                     menus.add(menu);
                 } catch (Exception e) {
                     e.printStackTrace();

@@ -3,16 +3,16 @@ package ru.compscicenter.projects.lunch.web.dao;
 import ru.compscicenter.projects.lunch.web.model.Game;
 import ru.compscicenter.projects.lunch.web.model.UserDBModel;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 public interface GameDao {
-    public List<Game> loadAll(UserDBModel user);
+    List<Game> getFinished(UserDBModel userDBModel);
 
-    public List<Game> getFinnished(UserDBModel userDBModel);
+    List<Game> getUnfinished(UserDBModel user);
 
-    public List<Game> getUnfinished(UserDBModel user);
+    void addOrUpdate(Game game);
 
-    public void addGame(Game game);
-
-    public Game getById(long id);
+    @Nullable
+    Game getById(long id);
 }

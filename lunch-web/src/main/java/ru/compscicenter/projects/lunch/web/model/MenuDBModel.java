@@ -16,7 +16,9 @@ public class MenuDBModel {
     private Calendar date;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinTable(name = "menu_menu_item", joinColumns = @JoinColumn(name = "menu_id"), inverseJoinColumns = @JoinColumn(name = "menu_item_id"))
+    @JoinTable(name = "menu_menu_item",
+            joinColumns = @JoinColumn(name = "menu_id"),
+            inverseJoinColumns = @JoinColumn(name = "menu_item_id"))
     private List<MenuItemDBModel> items;
 
     public Calendar getDate() {
@@ -50,8 +52,7 @@ public class MenuDBModel {
 
         MenuDBModel that = (MenuDBModel) o;
 
-        if (id != that.id) return false;
-        return true;
+        return id == that.id;
     }
 
     @Override

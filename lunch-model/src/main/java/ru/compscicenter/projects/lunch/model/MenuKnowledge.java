@@ -23,7 +23,7 @@ public class MenuKnowledge {
 
     public Set<MenuItem> getList(final Calendar begin, final Calendar end) {
         return menus.stream().
-                filter(m -> m.getDate().after(begin) && m.getDate().before(end)).
+                filter(m -> m.getDate().compareTo(begin) >= 0 && m.getDate().compareTo(end) <= 0).
                 flatMap(Menu::stream).
                 collect(Collectors.toSet());
     }

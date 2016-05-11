@@ -1,6 +1,5 @@
 package ru.compscicenter.projects.lunch.web.service.impl;
 
-import ru.compscicenter.projects.lunch.estimator.DeciderException;
 import ru.compscicenter.projects.lunch.estimator.impl.MeanClusterer;
 import ru.compscicenter.projects.lunch.model.MenuItem;
 import ru.compscicenter.projects.lunch.web.model.MenuItemDBModel;
@@ -35,7 +34,7 @@ public class CacheServiceImpl implements CacheService {
     }
 
     @Override
-    public synchronized void forceUpdate() throws DeciderException {
+    public synchronized void forceUpdate() {
         lastUpdate = -1;
         update();
     }

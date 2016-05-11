@@ -1,6 +1,6 @@
 package ru.compscicenter.projects.lunch.web.exception;
 
-public class GameUpdatingException extends IllegalStateException {
+public class GameUpdatingException extends MyHumbleException {
     public GameUpdatingException() {
     }
 

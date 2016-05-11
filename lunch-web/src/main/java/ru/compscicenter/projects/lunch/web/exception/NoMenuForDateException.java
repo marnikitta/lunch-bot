@@ -1,6 +1,6 @@
 package ru.compscicenter.projects.lunch.web.exception;
 
-public class NoMenuForDateException extends IllegalStateException {
+public class NoMenuForDateException extends MyHumbleException {
     public NoMenuForDateException() {
     }
 

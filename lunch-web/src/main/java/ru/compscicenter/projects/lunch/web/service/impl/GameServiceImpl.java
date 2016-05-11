@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.compscicenter.projects.lunch.estimator.DeciderException;
 import ru.compscicenter.projects.lunch.web.dao.GameDao;
-import ru.compscicenter.projects.lunch.web.dao.UserDAO;
+import ru.compscicenter.projects.lunch.web.dao.UserDao;
 import ru.compscicenter.projects.lunch.web.exception.GameUpdatingException;
 import ru.compscicenter.projects.lunch.web.model.Game;
 import ru.compscicenter.projects.lunch.web.model.MenuItemDBModel;
@@ -18,7 +18,7 @@ import java.util.stream.IntStream;
 
 public class GameServiceImpl implements GameService {
 
-    private UserDAO userDAO;
+    private UserDao userDao;
     private GameDao gameDao;
     private CacheService cacheService;
     private final static Logger logger = LoggerFactory.getLogger(GameServiceImpl.class);
@@ -31,14 +31,18 @@ public class GameServiceImpl implements GameService {
         this.cacheService = cacheService;
     }
 
-    public void setUserDAO(UserDAO userDAO) {
-        this.userDAO = userDAO;
+    public void setUserDao(UserDao userDao) {
+        this.userDao = userDao;
     }
 
     @Override
     @Transactional
-    public Game getNextGame(final long userId) throws DeciderException {
-        UserDBModel user = userDAO.getById(userId);
+    public Game getNextGame(final long userId) {
+        if (!userDao.contains(userId)) {
+            throw new IllegalStateException("DB should contain this id");
+        }
+
+        UserDBModel user = userDao.getById(userId);
         List<Game> unfinished = gameDao.getUnfinished(user);
 
         if (unfinished.size() != 0) {
@@ -51,8 +55,9 @@ public class GameServiceImpl implements GameService {
 
     @Override
     @Transactional
-    public void setResult(final long userId, final long gameId, final long winnerId) {
+    public void setResult(final long userId, final long gameId, final long winnerId) throws GameUpdatingException {
         Game game = gameDao.getById(gameId);
+
         if (game == null) {
             throw new GameUpdatingException("Trying to update notExisting game (gameId=" + gameId + ")");
         }
@@ -71,9 +76,14 @@ public class GameServiceImpl implements GameService {
         if (game.getSecond().getId() == winnerId) {
             game.setWinner(game.getSecond());
         }
-        gameDao.addGame(game);
+        gameDao.addOrUpdate(game);
 
-        updateLoveList(userDAO.getById(userId));
+
+        try {
+            updateLoveList(game.getUser());
+        } catch (DeciderException e) {
+            throw new GameUpdatingException(e);
+        }
     }
 
     private Game makeGameFromUnfinished(final UserDBModel user) {
@@ -84,7 +94,7 @@ public class GameServiceImpl implements GameService {
         }
         Collections.shuffle(unfinished);
         Game newGame = refreshGame(unfinished.get(0));
-        gameDao.addGame(newGame);
+        gameDao.addOrUpdate(newGame);
 
         return newGame;
     }
@@ -124,7 +134,7 @@ public class GameServiceImpl implements GameService {
         List<MenuItemDBModel> loveList = user.getLoveList();
         loveList.clear();
 
-        List<Game> games = gameDao.getFinnished(user);
+        List<Game> games = gameDao.getFinished(user);
         Map<MenuItemDBModel, Integer> clusters = cacheService.getClusters();
 
         Map<Integer, List<MenuItemDBModel>> reversedClusters = reverseMap(clusters);
@@ -132,7 +142,10 @@ public class GameServiceImpl implements GameService {
 
         TreeMap<Integer, Integer> sortedClusts = new TreeMap<>();
         IntStream.range(0, maxCl).forEach(i -> sortedClusts.put(i, 0));
-        games.stream().map(Game::getWinner).map(clusters::get).forEach(cl -> sortedClusts.merge(cl, 1, (oldV, newV) -> oldV + newV));
+        games.stream().
+                map(Game::getWinner).
+                map(clusters::get).
+                forEach(cl -> sortedClusts.merge(cl, 1, (oldV, newV) -> oldV + newV));
 
         NavigableSet<Integer> navigableSet = sortedClusts.descendingKeySet();
 
@@ -141,12 +154,12 @@ public class GameServiceImpl implements GameService {
             loveList.add(reversedClusters.get(cl1).get(0));
         }
 
-        userDAO.saveOrUpdate(user);
+        userDao.saveOrUpdate(user);
     }
 
 
     private void constructGames(final UserDBModel userDBModel) {
-        List<Game> games = gameDao.getFinnished(userDBModel);
+        List<Game> games = gameDao.getFinished(userDBModel);
         Map<MenuItemDBModel, Integer> clusters = cacheService.getClusters();
 
         Map<Integer, List<MenuItemDBModel>> reversedClusters = reverseMap(clusters);
@@ -154,8 +167,14 @@ public class GameServiceImpl implements GameService {
 
         TreeMap<Integer, Integer> sortedClusts = new TreeMap<>();
         IntStream.range(0, maxCl).forEach(i -> sortedClusts.put(i, 0));
-        games.stream().map(Game::getFirst).map(clusters::get).forEach(cl -> sortedClusts.merge(cl, 1, (oldV, newV) -> oldV + newV));
-        games.stream().map(Game::getSecond).map(clusters::get).forEach(cl -> sortedClusts.merge(cl, 1, (oldV, newV) -> oldV + newV));
+        games.stream().
+                map(Game::getFirst).
+                map(clusters::get).
+                forEach(cl -> sortedClusts.merge(cl, 1, (oldV, newV) -> oldV + newV));
+        games.stream().
+                map(Game::getSecond).
+                map(clusters::get).
+                forEach(cl -> sortedClusts.merge(cl, 1, (oldV, newV) -> oldV + newV));
 
         NavigableSet<Integer> navigableSet = sortedClusts.navigableKeySet();
 
@@ -173,7 +192,7 @@ public class GameServiceImpl implements GameService {
             MenuItemDBModel game1 = reversedClusters.get(cl1).get(0);
             MenuItemDBModel game2 = reversedClusters.get(cl2).get(0);
             Game g = new Game(userDBModel, game1, game2, null);
-            gameDao.addGame(g);
+            gameDao.addOrUpdate(g);
         }
     }
 

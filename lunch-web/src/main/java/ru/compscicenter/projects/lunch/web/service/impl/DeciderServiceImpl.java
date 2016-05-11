@@ -1,7 +1,5 @@
 package ru.compscicenter.projects.lunch.web.service.impl;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import ru.compscicenter.projects.lunch.estimator.Decider;
 import ru.compscicenter.projects.lunch.estimator.ServingDecider;
 import ru.compscicenter.projects.lunch.model.Menu;
@@ -22,7 +20,6 @@ import java.util.List;
 public class DeciderServiceImpl implements DeciderService {
 
 
-    private static Logger logger = LoggerFactory.getLogger(DeciderServiceImpl.class);
     private Decider decider;
     private UserService userService;
     private MenuService menuService;
@@ -45,16 +42,29 @@ public class DeciderServiceImpl implements DeciderService {
     }
 
     @Override
-    public double sumForPeriod(final long userId, final Calendar start, final Calendar end) {
+    public double sumForPeriod(final long userId, final Calendar start, final Calendar end) throws NoSuchUserException {
+        if (!userService.exists(userId)) {
+            throw new NoSuchUserException("No such user  " + userId);
+        }
+
+        User user = userService.getUserById(userId);
+
+        List<Menu> data = menuService.getAllForDates(new GregorianCalendar(1996, 1, 1), end);
+        if (data.size() == 0) {
+            return 0;
+        }
+        MenuKnowledge knowledge = new MenuKnowledge(data);
+
         double result = 0;
 
         Calendar it = (Calendar) start.clone();
+
         while (!it.getTime().after(end.getTime())) {
-            try {
-                List<MenuItem> menuItems = getForDate(userId, it);
-                result += menuItems.stream().mapToDouble(MenuItem::getPrice).sum();
-            } catch (NoMenuForDateException e) {
-                logger.debug("Summing", e);
+            if (menuService.contains(it)) {
+                Menu menu = menuService.getForDate(it);
+                assert menu != null;
+                List<MenuItem> list = decider.range(menu.getItems(), knowledge, user);
+                result += servingDecider.serve(list).stream().mapToDouble(MenuItem::getPrice).sum();
             }
             it.add(Calendar.DAY_OF_MONTH, 1);
         }
@@ -63,28 +73,26 @@ public class DeciderServiceImpl implements DeciderService {
 
     @Override
     @Transactional
-    public List<MenuItem> getForDate(final long userId, final Calendar date) {
-        if (date == null) {
-            throw new NullPointerException("date is null");
-        }
-
-        Menu menu = menuService.getForDate(date);
-        if (menu == null) {
+    public List<MenuItem> getForDate(final long userId, final Calendar date)
+            throws NoMenuForDateException, NoSuchUserException {
+        if (!menuService.contains(date)) {
             throw new NoMenuForDateException("There is no menuPattern for date " + date);
         }
 
-        User user = userService.getUserById(userId);
-        if (user == null) {
+        if (!userService.exists(userId)) {
             throw new NoSuchUserException("No such user  " + userId);
         }
 
+        Menu menu = menuService.getForDate(date);
+        User user = userService.getUserById(userId);
+
         List<Menu> data = menuService.getAllForDates(new GregorianCalendar(1996, 1, 1), date);
-        if (data.size() == 0) {
-            throw new NoMenuForDateException("Knowledge base is empty for " + date.toString());
-        }
         MenuKnowledge knowledge = new MenuKnowledge(data);
 
-        List<MenuItem> result = decider.range(menu.getItemsCopy(), knowledge, user);
+        assert menu != null;
+        assert user != null;
+
+        List<MenuItem> result = decider.range(menu.getItems(), knowledge, user);
 
         return servingDecider.serve(result);
     }

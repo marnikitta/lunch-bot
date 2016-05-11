@@ -2,10 +2,12 @@ package ru.compscicenter.projects.lunch.web.dao.impl;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import ru.compscicenter.projects.lunch.web.dao.UserDAO;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
+import ru.compscicenter.projects.lunch.web.dao.UserDao;
 import ru.compscicenter.projects.lunch.web.model.UserDBModel;
 
-public class UserDAOImpl implements UserDAO {
+public class UserDaoImpl implements UserDao {
 
     private SessionFactory factory;
 
@@ -29,8 +31,13 @@ public class UserDAOImpl implements UserDAO {
     @Override
     public boolean contains(final long id) {
         Session session = factory.getCurrentSession();
-        Object object = session.get(UserDBModel.class, id);
-        return object != null;
+
+        Number count = (Number) session.createCriteria(UserDBModel.class).
+                add(Restrictions.eq("id", id)).
+                setProjection(Projections.rowCount()).
+                uniqueResult();
+
+        return count.intValue() != 0;
     }
 
     @Override

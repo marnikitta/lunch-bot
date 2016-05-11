@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import ru.compscicenter.projects.lunch.model.Menu;
 import ru.compscicenter.projects.lunch.web.service.DeciderService;
 import ru.compscicenter.projects.lunch.web.service.MenuService;
 
@@ -41,8 +42,8 @@ public class MenuUpload {
     public String handleFileUpload(@RequestParam("file") final MultipartFile file) {
         if (!file.isEmpty()) {
             try {
-                menuService.upload(file.getInputStream());
-                return "OK!";
+                Menu menu = menuService.upload(file.getInputStream());
+                return "OK";
             } catch (Exception e) {
                 return ("You failed to upload " + e.getMessage());
             }

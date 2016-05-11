@@ -20,7 +20,7 @@ public class GameTest extends AbstractTestNGSpringContextTests {
     private UserService userService;
 
     @Test(dependsOnGroups = {"fillingDB", "creatingUsers"})
-    public void emulatingGames() throws DeciderException {
+    public void emulatingGames() throws DeciderException, GameUpdatingException {
         int userId = 4;
         for (int i = 0; i < 100; ++i) {
             Game game = gameService.getNextGame(4);
@@ -33,21 +33,21 @@ public class GameTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test(dependsOnGroups = {"fillingDB", "creatingUsers"}, expectedExceptions = GameUpdatingException.class)
-    public void updateWrongUser() throws DeciderException {
+    public void updateWrongUser() throws DeciderException, GameUpdatingException {
         int userId = 4;
         Game game = gameService.getNextGame(userId);
         gameService.setResult(userId + 1, game.getId(), game.getFirst().getId());
     }
 
     @Test(dependsOnGroups = {"fillingDB", "creatingUsers"}, expectedExceptions = GameUpdatingException.class)
-    public void updateNonExistingGame() throws DeciderException {
+    public void updateNonExistingGame() throws DeciderException, GameUpdatingException {
         int userId = 4;
         Game game = gameService.getNextGame(userId);
         gameService.setResult(userId, game.getId() + 10001, game.getFirst().getId());
     }
 
     @Test(dependsOnGroups = {"fillingDB", "creatingUsers"}, expectedExceptions = GameUpdatingException.class)
-    public void updateFinishedGame() throws DeciderException {
+    public void updateFinishedGame() throws DeciderException, GameUpdatingException {
         int userId = 4;
         Game game = gameService.getNextGame(userId);
         gameService.setResult(userId, game.getId(), game.getFirst().getId());

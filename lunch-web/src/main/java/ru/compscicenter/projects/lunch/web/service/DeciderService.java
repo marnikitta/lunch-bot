@@ -1,12 +1,14 @@
 package ru.compscicenter.projects.lunch.web.service;
 
 import ru.compscicenter.projects.lunch.model.MenuItem;
+import ru.compscicenter.projects.lunch.web.exception.NoMenuForDateException;
+import ru.compscicenter.projects.lunch.web.exception.NoSuchUserException;
 
 import java.util.Calendar;
 import java.util.List;
 
 public interface DeciderService {
-    public double sumForPeriod(long userId, Calendar start, Calendar end);
+    double sumForPeriod(long userId, Calendar start, Calendar end) throws NoSuchUserException;
 
-    public List<MenuItem> getForDate(long userId, Calendar date);
+    List<MenuItem> getForDate(long userId, Calendar date) throws NoMenuForDateException, NoSuchUserException;
 }

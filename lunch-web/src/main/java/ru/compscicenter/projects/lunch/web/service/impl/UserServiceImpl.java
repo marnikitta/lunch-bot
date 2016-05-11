@@ -2,10 +2,9 @@ package ru.compscicenter.projects.lunch.web.service.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.dao.DuplicateKeyException;
 import ru.compscicenter.projects.lunch.model.User;
-import ru.compscicenter.projects.lunch.web.dao.MenuDAO;
-import ru.compscicenter.projects.lunch.web.dao.UserDAO;
+import ru.compscicenter.projects.lunch.web.dao.MenuDao;
+import ru.compscicenter.projects.lunch.web.dao.UserDao;
 import ru.compscicenter.projects.lunch.web.exception.NoSuchUserException;
 import ru.compscicenter.projects.lunch.web.model.MenuItemDBModel;
 import ru.compscicenter.projects.lunch.web.model.UserDBModel;
@@ -21,22 +20,22 @@ public class UserServiceImpl implements UserService {
 
     private static Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
-    private UserDAO userDAO;
-    private MenuDAO menuDAO;
+    private UserDao userDao;
+    private MenuDao menuDao;
 
-    public void setMenuDAO(MenuDAO menuDAO) {
-        this.menuDAO = menuDAO;
+    public void setMenuDao(MenuDao menuDao) {
+        this.menuDao = menuDao;
     }
 
-    public void setUserDAO(UserDAO userDAO) {
-        this.userDAO = userDAO;
+    public void setUserDao(UserDao userDao) {
+        this.userDao = userDao;
     }
 
     @Override
     @Transactional
     public User getUserById(final long id) {
         if (exists(id)) {
-            UserDBModel userDBModel = userDAO.getById(id);
+            UserDBModel userDBModel = userDao.getById(id);
             return ModelConverter.dbUserToUser(userDBModel);
         } else {
             logger.debug("There is no user for id = " + id);
@@ -47,48 +46,53 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void makeRandomUser(final long id) {
-        if (exists(id)) {
-            logger.debug("Already has user with id=" + id);
-            throw new DuplicateKeyException("Already has user with id=" + id);
-        }
-
-        List<MenuItemDBModel> menuList = menuDAO.getAllItems();
-        Collections.shuffle(menuList);
-
         UserDBModel user = new UserDBModel();
         user.setId(id);
+
+        if (exists(id)) {
+            logger.warn("Already has user with id=" + id);
+            user = userDao.getById(id);
+        }
+
+        List<MenuItemDBModel> menuList = menuDao.getAllItems();
+        Collections.shuffle(menuList);
+
         int max = Math.min(menuList.size(), 10);
         user.setLoveList(menuList.subList(0, max));
         user.setHateList(new ArrayList<>());
 
-        userDAO.saveOrUpdate(user);
+        userDao.saveOrUpdate(user);
     }
 
     @Override
     @Transactional
-    public void createUser(long id) {
+    public void createUser(final long id) {
         if (!exists(id)) {
             User user = new User(id);
-            userDAO.saveOrUpdate(ModelConverter.userToDBUser(user));
+            userDao.saveOrUpdate(ModelConverter.userToDBUser(user));
         } else {
-            reset(id);
+            try {
+                reset(id);
+            } catch (NoSuchUserException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
     @Override
     @Transactional
     public boolean exists(final long id) {
-        return userDAO.contains(id);
+        return userDao.contains(id);
     }
 
     @Override
     @Transactional
-    public void reset(long id) {
+    public void reset(final long id) throws NoSuchUserException {
         if (exists(id)) {
-            UserDBModel user = userDAO.getById(id);
+            UserDBModel user = userDao.getById(id);
             user.getLoveList().clear();
             user.getHateList().clear();
-            userDAO.saveOrUpdate(user);
+            userDao.saveOrUpdate(user);
         } else {
             throw new NoSuchUserException("No user with id = " + id);
         }

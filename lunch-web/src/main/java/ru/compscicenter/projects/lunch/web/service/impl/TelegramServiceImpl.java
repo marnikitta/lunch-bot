@@ -7,6 +7,9 @@ import org.slf4j.LoggerFactory;
 import ru.compscicenter.projects.lunch.estimator.DeciderException;
 import ru.compscicenter.projects.lunch.model.Menu;
 import ru.compscicenter.projects.lunch.model.MenuItem;
+import ru.compscicenter.projects.lunch.web.exception.GameUpdatingException;
+import ru.compscicenter.projects.lunch.web.exception.NoMenuForDateException;
+import ru.compscicenter.projects.lunch.web.exception.NoSuchUserException;
 import ru.compscicenter.projects.lunch.web.model.Game;
 import ru.compscicenter.projects.lunch.web.service.*;
 import ru.compscicenter.projects.lunch.web.util.TelegramMethodExecutor;
@@ -51,6 +54,7 @@ public class TelegramServiceImpl implements TelegramService {
                     + "/menu [dd.mm.yyyy] - show menu for today [or date]" + "\n"
                     + "/day [dd.mm.yyyy] - suggest serving for today [or date]" + "\n"
                     + "/play - improve decider algorithm" + "\n"
+                    + "/dates - get avalible dates" + "\n"
                     + "/cancel - cancel current operation" + "\n"
                     + "/sum [mm.yyyy] - calculate sum from beginning of month till now [month]" + "\n\n"
                     + "Examples:" + "\n"
@@ -65,6 +69,7 @@ public class TelegramServiceImpl implements TelegramService {
     private static final String sumPatter = "\\/sum?(\\s+(?<date>\\d+.\\d+))?\\s*";
     private static final String playPattern = "\\/play\\s*";
     private static final String resetPattern = "\\/reset\\s*";
+    private static final String datesPattern = "\\/dates\\s*";
     private static final String votePattern = ".*\\(\\$(?<word>\\w*=*)\\)";
     private static final String cancelPattern = "\\/cancel\\s*";
 
@@ -118,9 +123,10 @@ public class TelegramServiceImpl implements TelegramService {
             long from = (Long) ((JSONObject) message.get("from")).get("id");
             long chat = (Long) ((JSONObject) message.get("chat")).get("id");
 
-            registerUser(from);
 
             try {
+                registerUser(from);
+
                 if (message.containsKey("text")) {
                     String text = (String) message.get("text");
                     text = text.replaceAll("@.*", "");
@@ -128,19 +134,19 @@ public class TelegramServiceImpl implements TelegramService {
                     handleTextQuery(from, chat, text);
                 }
             } catch (Exception e) {
-                logger.error("Smth went wrong", e);
                 sendMessage(chat, "Ooops... Something went wrong", null);
-                sendMessage(169022871, "Exception: " + e.toString(), null);
+                throw new Exception(e);
             }
 
         } catch (Exception e) {
-            logger.error("Error during update parsing", e);
+            logger.error("Sth went wrong", e);
             sendMessage(169022871, "Exception: " + e.toString(), null);
         }
     }
 
 
-    private void handleTextQuery(final long from, final long chat, final String text) {
+    private void handleTextQuery(final long from, final long chat, final String text)
+            throws NoMenuForDateException, NoSuchUserException, GameUpdatingException {
         String start = "\\/start";
         String help = "\\/help";
 
@@ -159,9 +165,11 @@ public class TelegramServiceImpl implements TelegramService {
         } else if (text.matches(cancelPattern)) {
             sendHelp(chat);
         } else if (text.matches(resetPattern)) {
-            resetHandle(from, chat);
+            handleReset(from, chat);
         } else if (text.matches(help)) {
             sendHelp(chat);
+        } else if (text.matches(datesPattern)) {
+            handleDates(chat);
         } else if (text.matches(votePattern)) {
             handleVote(from, chat, text);
         } else {
@@ -170,12 +178,22 @@ public class TelegramServiceImpl implements TelegramService {
         }
     }
 
-    private void resetHandle(final long from, final long chat) {
+    private void handleDates(final long chat) {
+        List<Menu> menus = menuService.getAll();
+        StringBuilder sb = new StringBuilder();
+        for (Menu menu : menus) {
+            sb.append(ToStrings.dateToString(menu.getDate())).append("; ");
+        }
+        sendMessage(chat, sb.toString(), null);
+    }
+
+    private void handleReset(final long from, final long chat) throws NoSuchUserException {
         userService.reset(from);
         sendMessage(chat, "Reset was done", null);
     }
 
-    private void handleVote(final long from, final long chat, final String text) {
+    private void handleVote(final long from, final long chat, final String text)
+            throws GameUpdatingException {
         Pattern pattern = Pattern.compile(votePattern);
         Matcher matcher = pattern.matcher(text);
 
@@ -192,7 +210,8 @@ public class TelegramServiceImpl implements TelegramService {
         }
     }
 
-    private void handleSum(final long from, final long chat, final String text) {
+    private void handleSum(final long from, final long chat, final String text)
+            throws NoSuchUserException {
         Pattern pattern = Pattern.compile(sumPatter);
         Matcher matcher = pattern.matcher(text);
         if (matcher.matches()) {
@@ -203,7 +222,8 @@ public class TelegramServiceImpl implements TelegramService {
             if (matcher.group("date") != null) {
                 String[] splitted = matcher.group("date").split("\\.");
                 try {
-                    start = new GregorianCalendar(Integer.parseInt(splitted[1]), Integer.parseInt(splitted[0]) - 1, 1);
+                    start = new GregorianCalendar(Integer.parseInt(splitted[1]),
+                            Integer.parseInt(splitted[0]) - 1, 1);
                     end = new GregorianCalendar(Integer.parseInt(splitted[1]),
                             Integer.parseInt(splitted[0]) - 1,
                             start.getActualMaximum(Calendar.DAY_OF_MONTH));
@@ -222,7 +242,8 @@ public class TelegramServiceImpl implements TelegramService {
     }
 
 
-    private void handleDecisionForDay(final long from, final long chat, final String text) {
+    private void handleDecisionForDay(final long from, final long chat, final String text)
+            throws NoMenuForDateException, NoSuchUserException {
         Pattern pattern = Pattern.compile(dayPattern);
         Matcher matcher = pattern.matcher(text);
 
@@ -231,7 +252,8 @@ public class TelegramServiceImpl implements TelegramService {
             if (matcher.group("date") != null) {
                 String[] splitted = matcher.group("date").split("\\.");
                 try {
-                    calendar = new GregorianCalendar(Integer.parseInt(splitted[2]), Integer.parseInt(splitted[1]) - 1, Integer.parseInt(splitted[0]));
+                    calendar = new GregorianCalendar(Integer.parseInt(splitted[2]),
+                            Integer.parseInt(splitted[1]) - 1, Integer.parseInt(splitted[0]));
                 } catch (Exception e) {
                     sendMessage(chat, "Wrong date format. Try dd.mm.yyyy", null);
                     return;
@@ -259,7 +281,8 @@ public class TelegramServiceImpl implements TelegramService {
             if (matcher.group("date") != null) {
                 String[] splitted = matcher.group("date").split("\\.");
                 try {
-                    calendar = new GregorianCalendar(Integer.parseInt(splitted[2]), Integer.parseInt(splitted[1]) - 1, Integer.parseInt(splitted[0]));
+                    calendar = new GregorianCalendar(Integer.parseInt(splitted[2]),
+                            Integer.parseInt(splitted[1]) - 1, Integer.parseInt(splitted[0]));
                 } catch (Exception e) {
                     sendMessage(chat, "Wrong date format. Try dd.mm.yyyy", null);
                     return;
@@ -270,7 +293,9 @@ public class TelegramServiceImpl implements TelegramService {
             } else {
                 Menu menu1 = menuService.getForDate(calendar);
                 String date = "Date: " + ToStrings.dateToString(calendar);
-                sendMessage(chat, date + "\n\n" + ToStrings.menuItemsToString(menu1.getItemsCopy(), 0, 100), null);
+
+                assert menu1 != null;
+                sendMessage(chat, date + "\n\n" + ToStrings.menuItemsToString(menu1.getItems(), 0, 100), null);
             }
         } else {
             throw new IllegalArgumentException(text);

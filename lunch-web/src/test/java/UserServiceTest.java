@@ -3,6 +3,7 @@ import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+import ru.compscicenter.projects.lunch.web.exception.NoSuchUserException;
 import ru.compscicenter.projects.lunch.web.service.UserService;
 
 import javax.annotation.Resource;
@@ -25,17 +26,12 @@ public class UserServiceTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test(dependsOnGroups = "fillingDB")
-    public void resettingUsers() {
+    public void resettingUsers() throws NoSuchUserException {
         userService.makeRandomUser(101);
         userService.reset(101);
         Assert.assertTrue(userService.exists(101));
         Assert.assertEquals(userService.getUserById(101).getLoveList().size(), 0);
         Assert.assertEquals(userService.getUserById(101).getHateList().size(), 0);
-    }
-
-    @Test(dependsOnGroups = "creatingUsers", expectedExceptions = org.springframework.dao.DuplicateKeyException.class)
-    public void creatingDuplicate() {
-        userService.makeRandomUser(1);
     }
 
     @Test(dependsOnGroups = "creatingUsers")

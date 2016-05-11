@@ -2,12 +2,16 @@ package ru.compscicenter.projects.lunch.web.dao;
 
 import ru.compscicenter.projects.lunch.web.model.UserDBModel;
 
-public interface UserDAO {
-    public UserDBModel getById(long id);
+public interface UserDao {
 
-    public void saveOrUpdate(UserDBModel userDBModel);
+    /***
+     * @return proxy object, can throw ObjectNotFoundException
+     */
+    UserDBModel getById(long id);
 
-    public boolean contains(long id);
+    void saveOrUpdate(UserDBModel userDBModel);
 
-    public void delete(long id);
+    boolean contains(long id);
+
+    void delete(long id);
 }
