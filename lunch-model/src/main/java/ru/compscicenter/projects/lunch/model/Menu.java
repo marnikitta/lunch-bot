@@ -53,8 +53,8 @@ public class Menu {
         return items.size();
     }
 
-    public List<MenuItem> getItemsCopy() {
-        return new ArrayList<>(items);
+    public List<MenuItem> getItems() {
+        return Collections.unmodifiableList(items);
     }
 
     public MenuItem getItem(int index) {

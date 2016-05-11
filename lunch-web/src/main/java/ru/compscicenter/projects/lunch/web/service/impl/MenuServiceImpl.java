@@ -1,8 +1,7 @@
 package ru.compscicenter.projects.lunch.web.service.impl;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import ru.compscicenter.projects.lunch.model.Menu;
+import ru.compscicenter.projects.lunch.model.MenuItem;
 import ru.compscicenter.projects.lunch.parser.PDFToMenu;
 import ru.compscicenter.projects.lunch.web.dao.MenuDAO;
 import ru.compscicenter.projects.lunch.web.exception.MenuDuplicateException;
@@ -16,10 +15,11 @@ import javax.transaction.Transactional;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class MenuServiceImpl implements MenuService {
-
-    private static Logger logger = LoggerFactory.getLogger(MenuServiceImpl.class);
 
     private MenuDAO menuDAO;
 
@@ -27,13 +27,13 @@ public class MenuServiceImpl implements MenuService {
         this.menuDAO = menuDAO;
     }
 
+    @Override
     @Transactional
     public void saveMenu(final Menu menu) throws MenuDuplicateException {
-        MenuDBModel menuDBModel = ModelConverter.menuToDBMenu(menu);
-        if (contains(menuDBModel.getDate())) {
-            logger.debug("Already has entry for date: " + menu.getDate());
+        if (contains(menu.getDate())) {
             throw new MenuDuplicateException("Already has entry for date: " + menu.getDate());
         }
+        MenuDBModel menuDBModel = ModelConverter.menuToDBMenu(menu);
         menuDAO.saveOrUpdate(menuDBModel);
     }
 
@@ -41,10 +41,7 @@ public class MenuServiceImpl implements MenuService {
     @Transactional
     public List<Menu> getAll() {
         List<MenuDBModel> list = menuDAO.getAll();
-        Set<Menu> result = new LinkedHashSet<>();
-        for (MenuDBModel menuDB : list) {
-            result.add(ModelConverter.dbMenuToMenu(menuDB));
-        }
+        Set<Menu> result = list.stream().map(ModelConverter::dbMenuToMenu).collect(Collectors.toSet());
         return new ArrayList<>(result);
     }
 
@@ -60,10 +57,7 @@ public class MenuServiceImpl implements MenuService {
     @Transactional
     public List<Menu> getAllForDates(final Calendar start, final Calendar end) {
         List<MenuDBModel> list = menuDAO.getAllForDates(start, end);
-        Set<Menu> result = new LinkedHashSet<>();
-        for (MenuDBModel menuDB : list) {
-            result.add(ModelConverter.dbMenuToMenu(menuDB));
-        }
+        Set<Menu> result = list.stream().map(ModelConverter::dbMenuToMenu).collect(Collectors.toSet());
         return new ArrayList<>(result);
     }
 
@@ -74,26 +68,56 @@ public class MenuServiceImpl implements MenuService {
         if (menuDBModel != null) {
             return ModelConverter.dbMenuToMenu(menuDBModel);
         } else {
-            logger.debug("No menu for date " + day);
             return null;
         }
     }
 
     @Override
     @Transactional
-    public boolean contains(Calendar day) {
+    public MenuItem getForName(final String name) {
+        MenuItemDBModel model = menuDAO.getForName(name);
+        if (model != null) {
+            return ModelConverter.dbMenuItemToMenuItem(model);
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    @Transactional
+    public List<MenuItem> getForNameRegex(final String regex) {
+        Pattern pattern = Pattern.compile(regex);
+
+        List<MenuItemDBModel> all = menuDAO.getAllItems();
+        Set<MenuItem> result = new HashSet<>();
+
+        for (MenuItemDBModel model : all) {
+            Matcher matcher = pattern.matcher(model.getName());
+            if (matcher.matches()) {
+                result.add(ModelConverter.dbMenuItemToMenuItem(model));
+            }
+        }
+        return new ArrayList<>(result);
+    }
+
+    @Override
+    @Transactional
+    public boolean contains(final Calendar day) {
         return menuDAO.contains(day);
     }
 
     @Override
     @Transactional
-    public List<MenuItemDBModel> getAllItems() {
-        List<MenuItemDBModel> result = menuDAO.getAllItems();
-        if (result != null) {
-            Set<MenuItemDBModel> menuItemDBModels = new HashSet<>(result);
-            return new ArrayList<>(menuItemDBModels);
-        }
-        return new ArrayList<>();
+    public List<MenuItem> getAllItems() {
+        List<MenuItemDBModel> allItems = menuDAO.getAllItems();
+        Set<MenuItem> result = allItems.stream().map(ModelConverter::dbMenuItemToMenuItem).collect(Collectors.toSet());
+
+        return new ArrayList<>(result);
+    }
+
+    @Override
+    public List<MenuItemDBModel> getAllDBItems() {
+        return menuDAO.getAllItems();
     }
 
     @Override
@@ -101,15 +125,10 @@ public class MenuServiceImpl implements MenuService {
     public Menu upload(final InputStream stream) throws MenuUploadingException, MenuDuplicateException {
         try {
             Menu menu = PDFToMenu.parsePDF(stream);
-            if (null == getForDate(menu.getDate())) {
-                saveMenu(menu);
-                return menu;
-            } else {
-                throw new MenuDuplicateException("Already has menu for date " + menu.getDate());
-            }
+            saveMenu(menu);
+            return menu;
         } catch (IOException e) {
-            logger.debug("Uploading menu wrong format", e);
-            throw new MenuUploadingException("Uploading menu wrong format", e);
+            throw new MenuUploadingException("Uploading menuPattern wrong format", e);
         }
     }
 }

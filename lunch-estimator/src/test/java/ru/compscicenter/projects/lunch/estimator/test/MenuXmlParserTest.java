@@ -30,7 +30,7 @@ public class MenuXmlParserTest extends Assert {
                 {1, "гречка отварная"},
                 {2, "картофельное пюре"},
                 {3, "макароны отварные"},
-                {4, null}
+                {4, ""}
         };
     }
 
@@ -74,7 +74,7 @@ public class MenuXmlParserTest extends Assert {
                 {6, "main course"},
                 {19, "soup"},
                 {22, "salad"},
-                {23, null}
+                {23, ""}
         };
     }
 

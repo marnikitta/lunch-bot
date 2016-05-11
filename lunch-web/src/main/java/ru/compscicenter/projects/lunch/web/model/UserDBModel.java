@@ -1,7 +1,7 @@
 package ru.compscicenter.projects.lunch.web.model;
 
 import javax.persistence.*;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -10,35 +10,35 @@ public class UserDBModel {
     @Column(name = "id")
     private long id;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany
     @JoinTable(name = "userlove_menu_item", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "menu_item_id"))
-    private Set<MenuItemDBModel> loveSet;
+    private List<MenuItemDBModel> loveList;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany
     @JoinTable(name = "userhate_menu_item", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "menu_item_id"))
-    private Set<MenuItemDBModel> hateSet;
+    private List<MenuItemDBModel> hateList;
 
     public long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(final long id) {
         this.id = id;
     }
 
-    public Set<MenuItemDBModel> getLoveSet() {
-        return loveSet;
+    public List<MenuItemDBModel> getLoveList() {
+        return loveList;
     }
 
-    public void setLoveSet(Set<MenuItemDBModel> loveSet) {
-        this.loveSet = loveSet;
+    public void setLoveList(final List<MenuItemDBModel> loveList) {
+        this.loveList = loveList;
     }
 
-    public Set<MenuItemDBModel> getHateSet() {
-        return hateSet;
+    public List<MenuItemDBModel> getHateList() {
+        return hateList;
     }
 
-    public void setHateSet(Set<MenuItemDBModel> hateSet) {
-        this.hateSet = hateSet;
+    public void setHateList(final List<MenuItemDBModel> hateList) {
+        this.hateList = hateList;
     }
 }

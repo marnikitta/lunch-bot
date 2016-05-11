@@ -8,11 +8,10 @@ import ru.compscicenter.projects.lunch.web.model.MenuItemDBModel;
 import ru.compscicenter.projects.lunch.web.model.UserDBModel;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+import java.util.stream.Collectors;
 
-public class ModelConverter {
+public final class ModelConverter {
 
     private ModelConverter() {
     }
@@ -21,20 +20,19 @@ public class ModelConverter {
         Menu.Builder builder = new Menu.Builder();
         builder.setDate(menuDBModel.getDate());
 
-        List<MenuItem> items = new ArrayList<>();
-        menuDBModel.getItems().forEach(item -> items.add(dbMenuItemToMenuItem(item)));
-        builder.addAll(items);
+        List<MenuItem> items = menuDBModel.getItems().stream().
+                map(ModelConverter::dbMenuItemToMenuItem).
+                collect(Collectors.toList());
 
+        builder.addAll(items);
         return builder.build();
     }
 
     public static MenuDBModel menuToDBMenu(final Menu menu) {
         MenuDBModel menuDBModel = new MenuDBModel();
-        List<MenuItemDBModel> items = new ArrayList<>();
-        menu.stream().forEach(item -> {
-            MenuItemDBModel it = menuItemToDBMenuItem(item);
-            items.add(it);
-        });
+        List<MenuItemDBModel> items = menu.stream().
+                map(ModelConverter::menuItemToDBMenuItem).
+                collect(Collectors.toList());
         menuDBModel.setDate(menu.getDate());
         menuDBModel.setItems(items);
         return menuDBModel;
@@ -48,7 +46,7 @@ public class ModelConverter {
                 menuItemDBModel.getWeight(),
                 menuItemDBModel.getCalorie(),
                 menuItemDBModel.getPrice(),
-                menuItemDBModel.getComposition());
+                new ArrayList<>(menuItemDBModel.getComposition())); //Костыль. Иначе equals стремно работает
     }
 
     public static MenuItemDBModel menuItemToDBMenuItem(final MenuItem menuItem) {
@@ -58,34 +56,28 @@ public class ModelConverter {
                 menuItem.getWeight(),
                 menuItem.getCalorie(),
                 menuItem.getPrice(),
-                menuItem.getComposition());
+                new ArrayList<>(menuItem.getComposition())); // Аналогичный костыль
     }
 
     public static UserDBModel userToDBUser(final User user) {
         UserDBModel userDBModel = new UserDBModel();
         userDBModel.setId(user.getId());
 
-        Set<MenuItemDBModel> dbSet = new HashSet<>();
-        user.getLoveSet().stream().forEach(item -> dbSet.add(menuItemToDBMenuItem(item)));
-        userDBModel.setLoveSet(dbSet);
-
-        dbSet.clear();
-        user.getHateSet().stream().forEach(item -> dbSet.add(menuItemToDBMenuItem(item)));
-        userDBModel.setHateSet(dbSet);
+        userDBModel.setLoveList(user.getLoveList().stream().
+                map(ModelConverter::menuItemToDBMenuItem).
+                collect(Collectors.toList()));
+        userDBModel.setHateList(user.getHateList().stream().
+                map(ModelConverter::menuItemToDBMenuItem).
+                collect(Collectors.toList()));
 
         return userDBModel;
     }
 
     public static User dbUserToUser(final UserDBModel userDBModel) {
         User user = new User(userDBModel.getId());
-        Set<MenuItem> set = new HashSet<>();
 
-        userDBModel.getLoveSet().stream().forEach(item -> set.add(dbMenuItemToMenuItem(item)));
-        user.getLoveSet().addAll(set);
-
-        set.clear();
-        userDBModel.getHateSet().stream().forEach(item -> set.add(dbMenuItemToMenuItem(item)));
-        user.getHateSet().addAll(set);
+        userDBModel.getLoveList().stream().map(ModelConverter::dbMenuItemToMenuItem).forEach(user.getLoveList()::add);
+        userDBModel.getHateList().stream().map(ModelConverter::dbMenuItemToMenuItem).forEach(user.getHateList()::add);
 
         return user;
     }

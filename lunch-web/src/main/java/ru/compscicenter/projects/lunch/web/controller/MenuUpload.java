@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import ru.compscicenter.projects.lunch.model.Menu;
 import ru.compscicenter.projects.lunch.web.service.DeciderService;
 import ru.compscicenter.projects.lunch.web.service.MenuService;
 
@@ -20,10 +20,10 @@ public class MenuUpload {
 
 
     @Resource(name = "deciderService")
-    DeciderService deciderService;
+    private DeciderService deciderService;
 
     @Resource(name = "menuService")
-    MenuService menuService;
+    private MenuService menuService;
 
     @RequestMapping(value = "/", produces = "application/json; charset=utf-8")
     @ResponseBody
@@ -32,19 +32,18 @@ public class MenuUpload {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "upload")
-    public String upload(Model model) {
+    public String upload(final Model model) {
         model.addAttribute("title", "Title");
         return "fileUpload";
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "upload")
     @ResponseBody
-    public String handleFileUpload(@RequestParam("file") MultipartFile file,
-                                   RedirectAttributes redirectAttributes) {
+    public String handleFileUpload(@RequestParam("file") final MultipartFile file) {
         if (!file.isEmpty()) {
             try {
-                menuService.upload(file.getInputStream());
-                return "OK!";
+                Menu menu = menuService.upload(file.getInputStream());
+                return "OK";
             } catch (Exception e) {
                 return ("You failed to upload " + e.getMessage());
             }

@@ -1,6 +1,6 @@
 package ru.compscicenter.projects.lunch.web.exception;
 
-public class MenuDuplicateException extends Exception {
+public class MenuDuplicateException extends MyHumbleException {
     public MenuDuplicateException(String msg) {
         super(msg);
     }

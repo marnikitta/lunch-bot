@@ -19,6 +19,7 @@
                 <beans:value>ru.compscicenter.projects.lunch.web.model.MenuItemDBModel</beans:value>
                 <beans:value>ru.compscicenter.projects.lunch.web.model.MenuDBModel</beans:value>
                 <beans:value>ru.compscicenter.projects.lunch.web.model.UserDBModel</beans:value>
+                <beans:value>ru.compscicenter.projects.lunch.web.model.Game</beans:value>
             </beans:list>
         </beans:property>
         <beans:property name="configLocation" value="classpath:hibernate-test.cfg.xml"/>

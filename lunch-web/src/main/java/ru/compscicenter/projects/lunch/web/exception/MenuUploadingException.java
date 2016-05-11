@@ -1,8 +1,6 @@
 package ru.compscicenter.projects.lunch.web.exception;
 
-import java.io.IOException;
-
-public class MenuUploadingException extends IOException {
+public class MenuUploadingException extends MyHumbleException {
     public MenuUploadingException() {
         super();
     }

@@ -1,6 +1,7 @@
 package ru.compscicenter.projects.lunch.model;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class MenuKnowledge {
     private List<Menu> menus;
@@ -15,20 +16,15 @@ public class MenuKnowledge {
     }
 
     public Set<MenuItem> getList() {
-        Set<MenuItem> result = new HashSet<>();
-        for (Menu m : menus) {
-            m.stream().forEach(result::add);
-        }
-        return result;
+        return menus.stream().
+                flatMap(Menu::stream).
+                collect(Collectors.toSet());
     }
 
     public Set<MenuItem> getList(final Calendar begin, final Calendar end) {
-        Set<MenuItem> result = new HashSet<>();
-        for (Menu m : menus) {
-            if (m.getDate().after(begin) && m.getDate().before(end)) {
-                m.stream().forEach(result::add);
-            }
-        }
-        return result;
+        return menus.stream().
+                filter(m -> m.getDate().compareTo(begin) >= 0 && m.getDate().compareTo(end) <= 0).
+                flatMap(Menu::stream).
+                collect(Collectors.toSet());
     }
 }

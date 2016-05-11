@@ -22,26 +22,40 @@ public class DeciderServiceTest extends AbstractTestNGSpringContextTests {
     private DeciderService deciderService;
 
     @Test(dependsOnGroups = "creatingUsers")
-    public void makeMenuForDay() {
+    public void makeMenuForDay() throws NoMenuForDateException, NoSuchUserException {
         final long id = 1;
         final Calendar calendar = new GregorianCalendar(2016, 2, 2);
 
         List<MenuItem> items = deciderService.getForDate(id, calendar);
         Assert.assertNotNull(items);
-        Assert.assertEquals(items.size(), 5);
+        Assert.assertTrue(items.size() > 0);
+    }
+
+    @Test(dependsOnGroups = "creatingUsers")
+    public void sumForPeriod() throws NoSuchUserException {
+        final long id = 1;
+        final Calendar end = new GregorianCalendar(2016, 2, 2);
+        final Calendar start = new GregorianCalendar(1996, 2, 2);
+
+        double sum = deciderService.sumForPeriod(id, start, end);
+        System.out.println(sum);
+        Assert.assertTrue(sum > 0);
+
+        sum = deciderService.sumForPeriod(id, start, start);
+        Assert.assertTrue(sum == 0);
     }
 
     @Test(dependsOnGroups = "creatingUsers", expectedExceptions = NoMenuForDateException.class)
-    public void getForWrongDate() {
+    public void getForWrongDate() throws NoMenuForDateException, NoSuchUserException {
         final long id = 1;
         final Calendar calendar = new GregorianCalendar(2016, 2, 5);
         deciderService.getForDate(id, calendar);
     }
 
     @Test(dependsOnGroups = "creatingUsers", expectedExceptions = NoSuchUserException.class)
-    public void getForWrongUser() {
-        final long id = 4;
-        final Calendar calendar = new GregorianCalendar(2016, 2, 5);
+    public void getForWrongUser() throws NoMenuForDateException, NoSuchUserException {
+        final long id = 404;
+        final Calendar calendar = new GregorianCalendar(2016, 2, 2);
         deciderService.getForDate(id, calendar);
     }
 }

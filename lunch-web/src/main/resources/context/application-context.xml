@@ -19,8 +19,8 @@
     </beans:bean>
 
     <beans:bean id="userService" class="ru.compscicenter.projects.lunch.web.service.impl.UserServiceImpl">
-        <beans:property name="menuService" ref="menuService"/>
         <beans:property name="userDAO" ref="userDAO"/>
+        <beans:property name="menuDAO" ref="menuDAO"/>
     </beans:bean>
 
     <beans:bean id="deciderService" class="ru.compscicenter.projects.lunch.web.service.impl.DeciderServiceImpl">
@@ -30,11 +30,25 @@
         <beans:property name="servingDecider" ref="simpleServingDecider"/>
     </beans:bean>
 
-    <beans:bean id="randomDecider" class="ru.compscicenter.projects.lunch.estimator.RandomDecider"/>
+    <beans:bean id="randomDecider" class="ru.compscicenter.projects.lunch.estimator.impl.PreferenceDecider"/>
 
-    <beans:bean id="simpleServingDecider" class="ru.compscicenter.projects.lunch.estimator.SimpleServingDecider">
-        <beans:constructor-arg value="5"/>
+    <beans:bean id="simpleServingDecider" class="ru.compscicenter.projects.lunch.estimator.impl.AnotherServingDecider">
     </beans:bean>
 
-    <beans:bean id="telegramService" class="ru.compscicenter.projects.lunch.web.service.impl.TelegramServiceImpl"/>
+    <beans:bean id="gameService" class="ru.compscicenter.projects.lunch.web.service.impl.GameServiceImpl">
+        <beans:property name="cacheService" ref="cacheService"/>
+        <beans:property name="gameDao" ref="gameDAO"/>
+        <beans:property name="userDAO" ref="userDAO"/>
+    </beans:bean>
+
+    <beans:bean id="cacheService" class="ru.compscicenter.projects.lunch.web.service.impl.CacheServiceImpl">
+        <beans:property name="menuService" ref="menuService"/>
+    </beans:bean>
+
+    <beans:bean id="telegramService" class="ru.compscicenter.projects.lunch.web.service.impl.TelegramServiceImpl">
+        <beans:property name="userService" ref="userService"/>
+        <beans:property name="menuService" ref="menuService"/>
+        <beans:property name="deciderService" ref="deciderService"/>
+        <beans:property name="gameService" ref="gameService"/>
+    </beans:bean>
 </beans:beans>

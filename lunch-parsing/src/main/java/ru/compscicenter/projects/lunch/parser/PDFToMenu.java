@@ -22,7 +22,7 @@ public class PDFToMenu {
     public static Menu parsePDF(InputStream stream) throws IOException {
         String str = "";
         PDDocument doc = PDDocument.load(stream);
-        PDFTextStripper stripper = new PDFTextStripper();
+        PDFTextStripper stripper = new PDFTextStripper("cp1251");
         str = stripper.getText(doc);
         doc.close();
         return MenuParser.parse(str);

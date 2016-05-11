@@ -2,11 +2,10 @@ package ru.compscicenter.projects.lunch.web.dao.impl;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import ru.compscicenter.projects.lunch.web.dao.UserDAO;
 import ru.compscicenter.projects.lunch.web.model.UserDBModel;
-
-import java.util.List;
 
 public class UserDAOImpl implements UserDAO {
 
@@ -17,27 +16,36 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public UserDBModel getById(long id) {
+    public UserDBModel getById(final long id) {
         Session session = factory.getCurrentSession();
-        UserDBModel userDBModel = (UserDBModel) session.load(UserDBModel.class, id);
-        return userDBModel;
+        Object userDBModel = session.load(UserDBModel.class, id);
+        return (UserDBModel) userDBModel;
     }
 
     @Override
-    public void saveOrUpdate(UserDBModel userDBModel) {
+    public void saveOrUpdate(final UserDBModel userDBModel) {
         Session session = factory.getCurrentSession();
         session.saveOrUpdate(userDBModel);
     }
 
     @Override
-    public boolean contains(long id) {
-        //TODO: optimize
+    public boolean contains(final long id) {
         Session session = factory.getCurrentSession();
-        List<UserDBModel> list = session.createCriteria(UserDBModel.class).add(Restrictions.eq("id", id)).list();
-        if (list == null || list.size() == 0) {
-            return false;
-        } else {
-            return true;
+
+        Number count = (Number) session.createCriteria(UserDBModel.class).
+                add(Restrictions.eq("id", id)).
+                setProjection(Projections.rowCount()).
+                uniqueResult();
+
+        return count.intValue() != 0;
+    }
+
+    @Override
+    public void delete(final long id) {
+        Session session = factory.getCurrentSession();
+        Object userDBModel = session.get(UserDBModel.class, id);
+        if (userDBModel != null) {
+            session.delete(userDBModel);
         }
     }
 }

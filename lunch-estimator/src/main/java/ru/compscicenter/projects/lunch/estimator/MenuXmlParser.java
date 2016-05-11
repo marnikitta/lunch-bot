@@ -9,7 +9,6 @@ import ru.compscicenter.projects.lunch.model.MenuItem;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,8 +28,6 @@ public class MenuXmlParser {
     private static final String TAGS = "tags";
 
     private static Document getDocument(final InputStream stream) throws Exception {
-        //Изменил на InputStream вместо File, чтобы можно было делать Classname.class.getResourceAsStream()
-        //TODO: look at me
 
         final DocumentBuilderFactory f = DocumentBuilderFactory.newInstance();
         f.setValidating(false);
@@ -75,20 +72,14 @@ public class MenuXmlParser {
             String tags = itemElement.getAttribute(TAGS);
             final List<String> composition = getArrayItemTextContent(itemElement, COMPOSITION, INGREDIENT);
 
-            if (weight == null) {
+            if (weight.equals("")) {
                 weight = "-1";
             }
-            if (calories == null) {
+            if (calories.equals("")) {
                 calories = "-1";
             }
-            if (price == null) {
+            if (price.equals("")) {
                 price = "-1";
-            }
-            if (type.equals("")) {
-                type = null;
-            }
-            if (tags.equals("")) {
-                tags = null;
             }
 
             final MenuItem item = new MenuItem(type, tags, name, Double.parseDouble(weight), Double.parseDouble(calories),
@@ -126,6 +117,6 @@ public class MenuXmlParser {
             return tagList.item(0).getTextContent();
         }
 
-        return null;
+        return "";
     }
 }

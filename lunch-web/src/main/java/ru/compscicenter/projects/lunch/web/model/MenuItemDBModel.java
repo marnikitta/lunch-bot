@@ -60,7 +60,7 @@ public class MenuItemDBModel {
     public MenuItemDBModel() {
     }
 
-    public void setId(long id) {
+    public void setId(final long id) {
         this.id = id;
     }
 
@@ -68,32 +68,8 @@ public class MenuItemDBModel {
         return id;
     }
 
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public void setTags(String tags) {
-        this.tags = tags;
-    }
-
-    public void setName(String name) {
+    public void setName(final String name) {
         this.name = name;
-    }
-
-    public void setWeight(double weight) {
-        this.weight = weight;
-    }
-
-    public void setCalorie(double calorie) {
-        this.calorie = calorie;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
-    }
-
-    public void setComposition(List<String> composition) {
-        this.composition = composition;
     }
 
     public String getType() {
@@ -122,5 +98,33 @@ public class MenuItemDBModel {
 
     public List<String> getComposition() {
         return composition;
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        MenuItemDBModel that = (MenuItemDBModel) o;
+
+        if (id != that.id) return false;
+        return name.equals(that.name);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (int) (id ^ (id >>> 32));
+        result = 31 * result + name.hashCode();
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("MenuItemDBModel{");
+        sb.append("id=").append(id);
+        sb.append(", name='").append(name).append('\'');
+        sb.append('}');
+        return sb.toString();
     }
 }

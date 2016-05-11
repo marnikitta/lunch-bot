@@ -8,63 +8,101 @@ public class TF_IDF {
 
     private static final int MIN_WORD_LENGTH = 2;
 
-    private final List<String[]> termsDocsList = new ArrayList<>();
-    private final List<String> uniqueTerms = new ArrayList<>();
-    private final List<double[]> tfIdfMatrix = new ArrayList<>();
+    private List<String> uniqueTerms = new ArrayList<>();
+    private List<Double> idfList;
+    private final double min_df;
 
 
-    public TF_IDF(final String[] docs, double min_df) throws MinDfException {
+    public TF_IDF(double min_df) throws MinDfException {
 
         if (min_df < 0 || min_df > 1) {
             throw new MinDfException(min_df);
         }
 
+        this.min_df = min_df;
+
+    }
+
+    private List<String[]> getTokenizeDocsList(final String[] docs) {
+        List<String[]> tokenizeDocsList = new ArrayList<>();
+
         for (String doc : docs) {
-            String[] tokenizedTerms = doc.replaceAll(",", "").split("\\s+");
+            String[] tokenizeTerms = doc.replaceAll(",", "").split("\\s+");
 
-            termsDocsList.add(tokenizedTerms);
+            tokenizeDocsList.add(tokenizeTerms);
+        }
 
-            for (String term : tokenizedTerms) {
-                if (!uniqueTerms.contains(term)) {
-                    uniqueTerms.add(term);
+        return tokenizeDocsList;
+    }
+
+    private List<String> getDictionary(final List<String[]> tokenizeDocsList, double minDf) {
+        List<String> dictionary = new ArrayList<>();
+
+        for (String[] termsList : tokenizeDocsList) {
+            for (String term : termsList) {
+                if (!dictionary.contains(term) && term.length() > MIN_WORD_LENGTH && getDf(tokenizeDocsList, term) > minDf) {
+                    dictionary.add(term);
                 }
             }
         }
 
-        tfidfCalculate(min_df);
+        return dictionary;
     }
 
-    private void tfidfCalculate(double min_df) {
+    private List<double[]> getTfMatrix(final List<String[]> tokenizeDocsList, final List<String> dictionary) {
+        List<double[]> tfMatrix = new ArrayList<>();
 
-        double tf;
-        List<Double> idf = new ArrayList<>();
-        double tfidf;
-        List<String> removeTerms = new ArrayList<>();
-
-        for (String term : uniqueTerms) {
-
-            double documentFreq = getDf(termsDocsList, term);
-
-            if (documentFreq > min_df && term.length() > MIN_WORD_LENGTH) {
-                idf.add(getIdf(documentFreq));
-            } else {
-                removeTerms.add(term);
-            }
-        }
-
-        uniqueTerms.removeAll(removeTerms);
-
-        for (String[] docTermsArray : termsDocsList) {
-            double[] tfidfArray = new double[uniqueTerms.size()];
+        for (String[] docTermsArray : tokenizeDocsList) {
+            double[] tfArray = new double[dictionary.size()];
             int count = 0;
-            for (String term : uniqueTerms) {
-                tf = getTf(docTermsArray, term);
-                tfidf = tf * idf.get(count);
-                tfidfArray[count] = tfidf;
+            for (String term : dictionary) {
+                tfArray[count] = getTf(docTermsArray, term);
                 ++count;
             }
-            tfIdfMatrix.add(tfidfArray);
+            tfMatrix.add(tfArray);
         }
+
+        return tfMatrix;
+    }
+
+    private List<Double> getIdfList(final List<String[]> tokenizeDocsList, final List<String> dictionary) {
+        List<Double> dfList = new ArrayList<>();
+
+        for (String term : dictionary) {
+            dfList.add(getIdf(getDf(tokenizeDocsList, term)));
+        }
+
+        return dfList;
+    }
+
+    private List<double[]> multipleTfonIdf(List<double[]> tfMatrix, List<Double> idfMatrix) {
+
+        for (double[] tfIdfArray : tfMatrix) {
+            for (int j = 0; j < tfIdfArray.length; ++j) {
+                tfIdfArray[j] *= idfMatrix.get(j);
+            }
+        }
+
+        return tfMatrix;
+    }
+
+    public List<double[]> fitTransform(final String[] docs) {
+
+        List<String[]> termsDocsList = getTokenizeDocsList(docs);
+        uniqueTerms = getDictionary(termsDocsList, min_df);
+
+        List<double[]> tfMatrix = getTfMatrix(termsDocsList, uniqueTerms);
+        idfList = getIdfList(termsDocsList, uniqueTerms);
+
+        return multipleTfonIdf(tfMatrix, idfList);
+    }
+
+    public List<double[]> transform(final String[] docs) {
+
+        List<String[]> termsDocsList = getTokenizeDocsList(docs);
+        List<double[]> tfMatrix = getTfMatrix(termsDocsList, uniqueTerms);
+
+        return multipleTfonIdf(tfMatrix, idfList);
     }
 
 
@@ -98,15 +136,6 @@ public class TF_IDF {
         }
 
         return allTerms.size() / (double) count;
-    }
-
-
-    public List<double[]> getTF_IDFMatrix() {
-        return tfIdfMatrix;
-    }
-
-    public double[] getTF_IDFVector(int index) {
-        return tfIdfMatrix.get(index);
     }
 
     public List<String> getTermsVector() {
