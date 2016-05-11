@@ -7,7 +7,8 @@ import javax.annotation.Nullable;
 import java.util.Calendar;
 import java.util.List;
 
-public interface MenuDao {
+public interface MenuDAO {
+
     void saveOrUpdate(final MenuDBModel menu);
 
     List<MenuDBModel> getAll();

@@ -5,7 +5,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
-import ru.compscicenter.projects.lunch.web.dao.MenuDao;
+import ru.compscicenter.projects.lunch.web.dao.MenuDAO;
 import ru.compscicenter.projects.lunch.web.model.MenuDBModel;
 import ru.compscicenter.projects.lunch.web.model.MenuItemDBModel;
 
@@ -15,7 +15,7 @@ import java.util.Calendar;
 import java.util.List;
 
 @SuppressWarnings("unchecked")
-public class MenuDaoImpl implements MenuDao {
+public class MenuDAOImpl implements MenuDAO {
 
     private SessionFactory factory;
 

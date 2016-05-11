@@ -46,11 +46,11 @@
 
     <!-- DAOs -->
 
-    <beans:bean id="menuDAO" class="ru.compscicenter.projects.lunch.web.dao.impl.MenuDaoImpl">
+    <beans:bean id="menuDAO" class="ru.compscicenter.projects.lunch.web.dao.impl.MenuDAOImpl">
         <beans:property name="factory" ref="hibernate4AnnotatedSessionFactory"/>
     </beans:bean>
 
-    <beans:bean id="userDAO" class="ru.compscicenter.projects.lunch.web.dao.impl.UserDaoImpl">
+    <beans:bean id="userDAO" class="ru.compscicenter.projects.lunch.web.dao.impl.UserDAOImpl">
         <beans:property name="factory" ref="hibernate4AnnotatedSessionFactory"/>
     </beans:bean>
 

@@ -4,10 +4,10 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
-import ru.compscicenter.projects.lunch.web.dao.UserDao;
+import ru.compscicenter.projects.lunch.web.dao.UserDAO;
 import ru.compscicenter.projects.lunch.web.model.UserDBModel;
 
-public class UserDaoImpl implements UserDao {
+public class UserDAOImpl implements UserDAO {
 
     private SessionFactory factory;
 

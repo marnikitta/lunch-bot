@@ -3,7 +3,7 @@ package ru.compscicenter.projects.lunch.web.service.impl;
 import ru.compscicenter.projects.lunch.model.Menu;
 import ru.compscicenter.projects.lunch.model.MenuItem;
 import ru.compscicenter.projects.lunch.parser.PDFToMenu;
-import ru.compscicenter.projects.lunch.web.dao.MenuDao;
+import ru.compscicenter.projects.lunch.web.dao.MenuDAO;
 import ru.compscicenter.projects.lunch.web.exception.MenuDuplicateException;
 import ru.compscicenter.projects.lunch.web.exception.MenuUploadingException;
 import ru.compscicenter.projects.lunch.web.model.MenuDBModel;
@@ -21,10 +21,10 @@ import java.util.stream.Collectors;
 
 public class MenuServiceImpl implements MenuService {
 
-    private MenuDao menuDao;
+    private MenuDAO menuDAO;
 
-    public void setMenuDao(MenuDao menuDao) {
-        this.menuDao = menuDao;
+    public void setMenuDAO(MenuDAO menuDAO) {
+        this.menuDAO = menuDAO;
     }
 
     @Override
@@ -34,13 +34,13 @@ public class MenuServiceImpl implements MenuService {
             throw new MenuDuplicateException("Already has entry for date: " + menu.getDate());
         }
         MenuDBModel menuDBModel = ModelConverter.menuToDBMenu(menu);
-        menuDao.saveOrUpdate(menuDBModel);
+        menuDAO.saveOrUpdate(menuDBModel);
     }
 
     @Override
     @Transactional
     public List<Menu> getAll() {
-        List<MenuDBModel> list = menuDao.getAll();
+        List<MenuDBModel> list = menuDAO.getAll();
         Set<Menu> result = list.stream().map(ModelConverter::dbMenuToMenu).collect(Collectors.toSet());
         return new ArrayList<>(result);
     }
@@ -56,7 +56,7 @@ public class MenuServiceImpl implements MenuService {
     @Override
     @Transactional
     public List<Menu> getAllForDates(final Calendar start, final Calendar end) {
-        List<MenuDBModel> list = menuDao.getAllForDates(start, end);
+        List<MenuDBModel> list = menuDAO.getAllForDates(start, end);
         Set<Menu> result = list.stream().map(ModelConverter::dbMenuToMenu).collect(Collectors.toSet());
         return new ArrayList<>(result);
     }
@@ -64,7 +64,7 @@ public class MenuServiceImpl implements MenuService {
     @Override
     @Transactional
     public Menu getForDate(final Calendar day) {
-        MenuDBModel menuDBModel = menuDao.getForDate(day);
+        MenuDBModel menuDBModel = menuDAO.getForDate(day);
         if (menuDBModel != null) {
             return ModelConverter.dbMenuToMenu(menuDBModel);
         } else {
@@ -75,7 +75,7 @@ public class MenuServiceImpl implements MenuService {
     @Override
     @Transactional
     public MenuItem getForName(final String name) {
-        MenuItemDBModel model = menuDao.getForName(name);
+        MenuItemDBModel model = menuDAO.getForName(name);
         if (model != null) {
             return ModelConverter.dbMenuItemToMenuItem(model);
         } else {
@@ -88,7 +88,7 @@ public class MenuServiceImpl implements MenuService {
     public List<MenuItem> getForNameRegex(final String regex) {
         Pattern pattern = Pattern.compile(regex);
 
-        List<MenuItemDBModel> all = menuDao.getAllItems();
+        List<MenuItemDBModel> all = menuDAO.getAllItems();
         Set<MenuItem> result = new HashSet<>();
 
         for (MenuItemDBModel model : all) {
@@ -103,13 +103,13 @@ public class MenuServiceImpl implements MenuService {
     @Override
     @Transactional
     public boolean contains(final Calendar day) {
-        return menuDao.contains(day);
+        return menuDAO.contains(day);
     }
 
     @Override
     @Transactional
     public List<MenuItem> getAllItems() {
-        List<MenuItemDBModel> allItems = menuDao.getAllItems();
+        List<MenuItemDBModel> allItems = menuDAO.getAllItems();
         Set<MenuItem> result = allItems.stream().map(ModelConverter::dbMenuItemToMenuItem).collect(Collectors.toSet());
 
         return new ArrayList<>(result);
@@ -117,7 +117,7 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     public List<MenuItemDBModel> getAllDBItems() {
-        return menuDao.getAllItems();
+        return menuDAO.getAllItems();
     }
 
     @Override

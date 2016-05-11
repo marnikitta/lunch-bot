@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.compscicenter.projects.lunch.estimator.DeciderException;
 import ru.compscicenter.projects.lunch.web.dao.GameDao;
-import ru.compscicenter.projects.lunch.web.dao.UserDao;
+import ru.compscicenter.projects.lunch.web.dao.UserDAO;
 import ru.compscicenter.projects.lunch.web.exception.GameUpdatingException;
 import ru.compscicenter.projects.lunch.web.model.Game;
 import ru.compscicenter.projects.lunch.web.model.MenuItemDBModel;
@@ -18,7 +18,7 @@ import java.util.stream.IntStream;
 
 public class GameServiceImpl implements GameService {
 
-    private UserDao userDao;
+    private UserDAO userDAO;
     private GameDao gameDao;
     private CacheService cacheService;
     private final static Logger logger = LoggerFactory.getLogger(GameServiceImpl.class);
@@ -31,18 +31,18 @@ public class GameServiceImpl implements GameService {
         this.cacheService = cacheService;
     }
 
-    public void setUserDao(UserDao userDao) {
-        this.userDao = userDao;
+    public void setUserDAO(UserDAO userDAO) {
+        this.userDAO = userDAO;
     }
 
     @Override
     @Transactional
     public Game getNextGame(final long userId) {
-        if (!userDao.contains(userId)) {
+        if (!userDAO.contains(userId)) {
             throw new IllegalStateException("DB should contain this id");
         }
 
-        UserDBModel user = userDao.getById(userId);
+        UserDBModel user = userDAO.getById(userId);
         List<Game> unfinished = gameDao.getUnfinished(user);
 
         if (unfinished.size() != 0) {
@@ -154,7 +154,7 @@ public class GameServiceImpl implements GameService {
             loveList.add(reversedClusters.get(cl1).get(0));
         }
 
-        userDao.saveOrUpdate(user);
+        userDAO.saveOrUpdate(user);
     }
 
 

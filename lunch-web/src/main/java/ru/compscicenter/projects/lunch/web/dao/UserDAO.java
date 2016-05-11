@@ -2,7 +2,7 @@ package ru.compscicenter.projects.lunch.web.dao;
 
 import ru.compscicenter.projects.lunch.web.model.UserDBModel;
 
-public interface UserDao {
+public interface UserDAO {
 
     /***
      * @return proxy object, can throw ObjectNotFoundException
